@@ -1,0 +1,511 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | Hazard Management System{% endblock %}
+{% block body_class %}dashboard-page{% endblock %}
+{% block extra_head %}
+<style>
+    body {
+        background: linear-gradient(180deg, #f3f7ff 0%, #f8fafc 100%);
+    }
+
+    .dashboard-shell {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 26px 0 40px;
+    }
+
+    .dashboard-topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 18px;
+        margin-bottom: 22px;
+    }
+
+    .dashboard-title-wrap h1 {
+        margin: 0;
+        font-size: clamp(2rem, 3vw, 2.7rem);
+        font-weight: 800;
+        letter-spacing: -0.05em;
+        color: #0f172a;
+    }
+
+    .dashboard-title-wrap p {
+        margin: 8px 0 0;
+        color: #64748b;
+        font-size: 1rem;
+    }
+
+    .topbar-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .soft-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 0.76rem;
+        font-weight: 700;
+    }
+
+    .soft-badge.blue { background: #dbeafe; color: #1d4ed8; }
+    .soft-badge.green { background: #dcfce7; color: #15803d; }
+    .soft-badge.orange { background: #fef3c7; color: #b45309; }
+    .soft-badge.red { background: #fee2e2; color: #b91c1c; }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .stat-card {
+        background: rgba(255,255,255,0.92);
+        border: 1px solid rgba(148,163,184,0.18);
+        border-radius: 22px;
+        padding: 20px 18px;
+        box-shadow: 0 12px 30px rgba(15,23,42,0.04);
+    }
+
+    .stat-card .label {
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #64748b;
+        font-weight: 700;
+    }
+
+    .stat-card .value {
+        margin-top: 12px;
+        font-size: clamp(2rem, 3vw, 2.5rem);
+        font-weight: 800;
+        letter-spacing: -0.05em;
+        color: #0f172a;
+    }
+
+    .stat-card .status-note {
+        margin-top: 10px;
+        color: #64748b;
+        font-size: 0.84rem;
+    }
+
+    .stat-card.primary { border-top: 4px solid #2563eb; }
+    .stat-card.green { border-top: 4px solid #16a34a; }
+    .stat-card.orange { border-top: 4px solid #f59e0b; }
+    .stat-card.red { border-top: 4px solid #ef4444; }
+
+    .content-grid {
+        display: grid;
+        grid-template-columns: 1.4fr 0.8fr;
+        gap: 18px;
+    }
+
+    .panel {
+        background: rgba(255,255,255,0.92);
+        border: 1px solid rgba(148,163,184,0.18);
+        border-radius: 24px;
+        box-shadow: 0 12px 30px rgba(15,23,42,0.04);
+        overflow: hidden;
+    }
+
+    .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 18px 20px;
+        border-bottom: 1px solid rgba(148,163,184,0.15);
+    }
+
+    .panel-title {
+        font-size: 1rem;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .panel-body {
+        padding: 18px 20px 20px;
+    }
+
+    .list-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .hazard-item {
+        display: block;
+        padding: 16px 16px;
+        border-radius: 16px;
+        background: #f8fafc;
+        border: 1px solid rgba(148,163,184,0.14);
+        text-decoration: none;
+        color: #1f2937;
+    }
+
+    .hazard-item:hover {
+        text-decoration: none;
+        background: #f1f5f9;
+    }
+
+    .hazard-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+    }
+
+    .hazard-title {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 700;
+    }
+
+    .mini-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 8px;
+        border-radius: 999px;
+        font-size: 0.68rem;
+        font-weight: 700;
+    }
+
+    .mini-badge.red { background: #fee2e2; color: #b91c1c; }
+    .mini-badge.green { background: #dcfce7; color: #15803d; }
+    .mini-badge.gray { background: #e2e8f0; color: #475569; }
+
+    .hazard-item p {
+        color: #64748b;
+        margin: 0;
+        line-height: 1.5;
+        font-size: 0.9rem;
+    }
+
+    .meta-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        font-size: 0.76rem;
+        color: #64748b;
+        margin-top: 10px;
+    }
+
+    .action-list {
+        display: grid;
+        gap: 10px;
+    }
+
+    .action-btn {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 700;
+        color: #0f172a;
+        border: 1px solid rgba(148,163,184,0.18);
+        background: #f8fafc;
+    }
+
+    .action-btn.primary {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: #fff;
+        border: none;
+    }
+
+    .action-btn.success {
+        background: linear-gradient(135deg, #16a34a, #15803d);
+        color: #fff;
+        border: none;
+    }
+
+    .action-btn.warning {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: #fff;
+        border: none;
+    }
+
+    .stack-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .report-card {
+        padding: 14px 14px;
+        border: 1px solid rgba(148,163,184,0.14);
+        background: #f8fafc;
+        border-radius: 14px;
+    }
+
+    .report-card strong {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 0.98rem;
+    }
+
+    .report-card p {
+        margin: 0;
+        color: #64748b;
+        font-size: 0.88rem;
+        line-height: 1.5;
+    }
+
+    .report-meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        margin-top: 10px;
+        font-size: 0.75rem;
+        color: #64748b;
+    }
+
+    .mini-status-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+
+    .mini-box {
+        background: #f8fafc;
+        border: 1px solid rgba(148,163,184,0.14);
+        border-radius: 14px;
+        padding: 14px;
+    }
+
+    .mini-box .label {
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #64748b;
+        font-weight: 700;
+    }
+
+    .mini-box .count {
+        display: block;
+        margin-top: 8px;
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 7px 10px;
+        border-radius: 999px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    @media (max-width: 991.98px) {
+        .stats-grid,
+        .content-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        .stats-grid,
+        .content-grid,
+        .mini-status-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .dashboard-topbar,
+        .panel-header {
+            align-items: flex-start;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-shell">
+    <div class="dashboard-topbar">
+        <div class="dashboard-title-wrap">
+            <h1>Admin Dashboard</h1>
+            <p>Monitor incidents, patient flow, hospitals, and emergency updates in one place.</p>
+        </div>
+        <div class="topbar-badges">
+            <span class="soft-badge blue">{{ hazards_count }} hazards</span>
+            <span class="soft-badge green">{{ patients_count }} patients</span>
+            <span class="soft-badge orange">{{ hospitals_count }} hospitals</span>
+            <span class="soft-badge red">{{ missing_count }} missing</span>
+        </div>
+    </div>
+
+    <section class="stats-grid">
+        <div class="stat-card primary">
+            <div class="label">Hazard Incidents</div>
+            <div class="value">{{ hazards_count }}</div>
+            <div class="status-note">Active: {{ active_count }} · Resolved: {{ resolved_count }}</div>
+        </div>
+
+        <div class="stat-card green">
+            <div class="label">Patients</div>
+            <div class="value">{{ patients_count }}</div>
+            <div class="status-note">Tracked across all incidents</div>
+        </div>
+
+        <div class="stat-card orange">
+            <div class="label">Hospitals</div>
+            <div class="value">{{ hospitals_count }}</div>
+            <div class="status-note">Registered emergency facilities</div>
+        </div>
+
+        <div class="stat-card red">
+            <div class="label">Missing Reports</div>
+            <div class="value">{{ missing_count }}</div>
+            <div class="status-note">Reports currently being monitored</div>
+        </div>
+    </section>
+
+    <section class="content-grid">
+        <div>
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">Recent Hazards</div>
+                    <a href="{% url 'Hazard_report' %}" class="action-btn primary" style="padding: 8px 12px; font-size: 0.82rem;">
+                        <span>New Report</span>
+                        <span>+</span>
+                    </a>
+                </div>
+                <div class="panel-body">
+                    <div class="list-stack">
+                        {% for h in recent_hazards %}
+                        <a href="{% url 'hazard_detail' h.id %}" class="hazard-item">
+                            <div class="hazard-head">
+                                <h3 class="hazard-title">{{ h.title }}</h3>
+                                <span class="mini-badge red">{{ h.get_servity_display }}</span>
+                            </div>
+                            <p>{{ h.description|truncatechars:110 }}</p>
+                            <div class="meta-row">
+                                <span>{{ h.get_status_display }}</span>
+                                <span>{{ h.created_at|date:"M d, Y" }}</span>
+                            </div>
+                        </a>
+                        {% empty %}
+                        <div class="text-center text-muted py-3">No recent hazards yet.</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="panel mb-4">
+                <div class="panel-header">
+                    <div class="panel-title">Quick Actions</div>
+                </div>
+                <div class="panel-body">
+                    <div class="action-list">
+                        <a href="{% url 'Hazard_report' %}" class="action-btn primary">
+                            <span>Report New Hazard</span>
+                            <span>→</span>
+                        </a>
+                        <a href="" class="action-btn success">
+                            <span>Add Patient</span>
+                            <span>→</span>
+                        </a>
+                        <a href="{% url 'add_hospital' %}" class="action-btn warning">
+                            <span>Add Hospital</span>
+                            <span>→</span>
+                        </a>
+                        <a href="{% url 'Active_hazard' %}" class="action-btn">
+                            <span>View Active Hazards</span>
+                            <span>→</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">System Snapshot</div>
+                    <span class="chip">Online</span>
+                </div>
+                <div class="panel-body">
+                    <div class="mini-status-grid">
+                        <div class="mini-box">
+                            <div class="label">Incidents</div>
+                            <span class="count">{{ hazards_count }}</span>
+                        </div>
+                        <div class="mini-box">
+                            <div class="label">Active</div>
+                            <span class="count">{{ active_count }}</span>
+                        </div>
+                        <div class="mini-box">
+                            <div class="label">Patients</div>
+                            <span class="count">{{ patients_count }}</span>
+                        </div>
+                        <div class="mini-box">
+                            <div class="label">Missing</div>
+                            <span class="count">{{ missing_count }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="margin-top: 18px; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 18px;">
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">Missing Reports</div>
+                <span class="soft-badge red" style="padding: 6px 10px;">{{ missing_count }} total</span>
+            </div>
+            <div class="panel-body">
+                <div class="stack-list">
+                    {% for c in recent_complaints %}
+                    <div class="report-card">
+                        <strong>{{ c.missing_person_name }}</strong>
+                        <p>Last seen: {{ c.last_seen_location }}</p>
+                        <p>Reported by: {{ c.person_name }} · {{ c.contact_number }}</p>
+                        <div class="report-meta">
+                            <span>Age: {{ c.missing_person_age }}</span>
+                            <span>{{ c.created_at|date:"M d, Y" }}</span>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="text-center text-muted py-3">No missing reports available.</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">Admin Tools</div>
+            </div>
+            <div class="panel-body">
+                <div class="action-list">
+                    <a href="/admin/" class="action-btn">
+                        <span>Django Admin Panel</span>
+                        <span>→</span>
+                    </a>
+                    <a href="{% url 'hospital_list' %}" class="action-btn">
+                        <span>Manage Hospitals</span>
+                        <span>→</span>
+                    </a>
+                    <a href="{% url 'add_hospital' %}" class="action-btn">
+                        <span>Register Hospital</span>
+                        <span>→</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

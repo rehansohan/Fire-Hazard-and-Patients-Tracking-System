@@ -1,0 +1,583 @@
+{% extends 'base.html' %}
+
+{% block title %}Hazard Details | Hazard Management System{% endblock %}
+
+{% block extra_head %}
+<style>
+    body {
+        background: linear-gradient(180deg, #eef6ff 0%, #f8fafc 100%);
+    }
+
+    .hazard-detail-shell {
+        padding: 28px 0 48px;
+    }
+
+    .hazard-hero {
+        background: linear-gradient(135deg, #0f172a 0%, #123b68 42%, #dc2626 100%);
+        border-radius: 28px;
+        padding: 30px 28px;
+        color: #fff;
+        box-shadow: 0 20px 48px rgba(15,23,42,0.14);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hazard-hero::after {
+        content: "";
+        position: absolute;
+        right: -70px;
+        bottom: -90px;
+        width: 250px;
+        height: 250px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.08);
+    }
+
+    .eyebrow {
+        position: relative;
+        z-index: 1;
+        display: inline-flex;
+        align-items: center;
+        padding: 7px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.18);
+        background: rgba(255,255,255,0.09);
+        color: rgba(255,255,255,0.9);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    .page-title {
+        position: relative;
+        z-index: 1;
+        margin-top: 18px;
+        margin-bottom: 8px;
+        font-size: clamp(2.2rem, 4vw, 3rem);
+        font-weight: 800;
+        letter-spacing: -0.05em;
+    }
+
+    .page-subtitle {
+        position: relative;
+        z-index: 1;
+        margin: 0;
+        max-width: 700px;
+        color: rgba(255,255,255,0.82);
+        line-height: 1.7;
+    }
+
+    .hero-meta {
+        position: relative;
+        z-index: 1;
+        text-align: right;
+        color: rgba(255,255,255,0.85);
+    }
+
+    .hero-meta .status-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+
+    .status-pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 0.74rem;
+        font-weight: 700;
+        background: rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.18);
+        color: #fff;
+    }
+
+    .status-pill.soft {
+        background: #dbeafe;
+        border-color: transparent;
+        color: #1d4ed8;
+    }
+
+    .status-pill.warn {
+        background: #fef3c7;
+        border-color: transparent;
+        color: #b45309;
+    }
+
+    .hero-actions {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 18px;
+    }
+
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 9px 14px;
+        border-radius: 12px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: transform 0.2s ease;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-1px);
+        text-decoration: none;
+    }
+
+    .action-btn.primary {
+        background: #fff;
+        color: #0f172a;
+    }
+
+    .action-btn.outline {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.18);
+        color: #fff;
+    }
+
+    .action-btn.danger {
+        background: rgba(239,68,68,0.12);
+        border: 1px solid rgba(255,255,255,0.18);
+        color: #fff;
+    }
+
+    .detail-grid {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 18px;
+        margin-top: 24px;
+    }
+
+    .panel {
+        background: rgba(255,255,255,0.92);
+        border-radius: 24px;
+        border: 1px solid rgba(148,163,184,0.18);
+        box-shadow: 0 14px 30px rgba(15,23,42,0.04);
+        overflow: hidden;
+    }
+
+    .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 20px 22px 16px;
+        border-bottom: 1px solid rgba(148,163,184,0.12);
+    }
+
+    .panel-title {
+        font-size: 1.08rem;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .panel-body {
+        padding: 20px 22px 22px;
+    }
+
+    .section-label {
+        display: inline-flex;
+        margin-bottom: 10px;
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #64748b;
+        font-weight: 700;
+    }
+
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 18px;
+    }
+
+    .summary-box {
+        background: #f8fafc;
+        border: 1px solid rgba(148,163,184,0.14);
+        border-radius: 18px;
+        padding: 16px;
+    }
+
+    .summary-box .label {
+        color: #64748b;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+
+    .summary-box .value {
+        margin-top: 10px;
+        font-size: 2rem;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .muted-text {
+        color: #64748b;
+        line-height: 1.7;
+        margin: 0;
+    }
+
+    .patient-search {
+        margin-bottom: 16px;
+    }
+
+    .patient-table-wrap {
+        overflow: hidden;
+        border: 1px solid rgba(148,163,184,0.14);
+        border-radius: 16px;
+    }
+
+    .patient-table {
+        margin: 0;
+        width: 100%;
+    }
+
+    .patient-table thead th {
+        background: #f8fafc;
+        border-bottom: 1px solid rgba(148,163,184,0.12);
+        color: #475569;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 12px 14px;
+    }
+
+    .patient-table tbody td {
+        padding: 12px 14px;
+        vertical-align: middle;
+        border-bottom: 1px solid rgba(148,163,184,0.08);
+        color: #1f2937;
+    }
+
+    .patient-table tbody tr:hover {
+        background: rgba(239,246,255,0.45);
+    }
+
+    .patient-image,
+    .complaint-image {
+        width: 72px;
+        height: 72px;
+        object-fit: cover;
+        border-radius: 14px;
+        border: 1px solid rgba(148,163,184,0.2);
+    }
+
+    .complaint-image {
+        width: 84px;
+        height: 84px;
+    }
+
+    .empty-box {
+        text-align: center;
+        color: #64748b;
+        padding: 38px 20px;
+    }
+
+    .report-grid {
+        display: grid;
+        gap: 14px;
+    }
+
+    .complaint-card {
+        display: flex;
+        gap: 14px;
+        padding: 14px;
+        border: 1px solid rgba(148,163,184,0.14);
+        border-radius: 18px;
+        background: #f8fafc;
+    }
+
+    .complaint-card-body {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .complaint-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .complaint-head strong {
+        display: block;
+        font-size: 1rem;
+        color: #0f172a;
+    }
+
+    .complaint-head small {
+        color: #64748b;
+    }
+
+    .complaint-meta {
+        margin-top: 8px;
+        color: #64748b;
+        font-size: 0.83rem;
+        line-height: 1.5;
+    }
+
+    .complaint-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 10px;
+    }
+
+    .mini-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 7px 10px;
+        border-radius: 10px;
+        font-size: 0.76rem;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .mini-btn.primary {
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
+
+    .mini-btn.warning {
+        background: #fef3c7;
+        color: #b45309;
+    }
+
+    .mini-btn.secondary {
+        background: #e2e8f0;
+        color: #334155;
+    }
+
+    .modal-body h6 {
+        margin-top: 10px;
+        color: #0f172a;
+        font-weight: 700;
+    }
+
+    @media (max-width: 991.98px) {
+        .detail-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .hero-meta {
+            text-align: left;
+        }
+
+        .hero-meta .status-row {
+            justify-content: flex-start;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        .summary-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .complaint-card {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container hazard-detail-shell">
+    <section class="hazard-hero">
+        <div class="row align-items-end g-3">
+            <div class="col-lg-8">
+                <span class="eyebrow">Incident detail</span>
+                <h1 class="page-title">{{ hazard.title }}</h1>
+                <p class="page-subtitle">{{ hazard.description }}</p>
+            </div>
+            <div class="col-lg-4 hero-meta">
+                <div class="status-row">
+                    <span class="status-pill soft">{{ hazard.get_status_display }}</span>
+                    <span class="status-pill warn">{{ hazard.get_servity_display }}</span>
+                </div>
+                <div>Reported {{ hazard.created_at|date:"M d, Y H:i" }} by {{ hazard.user.username }}</div>
+                <div class="hero-actions">
+                    {% if request.user.is_authenticated %}
+                        {% if request.user == hazard.user or request.user.category == 'admin' %}
+                            <a href="{% url 'edit_hazard' hazard.id %}" class="action-btn primary">Edit Incident</a>
+                        {% endif %}
+                    {% endif %}
+                    {% if request.user.category == 'admin' %}
+                        <form action="{% url 'delete_hazard' hazard.id %}" method="post" onsubmit="return confirm('Delete this incident?');" style="display:inline;">
+                            {% csrf_token %}
+                            <button class="action-btn danger" type="submit">Delete</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="detail-grid">
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">Overview</div>
+            </div>
+            <div class="panel-body">
+                <div class="section-label">Description</div>
+                <p class="muted-text">{{ hazard.description }}</p>
+
+                <div class="summary-grid">
+                    <div class="summary-box">
+                        <div class="label">Patients</div>
+                        <div class="value">{{ patients|length }}</div>
+                    </div>
+                    <div class="summary-box">
+                        <div class="label">Missing reports</div>
+                        <div class="value">{{ hazard.missing_complaints.all|length }}</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 26px;">
+                    <div class="section-label">Patients list</div>
+                    <form method="GET" class="patient-search">
+                        <div class="input-group">
+                            <input type="text" name="q" class="form-control" placeholder="Search patient by name or ID..." value="{{ request.GET.q }}">
+                            <button class="btn btn-primary" type="submit">Search</button>
+                        </div>
+                    </form>
+
+                    <div class="patient-table-wrap">
+                        <table class="patient-table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Patient ID</th>
+                                    <th>Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for patient in patients %}
+                                <tr>
+                                    <td>
+                                        {% if patient.image %}
+                                            <a href="{% url 'patient_detail' patient.id %}">
+                                                <img src="{{ patient.image.url }}" alt="{{ patient.name }}" class="patient-image">
+                                            </a>
+                                        {% else %}
+                                            <a href="{% url 'patient_detail' patient.id %}" class="d-inline-block text-decoration-none">
+                                                <div class="patient-image d-flex align-items-center justify-content-center bg-light text-muted small">No image</div>
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                    <td class="fw-semibold">{% if patient.patient_id %}{{ patient.patient_id }}{% else %}#{{ patient.id }}{% endif %}</td>
+                                    <td>
+                                        <a href="{% url 'patient_detail' patient.id %}" class="text-decoration-none fw-semibold text-dark">{{ patient.name }}</a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3">
+                                        <div class="empty-box">No patients have been linked to this hazard yet.</div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">Missing persons</div>
+                <a href="{% url 'add_missing_complaint' hazard.id %}" class="mini-btn primary">Report Missing</a>
+            </div>
+            <div class="panel-body">
+                <div class="report-grid">
+                    {% for complaint in hazard.missing_complaints.all %}
+                    <div class="complaint-card">
+                        <div>
+                            {% if complaint.image %}
+                                <img src="{{ complaint.image.url }}" alt="{{ complaint.missing_person_name }}" class="complaint-image">
+                            {% else %}
+                                <div class="complaint-image d-flex align-items-center justify-content-center bg-light border text-muted small">No image</div>
+                            {% endif %}
+                        </div>
+                        <div class="complaint-card-body">
+                            <div class="complaint-head">
+                                <div>
+                                    <strong>{{ complaint.missing_person_name }}</strong>
+                                    <small>Last seen: {{ complaint.last_seen_location }}</small>
+                                </div>
+                                <small>{{ complaint.created_at|date:"M d, Y" }}</small>
+                            </div>
+                            <div class="complaint-meta">
+                                Age: {{ complaint.missing_person_age }} · Gender: {{ complaint.get_missing_person_gender_display|default:complaint.missing_person_gender }}
+                            </div>
+                            <div class="complaint-meta">
+                                Reported by: {{ complaint.person_name }} · {{ complaint.contact_number }}
+                            </div>
+                            <div class="complaint-actions">
+                                <button class="mini-btn primary" data-bs-toggle="modal" data-bs-target="#missingModal{{ forloop.counter }}">View</button>
+                                {% if request.user.category == 'admin' %}
+                                    <a href="{% url 'edit_missing_complaint' complaint.id %}" class="mini-btn warning">Edit</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="missingModal{{ forloop.counter }}" tabindex="-1" aria-labelledby="missingModalLabel{{ forloop.counter }}" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="missingModalLabel{{ forloop.counter }}">{{ complaint.missing_person_name }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row g-3">
+                                        <div class="col-md-4 text-center">
+                                            {% if complaint.image %}
+                                                <img src="{{ complaint.image.url }}" alt="{{ complaint.missing_person_name }}" class="img-fluid rounded-3 mb-2">
+                                            {% else %}
+                                                <div class="rounded-3 bg-light border d-flex align-items-center justify-content-center" style="height:180px;">No image</div>
+                                            {% endif %}
+                                            <div class="text-muted">Age: {{ complaint.missing_person_age }}</div>
+                                            <div class="text-muted">Gender: {{ complaint.get_missing_person_gender_display|default:complaint.missing_person_gender }}</div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <h6>Last seen</h6>
+                                            <p class="text-muted">{{ complaint.last_seen_location }}</p>
+                                            <h6>Description</h6>
+                                            <p class="text-muted">{{ complaint.description }}</p>
+                                            <h6>Reporter</h6>
+                                            <p class="text-muted">{{ complaint.person_name }} · <a href="tel:{{ complaint.contact_number }}">{{ complaint.contact_number }}</a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    {% if request.user.category == 'admin' %}
+                                        <a href="{% url 'delete_missing_complaint' complaint.id %}" class="btn btn-danger" onclick="return confirm('Delete this report?')">Delete</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="empty-box">No missing complaints reported for this hazard yet.</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

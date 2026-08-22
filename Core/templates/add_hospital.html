@@ -1,0 +1,569 @@
+{% extends 'base.html' %}
+
+{% block title %}Register Hospital | Hazard Management System{% endblock %}
+
+{% block extra_head %}
+<style>
+
+    .hospital-form-page {
+        min-height: calc(100vh - 80px);
+        background:
+            radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 35%),
+            #f5f8fc;
+        padding: 45px 20px 70px;
+    }
+
+    .hospital-form-card {
+        max-width: 1000px;
+        margin: auto;
+        background: #ffffff;
+        border: 1px solid #e6ebf2;
+        border-radius: 20px;
+        box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
+        overflow: hidden;
+    }
+
+    /* Header */
+
+    .form-header {
+        padding: 30px 35px;
+        background: linear-gradient(
+            135deg,
+            #071322 0%,
+            #12345a 100%
+        );
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .form-header::after {
+        content: "";
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        background: rgba(59, 130, 246, 0.12);
+        right: -70px;
+        top: -90px;
+    }
+
+    .header-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        background: rgba(255,255,255,.1);
+        border: 1px solid rgba(255,255,255,.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 23px;
+        margin-bottom: 15px;
+    }
+
+    .form-header h1 {
+        font-size: 28px;
+        font-weight: 800;
+        margin-bottom: 7px;
+    }
+
+    .form-header p {
+        color: rgba(255,255,255,.72);
+        font-size: 13px;
+        margin: 0;
+        max-width: 650px;
+    }
+
+    /* Form body */
+
+    .form-body {
+        padding: 35px;
+    }
+
+    .section-label {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: #172033;
+        font-size: 14px;
+        font-weight: 800;
+        margin-bottom: 18px;
+    }
+
+    .section-label i {
+        color: #2563eb;
+        font-size: 17px;
+    }
+
+    .form-section {
+        margin-bottom: 32px;
+    }
+
+    .field-group {
+        margin-bottom: 18px;
+    }
+
+    .field-group label {
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        color: #334155;
+        margin-bottom: 7px;
+    }
+
+    .field-group input,
+    .field-group textarea,
+    .field-group select {
+        width: 100%;
+        border: 1px solid #dbe2ea;
+        border-radius: 10px;
+        padding: 11px 13px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 12px;
+        color: #172033;
+        background: #fbfdff;
+        outline: none;
+        transition: .2s ease;
+    }
+
+    .field-group input:focus,
+    .field-group textarea:focus,
+    .field-group select:focus {
+        border-color: #2563eb;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(37,99,235,.09);
+    }
+
+    .field-group textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .field-help {
+        color: #94a3b8;
+        font-size: 10px;
+        margin-top: 5px;
+    }
+
+    /* Image upload */
+
+    .image-upload {
+        border: 1.5px dashed #cbd5e1;
+        border-radius: 12px;
+        padding: 22px;
+        background: #f8fafc;
+        transition: .2s ease;
+    }
+
+    .image-upload:hover {
+        border-color: #2563eb;
+        background: #f5f9ff;
+    }
+
+    .image-upload input {
+        background: white;
+    }
+
+    /* Stats */
+
+    .stat-box {
+        background: #f8fafc;
+        border: 1px solid #e7edf4;
+        border-radius: 12px;
+        padding: 15px;
+    }
+
+    .stat-box label {
+        font-size: 11px;
+    }
+
+    /* Buttons */
+
+    .form-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        padding-top: 10px;
+        border-top: 1px solid #edf1f5;
+    }
+
+    .btn-cancel {
+        border: 1px solid #dbe2ea;
+        background: white;
+        color: #475569;
+        padding: 11px 22px;
+        border-radius: 9px;
+        font-size: 12px;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .btn-save {
+        border: none;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: white;
+        padding: 11px 25px;
+        border-radius: 9px;
+        font-size: 12px;
+        font-weight: 700;
+        box-shadow: 0 7px 18px rgba(37,99,235,.2);
+    }
+
+    .btn-save:hover {
+        background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    }
+
+    /* Responsive */
+
+    @media(max-width: 768px) {
+
+        .hospital-form-page {
+            padding: 25px 12px 50px;
+        }
+
+        .form-header,
+        .form-body {
+            padding: 25px 20px;
+        }
+
+        .form-header h1 {
+            font-size: 23px;
+        }
+
+        .form-actions {
+            flex-direction: column-reverse;
+        }
+
+        .btn-save,
+        .btn-cancel {
+            width: 100%;
+            text-align: center;
+        }
+    }
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="hospital-form-page">
+
+    <div class="hospital-form-card">
+
+        <!-- Header -->
+
+        <div class="form-header">
+
+            <div class="header-icon">
+                <i class="bi bi-hospital-fill"></i>
+            </div>
+
+            <h1>Register a Hospital</h1>
+
+            <p>
+                Add hospital information to the emergency response network.
+                These details will be displayed on the hospital profile page.
+            </p>
+
+        </div>
+
+
+        <!-- Form -->
+
+        <div class="form-body">
+
+            <form method="POST"
+                  enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+
+                <!-- Basic Information -->
+
+                <div class="form-section">
+
+                    <div class="section-label">
+                        <i class="bi bi-building"></i>
+                        Basic Information
+                    </div>
+
+
+                    <div class="row">
+
+                        <div class="col-md-7">
+
+                            <div class="field-group">
+
+                                <label for="{{ form.name.id_for_label }}">
+                                    Hospital Name
+                                </label>
+
+                                {{ form.name }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-5">
+
+                            <div class="field-group">
+
+                                <label for="{{ form.established_year.id_for_label }}">
+                                    Established Year
+                                </label>
+
+                                {{ form.established_year }}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="field-group">
+
+                        <label for="{{ form.location.id_for_label }}">
+                            Location
+                        </label>
+
+                        {{ form.location }}
+
+                    </div>
+
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <div class="field-group">
+
+                                <label for="{{ form.phone.id_for_label }}">
+                                    Hospital Phone
+                                </label>
+
+                                {{ form.phone }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="field-group">
+
+                                <label for="{{ form.emergency_phone.id_for_label }}">
+                                    Emergency Phone
+                                </label>
+
+                                {{ form.emergency_phone }}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Hospital Image -->
+
+                <div class="form-section">
+
+                    <div class="section-label">
+                        <i class="bi bi-image"></i>
+                        Hospital Image
+                    </div>
+
+                    <div class="image-upload">
+
+                        <div class="field-group mb-0">
+
+                            <label for="{{ form.image.id_for_label }}">
+                                Upload Hospital Image
+                            </label>
+
+                            {{ form.image }}
+
+                            <div class="field-help">
+                                Recommended: clear exterior or building image.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Hospital Description -->
+
+                <div class="form-section">
+
+                    <div class="section-label">
+                        <i class="bi bi-file-text"></i>
+                        About Hospital
+                    </div>
+
+                    <div class="field-group">
+
+                        <label for="{{ form.description.id_for_label }}">
+                            Hospital Description
+                        </label>
+
+                        {{ form.description }}
+
+                        <div class="field-help">
+                            Write a short introduction about the hospital,
+                            medical services and specialties.
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Hospital Statistics -->
+
+                <div class="form-section">
+
+                    <div class="section-label">
+                        <i class="bi bi-bar-chart-fill"></i>
+                        Hospital Statistics
+                    </div>
+
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <div class="stat-box mb-3">
+
+                                <div class="field-group mb-0">
+
+                                    <label for="{{ form.capacity.id_for_label }}">
+                                        Total Beds / Capacity
+                                    </label>
+
+                                    {{ form.capacity }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="stat-box mb-3">
+
+                                <div class="field-group mb-0">
+
+                                    <label for="{{ form.total_doctors.id_for_label }}">
+                                        Total Doctors
+                                    </label>
+
+                                    {{ form.total_doctors }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="stat-box">
+
+                                <div class="field-group mb-0">
+
+                                    <label for="{{ form.total_nurses.id_for_label }}">
+                                        Total Nurses
+                                    </label>
+
+                                    {{ form.total_nurses }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="stat-box">
+
+                                <div class="field-group mb-0">
+
+                                    <label for="{{ form.total_departments.id_for_label }}">
+                                        Departments
+                                    </label>
+
+                                    {{ form.total_departments }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="stat-box">
+
+                                <div class="field-group mb-0">
+
+                                    <label for="{{ form.ambulances.id_for_label }}">
+                                        Ambulances
+                                    </label>
+
+                                    {{ form.ambulances }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Actions -->
+
+                <div class="form-actions">
+
+                    <a href="{% url 'home' %}"
+                       class="btn-cancel">
+                        Cancel
+                    </a>
+
+                    <button type="submit"
+                            class="btn-save">
+
+                        <i class="bi bi-check2-circle me-1"></i>
+
+                        Save Hospital
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

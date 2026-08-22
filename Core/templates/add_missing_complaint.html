@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-10">
+
+            <div class="card shadow-lg border-0">
+
+                <div class="card-header bg-danger text-white py-3">
+                    <h2 class="mb-0">
+                        <i class="fas fa-user-slash me-2"></i>
+                        Missing Person Complaint
+                    </h2>
+                    <small>Please provide accurate information to help locate the missing person.</small>
+                </div>
+
+                <div class="card-body p-4">
+
+                    <form method="POST" enctype="multipart/form-data">
+
+                        {% csrf_token %}
+
+                        <!-- Victim Information -->
+
+                        <h4 class="text-danger mb-3">
+                            <i class="fas fa-user me-2"></i>
+                            Victim Information
+                        </h4>
+
+                        <hr>
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Victim Name</label>
+                                {{ form.missing_person_name }}
+                            </div>
+
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label fw-bold">Age</label>
+                                {{ form.missing_person_age }}
+                            </div>
+
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label fw-bold">Gender</label>
+                                {{ form.missing_person_gender }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Photo</label>
+                                {{ form.image }}
+                            </div>
+
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label fw-bold">Height</label>
+                                {{ form.height }}
+                            </div>
+
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label fw-bold">Blood Group</label>
+                                {{ form.blood_group }}
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Identifying Marks</label>
+                                {{ form.identifying_marks }}
+                            </div>
+
+                        </div>
+
+                        <!-- Missing Details -->
+
+                        <h4 class="text-danger mt-4 mb-3">
+                            <i class="fas fa-map-marker-alt me-2"></i>
+                            Missing Details
+                        </h4>
+
+                        <hr>
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Missing Date</label>
+                                {{ form.missing_date }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Missing Time</label>
+                                {{ form.missing_time }}
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Last Seen Location</label>
+                                {{ form.last_seen_location }}
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Clothing Description</label>
+                                {{ form.clothing_description }}
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Additional Description</label>
+                                {{ form.description }}
+                            </div>
+
+                        </div>
+
+                        <!-- Reporter Information -->
+
+                        <h4 class="text-danger mt-4 mb-3">
+                            <i class="fas fa-phone-alt me-2"></i>
+                            Reporter Information
+                        </h4>
+
+                        <hr>
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Relationship</label>
+                                {{ form.relationship }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Contact Number</label>
+                                {{ form.contact_number }}
+                            </div>
+
+                        </div>
+
+                        <div class="text-end mt-4">
+
+                            <a href="{% url 'home' %}" class="btn btn-secondary px-4">
+                                Cancel
+                            </a>
+
+                            <button type="submit" class="btn btn-danger px-5">
+                                <i class="fas fa-paper-plane me-2"></i>
+                                Submit Complaint
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

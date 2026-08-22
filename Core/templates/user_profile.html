@@ -1,0 +1,480 @@
+{% extends 'base.html' %}
+
+{% block extra_head %}
+<style>
+    body {
+        background: linear-gradient(180deg, #f4f8ff 0%, #f8fafc 100%);
+    }
+
+    .profile-shell {
+        padding: 32px 0 60px;
+    }
+
+    .profile-topbar {
+        max-width: 1200px;
+        margin: 0 auto 28px;
+        padding: 26px 28px;
+        border-radius: 28px;
+        background: linear-gradient(135deg, #0f172a 0%, #123b68 42%, #2563eb 100%);
+        color: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        box-shadow: 0 18px 38px rgba(37, 99, 235, 0.18);
+    }
+
+    .profile-topbar h2 {
+        margin: 0;
+        font-size: clamp(2rem, 3vw, 2.7rem);
+        font-weight: 800;
+        letter-spacing: -0.06em;
+    }
+
+    .profile-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.18);
+        color: rgba(255,255,255,0.9);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .profile-layout {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 320px minmax(0, 1fr);
+        gap: 26px;
+    }
+
+    .profile-sidebar,
+    .profile-panel,
+    .notification-panel {
+        background: rgba(255, 255, 255, 0.76);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        border-radius: 26px;
+        box-shadow: 0 16px 38px rgba(15, 23, 42, 0.06);
+        backdrop-filter: blur(8px);
+    }
+
+    .profile-sidebar {
+        padding: 28px 22px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .avatar-panel {
+        margin-bottom: 18px;
+    }
+
+    .avatar-frame {
+        width: 158px;
+        height: 158px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 5px solid rgba(148, 163, 184, 0.2);
+        background: linear-gradient(135deg, #e2e8f0, #f8fafc);
+        box-shadow: 0 18px 30px rgba(37, 99, 235, 0.12);
+    }
+
+    .avatar-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .avatar-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        color: #64748b;
+        background: linear-gradient(135deg, #e2e8f0, #f8fafc);
+    }
+
+    .profile-name {
+        margin: 0 0 8px;
+        font-size: 1.7rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .profile-role {
+        margin-bottom: 18px;
+        font-weight: 600;
+        color: #475569;
+    }
+
+    .mini-stats {
+        width: 100%;
+        display: grid;
+        gap: 12px;
+    }
+
+    .mini-stat {
+        padding: 12px 14px;
+        border-radius: 16px;
+        background: linear-gradient(180deg, #f8fbff 0%, #eef6ff 100%);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        text-align: left;
+    }
+
+    .mini-stat-label {
+        display: block;
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #64748b;
+        font-weight: 700;
+    }
+
+    .mini-stat-value {
+        display: block;
+        margin-top: 6px;
+        font-size: 1.04rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .profile-panel {
+        padding: 28px 28px 30px;
+    }
+
+    .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .panel-header h3 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .header-dot {
+        width: 10px;
+        height: 10px;
+        background: #22c55e;
+        border-radius: 50%;
+        box-shadow: 0 0 0 8px rgba(34, 197, 94, 0.12);
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 16px 18px;
+        border-radius: 16px;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+    }
+
+    .info-item strong {
+        font-size: 0.74rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #64748b;
+    }
+
+    .info-item span {
+        color: #0f172a;
+        font-weight: 600;
+        line-height: 1.6;
+    }
+
+    .profile-actions {
+        display: flex;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 28px;
+    }
+
+    .btn-primary {
+        border: none;
+        border-radius: 12px;
+        padding: 12px 20px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        box-shadow: 0 12px 22px rgba(37, 99, 235, 0.2);
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    }
+
+    .btn-outline-danger {
+        border-radius: 12px;
+        padding: 12px 18px;
+        font-weight: 700;
+    }
+
+    .notification-panel {
+        max-width: 1200px;
+        margin: 26px auto 0;
+        padding: 24px 26px;
+    }
+
+    .notification-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+
+    .notification-header h4 {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .badge-danger {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 28px;
+        height: 28px;
+        padding: 0 8px;
+        border-radius: 999px;
+        font-size: 0.77rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: #fff;
+    }
+
+    .notification-list {
+        display: grid;
+        gap: 12px;
+    }
+
+    .notification-item {
+        padding: 16px 18px;
+        border-radius: 16px;
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    }
+
+    .notification-item.unread {
+        border-left: 4px solid #3b82f6;
+        background: linear-gradient(90deg, rgba(59, 130, 246, 0.08), #ffffff 20%);
+    }
+
+    .notification-item h6 {
+        margin: 0 0 8px;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .notification-item p {
+        margin: 0 0 8px;
+        color: #475569;
+        line-height: 1.6;
+    }
+
+    .notification-item small {
+        color: #64748b;
+        font-weight: 600;
+    }
+
+    @media (max-width: 991.98px) {
+        .profile-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        .profile-topbar,
+        .profile-panel,
+        .notification-panel {
+            padding-left: 18px;
+            padding-right: 18px;
+        }
+
+        .profile-topbar {
+            border-radius: 18px;
+            flex-wrap: wrap;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .profile-actions {
+            justify-content: stretch;
+        }
+
+        .profile-actions > * {
+            flex: 1 1 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container profile-shell">
+    <div class="profile-topbar">
+        <h2>My Profile</h2>
+        <span class="profile-badge"><i class="bi bi-person-check"></i> Account</span>
+    </div>
+
+    <div class="profile-layout">
+        <aside class="profile-sidebar">
+            <div class="avatar-panel">
+                {% if request.user.profile.profile_image %}
+                    <div class="avatar-frame">
+                        <img src="{{ request.user.profile.profile_image.url }}" alt="Profile Image">
+                    </div>
+                {% else %}
+                    <div class="avatar-frame">
+                        <div class="avatar-placeholder"><i class="bi bi-person-fill"></i></div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <h3 class="profile-name">{{ request.user.get_full_name|default:request.user.username }}</h3>
+            <div class="profile-role">Volunteer Member</div>
+
+            <div class="mini-stats">
+                <div class="mini-stat">
+                    <span class="mini-stat-label">Username</span>
+                    <span class="mini-stat-value">{{ request.user.username }}</span>
+                </div>
+                <div class="mini-stat">
+                    <span class="mini-stat-label">Volunteer ID</span>
+                    <span class="mini-stat-value">{{ request.user.volunteer_id }}</span>
+                </div>
+            </div>
+        </aside>
+
+        <section class="profile-panel">
+            <div class="panel-header">
+                <h3>Personal Information</h3>
+                <span class="header-dot" aria-label="Profile online"></span>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <strong>First Name</strong>
+                    <span>{{ request.user.first_name|default:'Not provided' }}</span>
+                </div>
+                <div class="info-item">
+                    <strong>Last Name</strong>
+                    <span>{{ request.user.last_name|default:'Not provided' }}</span>
+                </div>
+                <div class="info-item">
+                    <strong>Email</strong>
+                    <span>{{ request.user.email|default:'Not provided' }}</span>
+                </div>
+                <div class="info-item">
+                    <strong>Phone</strong>
+                    <span>{{ request.user.profile.phone|default:'Not provided' }}</span>
+                </div>
+                <div class="info-item">
+                    <strong>Date of Birth</strong>
+                    <span>{{ request.user.profile.date_of_birth|default:'Not provided' }}</span>
+                </div>
+                <div class="info-item">
+                    <strong>Gender</strong>
+                    <span>{{ request.user.profile.gender|default:'Not provided' }}</span>
+                </div>
+                <div class="info-item" style="grid-column: 1 / -1;">
+                    <strong>Address</strong>
+                    <span>{{ request.user.profile.address|default:'No address added yet.' }}</span>
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Profile</a>
+                <a href="{% url 'my_missing_complaints' %}" class="btn btn-outline-danger">My Missing Complaints</a>
+            </div>
+        </section>
+    </div>
+
+    <section class="notification-panel">
+        <div class="notification-header">
+            <h4>Notifications</h4>
+            {% if unread_count %}
+                <span class="badge-danger">{{ unread_count }}</span>
+            {% endif %}
+        </div>
+
+        <div class="notification-list">
+
+    {% for notification in notifications %}
+
+        <div class="notification-item {% if not notification.is_read %}unread{% endif %}">
+
+            <h6>
+                {{ notification.title }}
+            </h6>
+
+            <p>
+                {{ notification.message }}
+            </p>
+
+            {% if notification.patient %}
+
+                <div class="patient-info mt-2">
+
+                    <div>
+                        <strong>Patient ID:</strong>
+                        {{ notification.patient.patient_id }}
+                    </div>
+
+                    <div>
+                        <strong>Patient Name:</strong>
+                        {{ notification.patient.name }}
+                    </div>
+
+                    <a href="{% url 'patient_detail' notification.patient.id %}"
+                       class="btn btn-sm btn-outline-primary mt-2">
+                        View Patient
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+            <small>
+                {{ notification.created_at|timesince }} ago
+            </small>
+
+        </div>
+
+    {% empty %}
+
+        <div class="notification-item">
+            <p class="mb-0 text-muted">
+                No notifications yet.
+            </p>
+        </div>
+
+    {% endfor %}
+
+</div>
+    </section>
+</div>
+{% endblock %}

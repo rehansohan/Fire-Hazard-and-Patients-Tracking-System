@@ -1,0 +1,353 @@
+{% extends 'base.html' %}
+
+{% block extra_head %}
+<style>
+    body {
+        background: linear-gradient(180deg, #f4f8ff 0%, #f8fafc 100%);
+    }
+
+    .profile-edit-shell {
+        padding: 32px 0 60px;
+    }
+
+    .profile-edit-wrap {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 320px minmax(0, 1fr);
+        gap: 26px;
+    }
+
+    .profile-summary,
+    .profile-form-panel {
+        background: rgba(255, 255, 255, 0.76);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        border-radius: 26px;
+        box-shadow: 0 16px 38px rgba(15, 23, 42, 0.06);
+    }
+
+    .profile-summary {
+        padding: 28px 22px;
+        text-align: center;
+    }
+
+    .avatar-panel {
+        margin-bottom: 18px;
+    }
+
+    .avatar-frame {
+        width: 160px;
+        height: 160px;
+        margin: 0 auto;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 5px solid rgba(148, 163, 184, 0.2);
+        background: linear-gradient(135deg, #e2e8f0, #f8fafc);
+        box-shadow: 0 18px 32px rgba(37, 99, 235, 0.12);
+    }
+
+    .avatar-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .avatar-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        color: #64748b;
+        background: linear-gradient(135deg, #e2e8f0, #f8fafc);
+    }
+
+    .summary-name {
+        margin: 0 0 8px;
+        font-size: 1.7rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .summary-role {
+        margin-bottom: 18px;
+        font-weight: 600;
+        color: #475569;
+    }
+
+    .summary-meta {
+        width: 100%;
+        display: grid;
+        gap: 12px;
+    }
+
+    .meta-box {
+        padding: 12px 14px;
+        text-align: left;
+        border-radius: 16px;
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        background: linear-gradient(180deg, #f8fbff 0%, #eef6ff 100%);
+    }
+
+    .meta-label {
+        display: block;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #64748b;
+    }
+
+    .meta-value {
+        display: block;
+        margin-top: 6px;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .profile-form-panel {
+        padding: 28px 28px 30px;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 22px;
+        flex-wrap: wrap;
+    }
+
+    .section-header h3 {
+        margin: 0;
+        font-size: clamp(1.8rem, 2vw, 2.2rem);
+        font-weight: 800;
+        letter-spacing: -0.05em;
+        color: #0f172a;
+    }
+
+    .header-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 14px;
+        border-radius: 999px;
+        background: rgba(37, 99, 235, 0.08);
+        color: #1d4ed8;
+        border: 1px solid rgba(37, 99, 235, 0.15);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .field-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .form-block {
+        margin-bottom: 18px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        color: #334155;
+        font-weight: 700;
+        font-size: 0.82rem;
+    }
+
+    .form-control,
+    textarea,
+    input[type="file"] {
+        width: 100%;
+        border-radius: 14px;
+        border: 1px solid #dfe7f1;
+        background: #f8fafc;
+        padding: 12px 14px;
+        min-height: 48px;
+        color: #0f172a;
+        transition: all 0.2s ease;
+    }
+
+    .form-control:focus,
+    textarea:focus,
+    input[type="file"]:focus {
+        border-color: #93c5fd;
+        background: #fff;
+        box-shadow: none;
+        outline: none;
+    }
+
+    textarea.form-control {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .form-error {
+        margin-top: 8px;
+        color: #dc2626;
+        font-size: 0.82rem;
+    }
+
+    .action-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 24px;
+    }
+
+    .btn-primary {
+        border: none;
+        border-radius: 12px;
+        padding: 12px 20px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        box-shadow: 0 12px 22px rgba(37, 99, 235, 0.2);
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    }
+
+    .btn-secondary {
+        border-radius: 12px;
+        padding: 12px 20px;
+        font-weight: 700;
+        border: none;
+        background: #e2e8f0;
+        color: #0f172a;
+    }
+
+    @media (max-width: 991.98px) {
+        .profile-edit-wrap {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        .profile-edit-shell {
+            padding-top: 24px;
+        }
+
+        .profile-summary,
+        .profile-form-panel {
+            border-radius: 20px;
+        }
+
+        .profile-summary,
+        .profile-form-panel {
+            padding-left: 18px;
+            padding-right: 18px;
+        }
+
+        .field-row {
+            grid-template-columns: 1fr;
+        }
+
+        .action-row {
+            justify-content: stretch;
+        }
+
+        .action-row > * {
+            flex: 1 1 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container profile-edit-shell">
+    <div class="profile-edit-wrap">
+        <aside class="profile-summary">
+            <div class="avatar-panel">
+                {% if request.user.profile.profile_image %}
+                    <div class="avatar-frame">
+                        <img src="{{ request.user.profile.profile_image.url }}" alt="Profile image">
+                    </div>
+                {% else %}
+                    <div class="avatar-frame">
+                        <div class="avatar-placeholder"><i class="bi bi-person-fill"></i></div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <h3 class="summary-name">{{ request.user.get_full_name|default:request.user.username }}</h3>
+            <div class="summary-role">Volunteer Profile</div>
+
+            <div class="summary-meta">
+                <div class="meta-box">
+                    <span class="meta-label">Username</span>
+                    <span class="meta-value">{{ request.user.username }}</span>
+                </div>
+                <div class="meta-box">
+                    <span class="meta-label">Email</span>
+                    <span class="meta-value">{{ request.user.email }}</span>
+                </div>
+                <div class="meta-box">
+                    <span class="meta-label">Joined</span>
+                    <span class="meta-value">{{ request.user.date_joined|date:'M d, Y' }}</span>
+                </div>
+            </div>
+        </aside>
+
+        <section class="profile-form-panel">
+            <div class="section-header">
+                <h3>Edit Profile</h3>
+                <span class="header-pill"><i class="bi bi-person-gear"></i> Account</span>
+            </div>
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger mb-4">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <div class="form-block">
+                    <label class="form-label">Profile Image</label>
+                    {{ form.profile_image }}
+                    {% if form.profile_image.errors %}
+                        <div class="form-error">{{ form.profile_image.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="field-row">
+                    <div class="form-block">
+                        <label class="form-label">Phone Number</label>
+                        {{ form.phone }}
+                        {% if form.phone.errors %}
+                            <div class="form-error">{{ form.phone.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-block">
+                        <label class="form-label">Email</label>
+                        <input class="form-control" value="{{ request.user.email }}" readonly>
+                    </div>
+                </div>
+
+                <div class="form-block">
+                    <label class="form-label">Address</label>
+                    {{ form.address }}
+                    {% if form.address.errors %}
+                        <div class="form-error">{{ form.address.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="action-row">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <a href="{% url 'profile' %}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,393 @@
+{% extends "base.html" %}
+
+{% block title %}AI Match Dashboard{% endblock %}
+
+{% block extra_head %}
+<style>
+    body {
+        background: linear-gradient(180deg, #eef6ff 0%, #f8fafc 100%);
+    }
+
+    .ai-match-page {
+        padding: 30px 0 50px;
+    }
+
+    .ai-hero {
+        background: linear-gradient(135deg, #0f172a 0%, #123b68 48%, #2563eb 100%);
+        border-radius: 28px;
+        padding: 28px 28px 24px;
+        color: #fff;
+        box-shadow: 0 24px 48px rgba(15, 23, 42, 0.14);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ai-hero::after {
+        content: "";
+        position: absolute;
+        right: -70px;
+        bottom: -90px;
+        width: 260px;
+        height: 260px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.08);
+    }
+
+    .eyebrow {
+        display: inline-block;
+        position: relative;
+        z-index: 1;
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.18);
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+
+    .ai-title {
+        position: relative;
+        z-index: 1;
+        margin-top: 18px;
+        margin-bottom: 6px;
+        font-size: clamp(2rem, 4vw, 2.8rem);
+        font-weight: 800;
+        letter-spacing: -0.05em;
+    }
+
+    .ai-subtitle {
+        position: relative;
+        z-index: 1;
+        margin: 0;
+        color: rgba(255,255,255,0.8);
+        font-size: 1rem;
+    }
+
+    .summary-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 22px;
+    }
+
+    .summary-box {
+        position: relative;
+        z-index: 1;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 18px;
+        padding: 16px 18px;
+    }
+
+    .summary-box .label {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+
+    .summary-box .value {
+        margin-top: 8px;
+        font-size: 1.8rem;
+        font-weight: 800;
+        line-height: 1;
+    }
+
+    .panel {
+        margin-top: 24px;
+        background: rgba(255,255,255,0.8);
+        border: 1px solid rgba(148,163,184,0.18);
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 16px 30px rgba(15,23,42,0.04);
+    }
+
+    .panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 22px 16px;
+        border-bottom: 1px solid rgba(148,163,184,0.12);
+        background: rgba(248,250,252,0.8);
+    }
+
+    .panel-header h3 {
+        margin: 0;
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .patient-pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: #dbeafe;
+        color: #1d4ed8;
+        font-size: 0.74rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    .panel-body {
+        padding: 18px 22px 24px;
+    }
+
+    .match-table-wrap {
+        overflow: hidden;
+        border: 1px solid rgba(148,163,184,0.14);
+        border-radius: 18px;
+    }
+
+    .match-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+    }
+
+    .match-table thead th {
+        background: #f8fafc;
+        color: #475569;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 700;
+        text-align: left;
+        padding: 14px 16px;
+        border-bottom: 1px solid rgba(148,163,184,0.12);
+    }
+
+    .match-table tbody td {
+        padding: 16px;
+        border-bottom: 1px solid rgba(148,163,184,0.10);
+        color: #1f2937;
+        vertical-align: middle;
+    }
+
+    .match-table tbody tr:hover {
+        background: rgba(239,246,255,0.38);
+    }
+
+    .rank-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        background: #eff6ff;
+        color: #1d4ed8;
+        font-weight: 800;
+    }
+
+    .match-name {
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .score {
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .confidence-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 7px 10px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+    }
+
+    .confidence-badge.high {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .confidence-badge.medium {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .confidence-badge.low {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .verified {
+        color: #15803d;
+        font-size: 1.35rem;
+        font-weight: 800;
+    }
+
+    .not-verified {
+        color: #dc2626;
+        font-size: 1.35rem;
+        font-weight: 800;
+    }
+
+    .action-group {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .action-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 12px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-size: 0.78rem;
+        font-weight: 700;
+        transition: all 0.2s ease;
+    }
+
+    .action-link.confirm {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .action-link.reject {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .action-link:hover {
+        text-decoration: none;
+        transform: translateY(-1px);
+    }
+
+    .empty-state {
+        padding: 30px 18px;
+        text-align: center;
+        color: #64748b;
+        font-weight: 600;
+    }
+
+    @media (max-width: 767.98px) {
+        .summary-row {
+            grid-template-columns: 1fr;
+        }
+
+        .match-table-wrap {
+            overflow-x: auto;
+        }
+
+        .match-table {
+            min-width: 700px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container ai-match-page">
+    <section class="ai-hero">
+        <div class="eyebrow">AI Match Analysis</div>
+        <h1 class="ai-title">{{ patient.name }}</h1>
+        <p class="ai-subtitle">Candidate similarity results for matching missing-person reports and patient records.</p>
+
+        <div class="summary-row">
+            <div class="summary-box">
+                <div class="label">Total Matches</div>
+                <div class="value">{{ matches|length }}</div>
+            </div>
+            <div class="summary-box">
+                <div class="label">Top Score</div>
+                <div class="value">
+                    {% if matches %}
+                        {% with best=matches|first %}
+                            {{ best.similarity_score }}%
+                        {% endwith %}
+                    {% else %}
+                        0%
+                    {% endif %}
+                </div>
+            </div>
+            <div class="summary-box">
+                <div class="label">Face Verified</div>
+                <div class="value">
+                    {% with verified_count=0 %}{% endwith %}
+                    {% for match in matches %}
+                        {% if match.face_verified %}{% with verified_count=verified_count|add:1 %}{% endwith %}{% endif %}
+                    {% endfor %}
+                    {% if matches %}
+                        {{ matches|length }}
+                    {% else %}
+                        0
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="panel">
+        <div class="panel-header">
+            <h3>Match results</h3>
+            <span class="patient-pill">{{ patient.name }}</span>
+        </div>
+
+        <div class="panel-body">
+            {% if matches %}
+                <div class="match-table-wrap">
+                    <table class="match-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Missing Person</th>
+                                <th>Score</th>
+                                <th>Confidence</th>
+                                <th>Face</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for match in matches %}
+                            <tr>
+                                <td><span class="rank-badge">{{ forloop.counter }}</span></td>
+                                <td class="match-name">{{ match.complaint.missing_person_name }}</td>
+                                <td class="score">{{ match.similarity_score }}%</td>
+                                <td>
+                                    {% if match.similarity_score >= 90 %}
+                                        <span class="confidence-badge high">Very High</span>
+                                    {% elif match.similarity_score >= 70 %}
+                                        <span class="confidence-badge medium">High</span>
+                                    {% elif match.similarity_score >= 50 %}
+                                        <span class="confidence-badge medium">Medium</span>
+                                    {% else %}
+                                        <span class="confidence-badge low">Low</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if match.face_verified %}
+                                        <span class="verified">✓</span>
+                                    {% else %}
+                                        <span class="not-verified">✕</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="action-group">
+                                        <a href="#" class="action-link confirm">Confirm</a>
+                                        <a href="#" class="action-link reject">Reject</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty-state">No AI matches were found for this patient yet.</div>
+            {% endif %}
+        </div>
+    </section>
+</div>
+{% endblock %}

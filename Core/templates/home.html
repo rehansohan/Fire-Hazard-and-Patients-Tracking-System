@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FHPTS - Fire Hazard & Patient Tracking System</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        /* Bangladesh Fire Service Portal Theme */
+        :root {
+            --bd-red: #dc3545;
+            --bd-dark-red: #c82333;
+            --bd-green: #006a4e;
+            --bd-gold: #f42a41;
+            --govt-blue: #1e3a8a;
+            --govt-gray: #f8f9fa;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        /* Top Government Header */
+        .govt-header {
+            background: linear-gradient(to right, #006a4e 0%, #006a4e 33%, var(--bd-red) 33%, var(--bd-red) 66%, #006a4e 66%, #006a4e 100%);
+            padding: 3px 0;
+        }
+        
+        .main-header {
+            background: linear-gradient(135deg, #c82333 0%, #dc3545 100%);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .main-header .emblem {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .main-header .emblem i {
+            font-size: 2.5rem;
+            color: var(--bd-red);
+        }
+        
+        .main-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .main-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+            opacity: 0.95;
+        }
+        
+        .main-header .subtitle {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+        
+        .navbar-custom {
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-bottom: 3px solid var(--bd-red);
+        }
+        
+        .navbar-custom .nav-link {
+            color: #333;
+            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .navbar-custom .nav-link:hover {
+            color: var(--bd-red);
+            border-bottom: 3px solid var(--bd-red);
+        }
+        
+        .hero-section {
+            background-image: url('https://www.palcon.com.my/wp-content/uploads/2022/06/Fire-Hazard-Awareness-in-Malaysia-Why-Is-It-Important-scaled.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            color: white;
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-section {
+                background-attachment: scroll;
+            }
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-badge {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.3);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .emergency-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-left: 5px solid var(--bd-red);
+        }
+        
+        .emergency-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--bd-red);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, var(--bd-red) 0%, var(--bd-dark-red) 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+        }
+        
+        .feature-card {
+            transition: all 0.3s ease;
+            border: 2px solid #e9ecef;
+            height: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(220, 53, 69, 0.2);
+            border-color: var(--bd-red);
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .stats-section {
+            background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+            border-top: 4px solid var(--bd-red);
+            border-bottom: 4px solid var(--bd-red);
+        }
+        
+        .stat-box {
+            text-align: center;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-box:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--bd-red);
+            display: block;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            color: #495057;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .about-section {
+            background-color: #ffffff;
+        }
+        
+        .section-title {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--bd-red), var(--bd-dark-red));
+            border-radius: 2px;
+        }
+        
+        .cta-section {
+            background: linear-gradient(135deg, #c82333 0%, #dc3545 100%);
+            color: white;
+            padding: 5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.05" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path></svg>') no-repeat top;
+            background-size: cover;
+        }
+        
+        .btn-govt {
+            background: white;
+            color: var(--bd-red);
+            font-weight: 700;
+            padding: 1rem 2.5rem;
+            border-radius: 5px;
+            border: 2px solid white;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-govt:hover {
+            background: transparent;
+            color: white;
+            border-color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .btn-outline-govt {
+            color: white;
+            border: 2px solid white;
+            font-weight: 700;
+            padding: 1rem 2.5rem;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-govt:hover {
+            background: white;
+            color: var(--bd-red);
+            transform: translateY(-2px);
+        }
+        
+        .service-badge {
+            background: var(--bd-red);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        .govt-footer {
+            background: #212529;
+            color: white;
+            border-top: 4px solid var(--bd-red);
+        }
+        
+        .quick-link {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            padding: 0.3rem 0;
+        }
+        
+        .quick-link:hover {
+            color: white;
+            padding-left: 10px;
+        }
+        
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-15px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-7px);
+            }
+        }
+        
+        .officer-portal-btn {
+            background: var(--bd-red);
+            color: white;
+            border: 2px solid var(--bd-red);
+            padding: 0.6rem 1.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+        
+        .officer-portal-btn:hover {
+            background: white;
+            color: var(--bd-red);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Government Top Header -->
+    <div class="govt-header"></div>
+
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-2 text-center mb-3 mb-md-0">
+                    <div class="emblem">
+                        <i class="fas fa-fire-extinguisher"></i>
+                    </div>
+                </div>
+                <div class="col-md-8 text-center">
+                    <h2></h2>
+                    <h1>Fire Hazard & Patient Tracking System</h1>
+                    <p class="subtitle mb-0">
+                        <i class="fas fa-fire me-2"></i>Fire Service & Civil Defence
+                        <span class="mx-2">|</span>
+                        <i class="fas fa-hospital me-2"></i>Health Services Directorate
+                    </p>
+                </div>
+                <div class="col-md-2 text-center">
+                    <div class="emblem">
+                        <i class="fas fa-hospital"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-danger" href="home.html">
+                <i class="fas fa-home me-2"></i>FHPTS Portal
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">
+                            <i class="fas fa-home me-1"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'Hazard_report' %}">
+                            <i class="fas fa-home me-1"></i>Report Hazard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'Active_hazard' %}">
+                            <i class="fas fa-fire me-1"></i>Active Hazards
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'hospital_list' %}">
+                            <i class="fas fa-home me-1"></i>Hospital
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'admin_dashboard' %}">
+                            <i class="fas fa-home me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">
+                            <i class="fas fa-phone me-1"></i>Contact
+                        </a>
+                    </li>
+
+{% if user.is_authenticated %}
+
+
+<a class="btn btn-danger ms-3" href="{% url 'logout' %}">
+    <i class="fas fa-sign-out-alt me-2"></i>Logout
+</a>
+<a class="btn btn-danger ms-3" href="{% url 'profile' %}">
+    <i class="fas fa-sign-out-alt me-2"></i>Profile
+</a>
+
+
+
+{% else %}
+
+<li class="nav-item">
+    <a class="btn officer-portal-btn ms-3" href="{% url 'login' %}">
+        <i class="fas fa-user-shield me-2"></i>Login
+    </a>
+</li>
+
+<li class="nav-item">
+    <a class="btn btn-outline-danger ms-2" href="{% url 'register' %}">
+        <i class="fas fa-user-plus me-2"></i>Register
+    </a>
+</li>
+
+{% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="home">
+        <div class="container">
+            <div class="row align-items-center hero-content">
+                <div class="col-lg-7">
+                    
+                    <h1 class="display-3 fw-bold mb-4">
+                        Fire Hazard & Patient Tracking System
+                    </h1>
+                    <p class="lead fs-4 mb-4">
+                        A unified digital platform for emergency response coordination, fire hazard management, 
+                        and real-time patient tracking across Bangladesh.
+                    </p>
+                    <div class="d-flex gap-3 flex-wrap mb-4">
+                        <a href="" class="btn btn-govt btn-lg">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Report Fire Hazard
+                        </a>
+                        <a href="" class="btn btn-outline-govt btn-lg">
+                            <i class="fas fa-user-shield me-2"></i>Officer Portal
+                        </a>
+                    </div>
+                    <div class="alert alert-light d-inline-block">
+                        <i class="fas fa-info-circle text-danger me-2"></i>
+                        <strong>Public Notice:</strong> For life-threatening emergencies, call <strong class="text-danger">999</strong> immediately
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="emergency-card">
+                        <div class="text-center mb-3">
+                            <div class="service-badge">
+                                <i class="fas fa-phone-volume me-2"></i>EMERGENCY HOTLINE
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <div class="emergency-number">999</div>
+                            <p class="text-dark fw-bold mb-3">Fire Service & Civil Defence</p>
+                        </div>
+                        <hr>
+                        <div class="row text-center">
+                            <div class="col-6 mb-2">
+                                <i class="fas fa-phone text-danger fs-3"></i>
+                                <p class="mb-0 mt-2 fw-bold text-dark">Fire Emergency</p>
+                                <small class="text-muted">24/7 Available</small>
+                            </div>
+                            <div class="col-6 mb-2">
+                                <i class="fas fa-ambulance text-danger fs-3"></i>
+                                <p class="mb-0 mt-2 fw-bold text-dark">Ambulance</p>
+                                <small class="text-muted">Rapid Response</small>
+                            </div>
+                        </div>
+                        <div class="mt-3 text-center">
+                            <a href="tel:999" class="btn btn-danger btn-lg w-100">
+                                <i class="fas fa-phone-alt me-2"></i>Call Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down fa-2x text-white opacity-75"></i>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-6">
+                    <div class="stat-box">
+                        <span class="stat-number">
+                            <i class="fas fa-building"></i> 1
+                        </span>
+                        <span class="stat-label">Districts Covered</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-6">
+                    <div class="stat-box">
+                        <span class="stat-number">
+                            <i class="fas fa-hospital"></i> 6
+                        </span>
+                        <span class="stat-label">Registered Hospitals</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-6">
+                    <div class="stat-box">
+                        <span class="stat-number">
+                            <i class="fas fa-fire-extinguisher"></i> 5
+                        </span>
+                        <span class="stat-label">Fire Stations</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-6">
+                    <div class="stat-box">
+                        <span class="stat-number" id="activeHazardsCount">
+                            <i class="fas fa-exclamation-triangle"></i> <span class="count-value">0</span>
+                        </span>
+                        <span class="stat-label">Active Hazards</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+    <!-- About Section -->
+    <section class="about-section py-5 bg-light" id="about">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold section-title">About FHPTS</h2>
+                <p class="lead text-muted">Digital initiative for emergency response modernization</p>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <div class="card border-danger shadow-lg h-100">
+                        <div class="card-header bg-danger text-white">
+                            <h4 class="mb-0">
+                                <i class="fas fa-info-circle me-2"></i>About the Platform
+                            </h4>
+                        </div>
+                        <div class="card-body p-4">
+                            <p class="mb-3">
+                                The Fire Hazard & Patient Tracking System (FHPTS) is a comprehensive digital platform 
+                                designed for emergency response coordination, fire hazard management, and patient tracking across Bangladesh.
+                            </p>
+                            <p class="mb-3">
+                                <i class="fas fa-check-circle text-danger me-2"></i>
+                                <strong>Public Access:</strong> Anyone can report fire hazards and emergencies
+                            </p>
+                            <p class="mb-3">
+                                <i class="fas fa-check-circle text-danger me-2"></i>
+                                <strong>Inter-Agency Coordination:</strong> Fire Service, Hospitals, and Authorities
+                            </p>
+                            <p class="mb-3">
+                                <i class="fas fa-check-circle text-danger me-2"></i>
+                                <strong>24/7 Operations:</strong> Round-the-clock emergency response
+                            </p>
+                            <p class="mb-3">
+                                <i class="fas fa-check-circle text-danger me-2"></i>
+                                <strong>Real-time Tracking:</strong> Monitor incidents and patient status instantly
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-lg">
+                        <div class="card-header bg-white border-bottom">
+                            <h4 class="mb-0 text-danger">
+                                <i class="fas fa-users-cog me-2"></i>Portal Access Roles
+                            </h4>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="mb-3 p-3 border-start border-danger border-4 bg-light">
+                                <h5 class="text-danger mb-1">
+                                    <i class="fas fa-user-shield me-2"></i>System Administrator
+                                </h5>
+                                <p class="mb-0 text-muted">Full system control, hospital registration, authority management</p>
+                            </div>
+                            <div class="mb-3 p-3 border-start border-primary border-4 bg-light">
+                                <h5 class="text-primary mb-1">
+                                    <i class="fas fa-hospital me-2"></i>Hospital Authority
+                                </h5>
+                                <p class="mb-0 text-muted">Patient management, staff coordination, emergency records</p>
+                            </div>
+                            <div class="mb-3 p-3 border-start border-danger border-4 bg-light">
+                                <h5 class="text-danger mb-1">
+                                    <i class="fas fa-fire-extinguisher me-2"></i>Fire Service Officer
+                                </h5>
+                                <p class="mb-0 text-muted">Hazard monitoring, response coordination, incident management</p>
+                            </div>
+                            <div class="p-3 border-start border-success border-4 bg-light">
+                                <h5 class="text-success mb-1">
+                                    <i class="fas fa-user-md me-2"></i>Medical Staff
+                                </h5>
+                                <p class="mb-0 text-muted">Patient updates, admission records, treatment tracking</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="contact">
+        <div class="container text-center">
+            <div class="mb-4">
+                <i class="fas fa-shield-alt fa-4x mb-3 opacity-75"></i>
+            </div>
+            <h2 class="display-4 fw-bold mb-4">Emergency Services Available 24/7</h2>
+            <p class="lead mb-5">
+                For immediate fire emergency or medical assistance, contact our national helpline.
+                Our dedicated team is ready to respond to your emergency.
+            </p>
+            <div class="row justify-content-center mb-4">
+                <div class="col-lg-8">
+                    <div class="card bg-white text-dark shadow-lg">
+                        <div class="card-body p-4">
+                            <div class="row">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <h3 class="text-danger fw-bold mb-2">
+                                        <i class="fas fa-phone-volume me-2"></i>999
+                                    </h3>
+                                    <p class="mb-0">Fire & Civil Defence</p>
+                                    <small class="text-muted">Toll-free nationwide</small>
+                                </div>
+                                <div class="col-md-6">
+                                    <h3 class="text-danger fw-bold mb-2">
+                                        <i class="fas fa-ambulance me-2"></i>999
+                                    </h3>
+                                    <p class="mb-0">Emergency Ambulance</p>
+                                    <small class="text-muted">Rapid response service</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="index.html" class="btn btn-govt btn-lg">
+                    <i class="fas fa-sign-in-alt me-2"></i>Officer Portal Login
+                </a>
+                <a href="fire_hazard_report.html" class="btn btn-outline-govt btn-lg">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Report Fire Hazard
+                </a>
+            </div>
+            <div class="mt-5">
+                <p class="mb-2"><strong>Mailing Address:</strong></p>
+                <p class="mb-1">Fire Service & Civil Defence Headquarters</p>
+                <p class="mb-1">Kakrail, Dhaka - 1000, Bangladesh</p>
+                <p><i class="fas fa-envelope me-2"></i>info@fireservice.gov.bd</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="govt-footer py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5 class="mb-3 fw-bold">
+                        <i class="fas fa-fire-extinguisher text-danger me-2"></i>FHPTS
+                    </h5>
+                    <p class="mb-2">Fire Hazard & Patient Tracking System</p>
+                    <p class="text-white-50 small">Government of Bangladesh</p>
+                    <p class="text-white-50 small">Ministry of Disaster Management & Relief</p>
+                    <p class="text-muted small mt-3">© 2026 Bangladesh Fire Service & Civil Defence. All Rights Reserved.</p>
+                </div>
+                <div class="col-lg-2 col-6 mb-3 mb-lg-0">
+                    <h6 class="mb-3 fw-bold">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#home" class="quick-link">Home</a></li>
+                        <li><a href="#services" class="quick-link">Services</a></li>
+                        <li><a href="#about" class="quick-link">About</a></li>
+                        <li><a href="#contact" class="quick-link">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-6 mb-3 mb-lg-0">
+                    <h6 class="mb-3 fw-bold">Portals</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="index.html" class="quick-link">Officer Login</a></li>
+                        <li><a href="register.html" class="quick-link">Officer Registration</a></li>
+                        <li><a href="fire_hazard_report.html" class="quick-link">Report Hazard</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h6 class="mb-3 fw-bold">Emergency Hotline</h6>
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-danger rounded-circle p-3 me-3">
+                            <i class="fas fa-phone-alt fa-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="mb-0 fw-bold text-danger">999</h4>
+                            <small class="text-white-50">24/7 Emergency Response</small>
+                        </div>
+                    </div>
+                    <p class="mb-1 small">
+                        <i class="fas fa-envelope me-2"></i>info@fireservice.gov.bd
+                    </p>
+                    <p class="mb-1 small">
+                        <i class="fas fa-map-marker-alt me-2"></i>Kakrail, Dhaka - 1000
+                    </p>
+                </div>
+            </div>
+            <hr class="my-4 bg-white opacity-25">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="mb-0 small text-white-50">
+                        Developed and maintained by ICT Division | 
+                        <a href="#" class="text-white-50 text-decoration-none">Privacy Policy</a> | 
+                        <a href="#" class="text-white-50 text-decoration-none">Terms of Service</a> | 
+                        <a href="#" class="text-white-50 text-decoration-none">Sitemap</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
+    <script>
+        // Active Hazards Data (Simulated - in production this would come from API)
+        let activeHazards = [
+            {
+                id: 'FH-2026-001',
+                location: 'Gulshan Avenue, House #45',
+                district: 'Dhaka',
+                severity: 'High',
+                description: 'Building fire in residential area, 4th floor',
+                reportTime: '2026-02-24 08:30 AM',
+                approvedBy: 'Fire Station Chief - Gulshan',
+                status: 'Active',
+                affectedPeople: 15,
+                emergencyContact: '01712345678'
+            },
+            {
+                id: 'FH-2026-002',
+                location: 'Agrabad Commercial Area',
+                district: 'Chittagong',
+                severity: 'Medium',
+                description: 'Electrical short circuit in commercial building',
+                reportTime: '2026-02-24 09:15 AM',
+                approvedBy: 'Fire Station Officer - Agrabad',
+                status: 'Active',
+                affectedPeople: 8,
+                emergencyContact: '01898765432'
+            },
+            {
+                id: 'FH-2026-003',
+                location: 'Zindabazar Market Complex',
+                district: 'Sylhet',
+                severity: 'Low',
+                description: 'Smoke detected in storage area, contained',
+                reportTime: '2026-02-24 10:00 AM',
+                approvedBy: 'Fire Officer - Sylhet Central',
+                status: 'Active',
+                affectedPeople: 3,
+                emergencyContact: '01756789012'
+            },
+            {
+                id: 'FH-2026-004',
+                location: 'Rajshahi University Campus',
+                district: 'Rajshahi',
+                severity: 'Medium',
+                description: 'Chemical lab fire, evacuation in progress',
+                reportTime: '2026-02-24 11:20 AM',
+                approvedBy: 'Fire Controller - Rajshahi',
+                status: 'Active',
+                affectedPeople: 25,
+                emergencyContact: '01623456789'
+            },
+            {
+                id: 'FH-2026-005',
+                location: 'Shipyard Road Industrial Zone',
+                district: 'Khulna',
+                severity: 'High',
+                description: 'Factory fire with hazardous materials',
+                reportTime: '2026-02-24 12:45 PM',
+                approvedBy: 'District Fire Officer - Khulna',
+                status: 'Active',
+                affectedPeople: 40,
+                emergencyContact: '01534567890'
+            }
+        ];
+
+        // Hospital data by district (same as in script.js)
+        const hospitalsByDistrict = {
+            'Dhaka': [
+                { name: 'Dhaka Medical College Hospital', address: 'Secretariat Road, Dhaka', phone: '02-8626812', distance: '2.5 km' },
+                { name: 'Square Hospital', address: 'Panthapath, Dhaka', phone: '02-8159457', distance: '3.1 km' },
+                { name: 'United Hospital', address: 'Gulshan, Dhaka', phone: '09666-710678', distance: '4.2 km' }
+            ],
+            'Chittagong': [
+                { name: 'Chittagong Medical College Hospital', address: 'K.B. Fazlul Kader Road', phone: '031-2504000', distance: '1.8 km' },
+                { name: 'Chevron Clinical Laboratory', address: 'Agrabad, Chittagong', phone: '031-2511807', distance: '3.5 km' },
+                { name: 'Imperial Hospital', address: 'Nasirabad, Chittagong', phone: '031-2553329', distance: '5.0 km' }
+            ],
+            'Sylhet': [
+                { name: 'Sylhet MAG Osmani Medical College', address: 'Medical College Road', phone: '0821-713844', distance: '2.1 km' },
+                { name: 'Mount Adora Hospital', address: 'Amberkhana, Sylhet', phone: '0821-720344', distance: '3.8 km' },
+                { name: 'Noorjahan Hospital', address: 'Zindabazar, Sylhet', phone: '0821-717324', distance: '4.5 km' }
+            ],
+            'Rajshahi': [
+                { name: 'Rajshahi Medical College Hospital', address: 'Laxmipur, Rajshahi', phone: '0721-772150', distance: '1.5 km' },
+                { name: 'Islami Bank Hospital', address: 'Sapura, Rajshahi', phone: '0721-772204', distance: '3.2 km' },
+                { name: 'Popular Diagnostic Centre', address: 'Shaheb Bazar, Rajshahi', phone: '0721-775533', distance: '2.8 km' }
+            ],
+            'Khulna': [
+                { name: 'Khulna Medical College Hospital', address: 'Medical College Road, Khulna', phone: '041-760300', distance: '2.0 km' },
+                { name: 'Gazi Medical College Hospital', address: 'Nirala, Khulna', phone: '041-730212', distance: '4.1 km' },
+                { name: 'Metro Hospital', address: 'Boyra, Khulna', phone: '041-810999', distance: '3.6 km' }
+            ],
+            'Barisal': [
+                { name: 'Sher-e-Bangla Medical College', address: 'Band Road, Barisal', phone: '0431-2173011', distance: '1.9 km' },
+                { name: 'Barisal Medical Centre', address: 'Sadar Road, Barisal', phone: '0431-2176699', distance: '2.7 km' },
+                { name: 'Delta Medical Centre', address: 'Kashipur, Barisal', phone: '0431-2173888', distance: '3.4 km' }
+            ],
+            'Rangpur': [
+                { name: 'Rangpur Medical College Hospital', address: 'Medical Road, Rangpur', phone: '0521-62213', distance: '1.7 km' },
+                { name: 'City Hospital', address: 'Station Road, Rangpur', phone: '0521-63541', distance: '3.0 km' },
+                { name: 'Parkview Hospital', address: 'Jahaj Company, Rangpur', phone: '0521-52219', distance: '4.3 km' }
+            ],
+            'Mymensingh': [
+                { name: 'Mymensingh Medical College', address: 'Jail Road, Mymensingh', phone: '091-66062', distance: '2.3 km' },
+                { name: 'Community Hospital', address: 'Mashkanda, Mymensingh', phone: '091-66853', distance: '3.9 km' },
+                { name: 'Anwer Khan Medical Centre', address: 'Town Hall, Mymensingh', phone: '091-55444', distance: '2.6 km' }
+            ]
+        };
+
+        // Get nearby hospitals for a district
+        function getNearbyHospitals(district) {
+            return hospitalsByDistrict[district] || [];
+        }
+
+        // Display Hazards Function
+        function displayHazards(hazards) {
+            const hazardsList = document.getElementById('hazardsList');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (hazards.length === 0) {
+                hazardsList.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            let html = '<div class="row g-4">';
+            
+            hazards.forEach(hazard => {
+                let severityClass = '';
+                let severityIcon = '';
+                
+                switch(hazard.severity) {
+                    case 'High':
+                        severityClass = 'danger';
+                        severityIcon = 'fa-fire';
+                        break;
+                    case 'Medium':
+                        severityClass = 'warning';
+                        severityIcon = 'fa-exclamation-triangle';
+                        break;
+                    case 'Low':
+                        severityClass = 'info';
+                        severityIcon = 'fa-info-circle';
+                        break;
+                }
+                
+                // Get nearby hospitals for this hazard
+                const nearbyHospitals = getNearbyHospitals(hazard.district);
+                const hospitalsHTML = nearbyHospitals.slice(0, 2).map(hospital => `
+                    <div class="d-flex align-items-start mb-2 p-2 bg-light rounded">
+                        <i class="fas fa-hospital text-primary me-2 mt-1"></i>
+                        <div class="flex-grow-1">
+                            <small class="fw-bold d-block text-dark">${hospital.name}</small>
+                            <small class="text-muted d-block">
+                                <i class="fas fa-map-marker-alt me-1"></i>${hospital.distance} away | 
+                                <i class="fas fa-phone me-1"></i>${hospital.phone}
+                            </small>
+                        </div>
+                    </div>
+                `).join('');
+                
+                html += `
+                    <div class="col-lg-6 col-md-12 hazard-item" data-district="${hazard.district}" data-severity="${hazard.severity}">
+                        <div class="card border-${severityClass} border-3 shadow-sm h-100">
+                            <div class="card-header bg-${severityClass} text-white d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas ${severityIcon} me-2"></i>
+                                    <strong>${hazard.severity.toUpperCase()} ALERT</strong>
+                                </div>
+                                <span class="badge bg-white text-${severityClass}">${hazard.id}</span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">
+                                    <i class="fas fa-map-marker-alt text-${severityClass} me-2"></i>
+                                    ${hazard.location}
+                                </h5>
+                                <p class="card-text mb-3">${hazard.description}</p>
+                                
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <small class="text-muted d-block">
+                                            <i class="fas fa-map-marked-alt me-1"></i><strong>District:</strong>
+                                        </small>
+                                        <span class="badge bg-secondary">${hazard.district}</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted d-block">
+                                            <i class="fas fa-users me-1"></i><strong>Affected:</strong>
+                                        </small>
+                                        <span class="badge bg-dark">${hazard.affectedPeople} People</span>
+                                    </div>
+                                </div>
+                                
+                                <hr>
+                                
+                                ${nearbyHospitals.length > 0 ? `
+                                <div class="mb-3">
+                                    <h6 class="text-primary mb-2">
+                                        <i class="fas fa-hospital-alt me-2"></i>Nearest Hospitals
+                                    </h6>
+                                    ${hospitalsHTML}
+                                    ${nearbyHospitals.length > 2 ? `
+                                    <small class="text-muted d-block mt-2">
+                                        <i class="fas fa-plus-circle me-1"></i>${nearbyHospitals.length - 2} more hospitals available
+                                    </small>
+                                    ` : ''}
+                                </div>
+                                <hr>
+                                ` : ''}
+                                
+                                <div class="mb-2">
+                                    <small class="text-muted">
+                                        <i class="fas fa-clock me-1"></i><strong>Reported:</strong> ${hazard.reportTime}
+                                    </small>
+                                </div>
+                                <div class="mb-2">
+                                    <small class="text-muted">
+                                        <i class="fas fa-user-shield me-1"></i><strong>Approved By:</strong> ${hazard.approvedBy}
+                                    </small>
+                                </div>
+                                <div class="mb-3">
+                                    <small class="text-muted">
+                                        <i class="fas fa-phone-alt me-1"></i><strong>Contact:</strong> ${hazard.emergencyContact}
+                                    </small>
+                                </div>
+                                
+                                <div class="d-flex gap-2">
+                                    <span class="badge bg-danger">
+                                        <i class="fas fa-circle fa-xs me-1" style="animation: pulse 1.5s infinite;"></i>
+                                        ACTIVE
+                                    </span>
+                                    <span class="badge bg-light text-dark">
+                                        <i class="fas fa-broadcast-tower me-1"></i>
+                                        Live Monitor
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-light">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-danger">
+                                        <i class="fas fa-exclamation-circle me-1"></i>
+                                        Stay away from this area
+                                    </small>
+                                    <a href="tel:999" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-phone me-1"></i>Call 999
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            hazardsList.innerHTML = html;
+            
+            // Update counters
+            updateCounters();
+        }
+
+        // Filter Hazards Function
+        function filterHazards() {
+            const districtFilter = document.getElementById('districtFilter').value;
+            const severityFilter = document.getElementById('severityFilter').value;
+            
+            let filteredHazards = activeHazards.filter(hazard => {
+                let matchDistrict = !districtFilter || hazard.district === districtFilter;
+                let matchSeverity = !severityFilter || hazard.severity === severityFilter;
+                return matchDistrict && matchSeverity;
+            });
+            
+            displayHazards(filteredHazards);
+        }
+
+        // Update Counters
+        function updateCounters() {
+            const activeCount = activeHazards.length;
+            document.querySelector('#activeHazardsCount .count-value').textContent = activeCount;
+            document.getElementById('totalActiveHazards').textContent = activeCount;
+        }
+
+        // Auto Refresh Functionality
+        let refreshInterval;
+        
+        function startAutoRefresh() {
+            refreshInterval = setInterval(() => {
+                console.log('Auto-refreshing hazards data...');
+                // In production, this would fetch from API
+                filterHazards();
+            }, 30000); // 30 seconds
+        }
+
+        function stopAutoRefresh() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        }
+
+        // Auto Refresh Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const autoRefreshToggle = document.getElementById('autoRefresh');
+            if (autoRefreshToggle) {
+                autoRefreshToggle.addEventListener('change', function() {
+                    if (this.checked) {
+                        startAutoRefresh();
+                    } else {
+                        stopAutoRefresh();
+                    }
+                });
+                
+                // Start auto refresh by default
+                if (autoRefreshToggle.checked) {
+                    startAutoRefresh();
+                }
+            }
+            
+            // Initial display
+            displayHazards(activeHazards);
+        });
+
+        // Add pulse animation for active indicator
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.3; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#' && href !== '') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        const offsetTop = target.offsetTop - 120;
+                        window.scrollTo({
+                            top: offsetTop,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+
+        // Navbar shadow on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar-custom');
+            if (window.scrollY > 50) {
+                navbar.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.15)';
+            } else {
+                navbar.style.boxShadow = '0 2px 5px rgba(0, 0, 0, 0.1)';
+            }
+        });
+
+        // Active nav link on scroll
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.navbar-custom .nav-link[href^="#"]');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 150)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Counter animation for stats
+        function animateCounter(element, target, duration) {
+            let current = 0;
+            const increment = target / (duration / 16);
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current);
+                }
+            }, 16);
+        }
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.3,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements
+        document.querySelectorAll('.feature-card, .stat-box').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Emergency call functionality
+        document.querySelectorAll('a[href="tel:999"]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                console.log('Emergency call initiated to 999');
+            });
+        });
+    </script>
+</body>
+</html>

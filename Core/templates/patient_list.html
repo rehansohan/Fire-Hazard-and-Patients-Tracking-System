@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}Patients | Hazard Management System{% endblock %}
+
+{% block content %}
+<section class="hero-panel mb-4">
+    <span class="eyebrow">Patient registry</span>
+    <h1 class="page-title mb-2">All Patients</h1>
+    <p class="page-subtitle mb-0">Browse all registered patients and their linked hazards.</p>
+</section>
+
+<section class="surface-card">
+    <div class="mb-4 row g-3 align-items-center">
+        <div class="col-12 col-lg-6">
+            <label for="patientSearch" class="form-label mb-2">Search patient</label>
+            <div class="position-relative">
+                <input id="patientSearch" type="text" class="form-control" placeholder="Type name or patient ID..." autocomplete="off">
+                <ul id="patientSuggestions" class="list-group position-absolute w-100 d-none" style="z-index:50; top:100%; left:0;"></ul>
+            </div>
+        </div>
+        <div class="col-12 col-lg-6 text-lg-end"><small class="text-muted d-block mt-lg-3">Click a suggestion to jump to the row.</small></div>
+    </div>
+
+    <div class="table-responsive">
+        <table id="patientsTable" class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Patient ID</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>Condition</th>
+                    <th>Hospital</th>
+                    <th>Hazard</th>
+                    <th>Registered</th>
+                    {% if request.user.category == 'admin' %}<th>Actions</th>{% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for patient in patients %}
+                <tr data-search="{% if patient.patient_id %}{{ patient.patient_id }}{% endif %} {{ patient.id }} {{ patient.name }} {{ patient.hospital }} {{ patient.get_condition_display }}">
+                    <td style="width:96px;">
+                        {% if patient.image %}
+                        <img src="{{ patient.image.url }}" alt="{{ patient.name }}" class="rounded-3" style="width:72px; height:72px; object-fit:cover;">
+                        {% else %}
+                        <div class="rounded-3 bg-light border text-center text-muted d-flex align-items-center justify-content-center" style="width:72px; height:72px; font-size:0.75rem;">No image</div>
+                        {% endif %}
+                    </td>
+                    <td class="fw-semibold">
+                        {% if patient.patient_id %}
+                            {{ patient.patient_id }}
+                        {% else %}
+                            #{{ patient.id }}
+                        {% endif %}
+                    </td>
+                    <td>{{ patient.name }}</td>
+                    <td>{{ patient.age }}</td>
+                    <td>{{ patient.gender }}</td>
+                    <td><span class="badge bg-success">{{ patient.get_condition_display }}</span></td>
+                    <td>{{ patient.hospital }}</td>
+                    <td>
+                        {% if patient.hazard %}
+                            <a href="{% url 'hazard_detail' patient.hazard.id %}">{{ patient.hazard.title }}</a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td class="text-muted">{{ patient.created_at|date:"M d, Y H:i" }}</td>
+                    {% if request.user.category == 'admin' %}
+                    <td>
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'edit_patient' patient.id %}" class="btn btn-sm btn-outline-warning">✏️</a>
+                            <a href="{% url 'delete_patient' patient.id %}" class="btn btn-sm btn-outline-danger">🗑️</a>
+                        </div>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="10" class="text-center text-muted py-4">No patients found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    (function(){
+        const input = document.getElementById('patientSearch');
+        const suggestions = document.getElementById('patientSuggestions');
+        const table = document.getElementById('patientsTable');
+        if(!input || !suggestions || !table) return;
+
+        const rows = Array.from(table.querySelectorAll('tbody tr[data-search]')).map(r=>({
+            el: r,
+            text: (r.dataset.search||'').toLowerCase(),
+            name: (r.querySelectorAll('td')[2]||{}).textContent || ''
+        }));
+
+        const clearSuggestions = ()=>{ suggestions.innerHTML=''; suggestions.classList.add('d-none'); };
+
+        const highlightRow = (rowEl)=>{
+            rows.forEach(r=>r.el.classList.remove('table-warning'));
+            rowEl.classList.add('table-warning');
+            rowEl.scrollIntoView({behavior:'smooth',block:'center'});
+            setTimeout(()=>rowEl.classList.remove('table-warning'),2500);
+        };
+
+        input.addEventListener('input', ()=>{
+            const q = input.value.trim().toLowerCase();
+            clearSuggestions();
+            if(!q) return;
+            const matches = rows.filter(r=> r.text.includes(q) || r.name.toLowerCase().includes(q)).slice(0,8);
+            if(matches.length===0) return;
+            matches.forEach(m=>{
+                const li = document.createElement('li');
+                li.className='list-group-item list-group-item-action';
+                li.textContent = (m.name || m.el.dataset.search).trim();
+                li.addEventListener('click', ()=>{ clearSuggestions(); input.value = li.textContent; highlightRow(m.el); });
+                suggestions.appendChild(li);
+            });
+            suggestions.classList.remove('d-none');
+        });
+
+        document.addEventListener('click', (e)=>{ if(!e.target.closest('#patientSuggestions') && e.target !== input) clearSuggestions(); });
+    })();
+</script>
+{% endblock %}

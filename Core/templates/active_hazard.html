@@ -1,0 +1,311 @@
+{% extends 'base.html' %}
+
+{% block title %}Active Hazards | Hazard Management System{% endblock %}
+
+{% block extra_head %}
+<style>
+    body {
+        background: linear-gradient(180deg, #eef6ff 0%, #f8fafc 100%);
+    }
+
+    .hazard-shell {
+        padding: 28px 0 48px;
+    }
+
+    .hazard-hero {
+        background: linear-gradient(135deg, #0f172a 0%, #123b68 42%, #dc2626 100%);
+        border-radius: 28px;
+        padding: 30px 28px;
+        color: #fff;
+        box-shadow: 0 18px 42px rgba(15, 23, 42, 0.14);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hazard-hero::after {
+        content: "";
+        position: absolute;
+        width: 260px;
+        height: 260px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.08);
+        right: -80px;
+        bottom: -100px;
+    }
+
+    .hero-badge {
+        position: relative;
+        z-index: 1;
+        display: inline-flex;
+        align-items: center;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.18);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.9);
+    }
+
+    .page-title {
+        position: relative;
+        z-index: 1;
+        margin-top: 18px;
+        margin-bottom: 12px;
+        font-size: clamp(2.2rem, 4vw, 3rem);
+        font-weight: 800;
+        letter-spacing: -0.05em;
+    }
+
+    .page-subtitle {
+        position: relative;
+        z-index: 1;
+        max-width: 680px;
+        color: rgba(255,255,255,0.82);
+        font-size: 1.02rem;
+        line-height: 1.7;
+        margin: 0;
+    }
+
+    .hero-metric {
+        position: relative;
+        z-index: 1;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.14);
+        border-radius: 20px;
+        padding: 18px 20px;
+        text-align: center;
+        backdrop-filter: blur(8px);
+    }
+
+    .metric-label {
+        color: rgba(255,255,255,0.78);
+        font-size: 0.76rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+
+    .metric-value {
+        margin-top: 10px;
+        font-size: 2.2rem;
+        font-weight: 800;
+        letter-spacing: -0.05em;
+    }
+
+    .table-panel {
+        margin-top: 24px;
+        background: rgba(255,255,255,0.9);
+        border: 1px solid rgba(148,163,184,0.18);
+        border-radius: 24px;
+        box-shadow: 0 14px 32px rgba(15,23,42,0.05);
+        overflow: hidden;
+    }
+
+    .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        padding: 20px 22px 16px;
+        border-bottom: 1px solid rgba(148,163,184,0.15);
+    }
+
+    .table-header h4 {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .table-header small {
+        color: #64748b;
+    }
+
+    .hazard-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+    }
+
+    .hazard-table thead th {
+        background: #f8fafc;
+        color: #475569;
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 14px 16px;
+        border-bottom: 1px solid rgba(148,163,184,0.15);
+    }
+
+    .hazard-table tbody td {
+        padding: 16px;
+        vertical-align: middle;
+        color: #1f2937;
+        border-bottom: 1px solid rgba(148,163,184,0.10);
+    }
+
+    .hazard-table tbody tr:hover {
+        background: rgba(239,246,255,0.45);
+    }
+
+    .severity-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 700;
+    }
+
+    .severity-badge.high { background: #fee2e2; color: #b91c1c; }
+    .severity-badge.medium { background: #fef3c7; color: #b45309; }
+    .severity-badge.low { background: #dcfce7; color: #166534; }
+
+    .details-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 9px 14px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: #fff;
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-decoration: none;
+        box-shadow: 0 8px 18px rgba(220,38,38,0.2);
+    }
+
+    .details-btn:hover {
+        color: #fff;
+        text-decoration: none;
+        box-shadow: 0 10px 20px rgba(220,38,38,0.25);
+    }
+
+    .empty-state {
+        padding: 48px 20px;
+        text-align: center;
+        color: #64748b;
+    }
+
+    .empty-state h5 {
+        margin-top: 16px;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    @media (max-width: 767.98px) {
+        .table-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .hazard-table thead {
+            display: none;
+        }
+
+        .hazard-table tbody,
+        .hazard-table tr,
+        .hazard-table td {
+            display: block;
+            width: 100%;
+        }
+
+        .hazard-table tbody tr {
+            border-bottom: 1px solid rgba(148,163,184,0.12);
+            padding: 8px 0;
+        }
+
+        .hazard-table tbody td {
+            border: none;
+            padding: 8px 16px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container hazard-shell">
+    <section class="hazard-hero">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8">
+                <span class="hero-badge">Response coordination center</span>
+                <h1 class="page-title">Active Hazard <span class="text-warning">Monitoring</span></h1>
+                <p class="page-subtitle">Monitor all ongoing emergency incidents, review hazard details, and coordinate response teams in real time.</p>
+            </div>
+            <div class="col-lg-4">
+                <div class="hero-metric">
+                    <div class="metric-label">Open incidents</div>
+                    <div class="metric-value">{{ hazards|length }}</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="table-panel">
+        <div class="table-header">
+            <div>
+                <h4>Active Hazard List</h4>
+                <small>All unresolved hazards currently under observation.</small>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="hazard-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Severity</th>
+                        <th>Reported Time</th>
+                        <th>Reported By</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for h in hazards %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td><strong>{{ h.title }}</strong></td>
+                        <td>{{ h.description|truncatechars:70 }}</td>
+                        <td>
+                            {% if h.servity == "High" %}
+                                <span class="severity-badge high">{{ h.get_servity_display }}</span>
+                            {% elif h.servity == "Medimu" %}
+                                <span class="severity-badge medium">{{ h.get_servity_display }}</span>
+                            {% else %}
+                                <span class="severity-badge low">{{ h.get_servity_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ h.created_at|date:"d M Y, h:i A" }}</td>
+                        <td>{{ h.user.username }}</td>
+                        <td>
+                            <a href="{% url 'hazard_detail' h.id %}" class="details-btn">
+                                <i class="bi bi-eye-fill"></i>
+                                Details
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <i class="bi bi-shield-check display-4 text-success"></i>
+                                <h5>No Active Hazards</h5>
+                                <p>There are currently no unresolved hazards.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}

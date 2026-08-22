@@ -1,0 +1,409 @@
+{% extends 'base.html' %}
+
+{% block title %}Patient Details{% endblock %}
+
+{% block extra_head %}
+<style>
+    body {
+        background: linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%);
+    }
+
+    .patient-page {
+        padding: 30px 0 50px;
+    }
+
+    .patient-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        margin-bottom: 26px;
+    }
+
+    .patient-header h2 {
+        margin: 0;
+        font-size: clamp(2rem, 4vw, 2.7rem);
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        color: #0f172a;
+    }
+
+    .patient-id {
+        margin-top: 8px;
+        color: #64748b;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.78rem;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: #dbeafe;
+        color: #1d4ed8;
+        font-weight: 700;
+        font-size: 0.8rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    .profile-layout {
+        display: grid;
+        grid-template-columns: 340px 1fr;
+        gap: 24px;
+        align-items: start;
+    }
+
+    .profile-photo-wrap {
+        background: rgba(255,255,255,0.5);
+        border: 1px solid rgba(148,163,184,0.18);
+        border-radius: 26px;
+        padding: 20px;
+    }
+
+    .profile-photo {
+        width: 100%;
+        height: 420px;
+        object-fit: cover;
+        border-radius: 22px;
+        display: block;
+        border: 1px solid rgba(148,163,184,0.2);
+    }
+
+    .photo-placeholder {
+        height: 420px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 22px;
+        background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+        color: #64748b;
+        border: 1px solid rgba(148,163,184,0.2);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+    }
+
+    .info-panel {
+        background: rgba(255,255,255,0.72);
+        border: 1px solid rgba(148,163,184,0.18);
+        border-radius: 26px;
+        padding: 22px 22px 10px;
+    }
+
+    .panel-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 18px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(148,163,184,0.12);
+    }
+
+    .panel-title h3 {
+        margin: 0;
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .detail-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0;
+        border-top: 1px solid rgba(148,163,184,0.12);
+    }
+
+    .detail-row {
+        display: grid;
+        grid-template-columns: 180px 1fr;
+        padding: 14px 0;
+        border-bottom: 1px solid rgba(148,163,184,0.12);
+    }
+
+    .detail-row:nth-child(odd) {
+        padding-right: 18px;
+    }
+
+    .detail-row:nth-child(even) {
+        padding-left: 18px;
+    }
+
+    .detail-label {
+        color: #64748b;
+        font-weight: 700;
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .detail-value {
+        color: #0f172a;
+        font-weight: 600;
+        line-height: 1.6;
+    }
+
+    .detail-value a {
+        color: #1d4ed8;
+        text-decoration: none;
+    }
+
+    .detail-value a:hover {
+        text-decoration: underline;
+    }
+
+    .history-panel {
+        margin-top: 26px;
+        background: rgba(255,255,255,0.72);
+        border: 1px solid rgba(148,163,184,0.18);
+        border-radius: 26px;
+        overflow: hidden;
+    }
+
+    .history-header {
+        padding: 18px 22px;
+        border-bottom: 1px solid rgba(148,163,184,0.12);
+    }
+
+    .history-header h3 {
+        margin: 0;
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .history-body {
+        padding: 20px 22px 8px;
+    }
+
+    .history-table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+    }
+
+    .history-table thead th {
+        background: #f8fafc;
+        color: #475569;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 700;
+        padding: 12px 14px;
+        border-bottom: 1px solid rgba(148,163,184,0.12);
+        text-align: left;
+    }
+
+    .history-table tbody td {
+        padding: 14px;
+        border-bottom: 1px solid rgba(148,163,184,0.10);
+        color: #1f2937;
+    }
+
+    .history-table tbody tr:hover {
+        background: rgba(239,246,255,0.35);
+    }
+
+    .empty-history {
+        padding: 20px 0 8px;
+        color: #64748b;
+        font-weight: 500;
+    }
+
+    .footer-actions {
+        margin-top: 24px;
+    }
+
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 11px 18px;
+        border-radius: 12px;
+        background: #e2e8f0;
+        color: #0f172a;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .back-btn:hover {
+        text-decoration: none;
+        background: #cbd5e1;
+        color: #0f172a;
+    }
+
+    @media (max-width: 900px) {
+        .profile-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .detail-list {
+            grid-template-columns: 1fr;
+        }
+
+        .detail-row {
+            grid-template-columns: 1fr;
+            padding: 12px 0;
+        }
+
+        .detail-row:nth-child(odd),
+        .detail-row:nth-child(even) {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container patient-page">
+    <div class="patient-header">
+        <div>
+            <h2>{{ patient.name }}</h2>
+            <div class="patient-id">{{ patient.patient_id }}</div>
+        </div>
+
+        <span class="status-badge">{{ patient.get_status_display }}</span>
+    </div>
+
+    <div class="profile-layout">
+        <div class="profile-photo-wrap">
+            {% if patient.image %}
+                <img src="{{ patient.image.url }}" class="profile-photo" alt="{{ patient.name }}">
+            {% else %}
+                <div class="photo-placeholder">No Image</div>
+            {% endif %}
+        </div>
+
+        <div class="info-panel">
+            <div class="panel-title">
+                <h3>Patient Information</h3>
+            </div>
+
+            <div class="detail-list">
+                <div class="detail-row">
+                    <div class="detail-label">Age</div>
+                    <div class="detail-value">{{ patient.age }}</div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Gender</div>
+                    <div class="detail-value">{{ patient.gender }}</div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Blood Group</div>
+                    <div class="detail-value">{{ patient.blood_group|default:"N/A" }}</div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Height</div>
+                    <div class="detail-value">{{ patient.height|default:"N/A" }}</div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Hospital</div>
+                    <div class="detail-value">{{ patient.hospital }}</div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Condition</div>
+                    <div class="detail-value">{{ patient.get_condition_display }}</div>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Identifying Marks</div>
+                    <div class="detail-value">{{ patient.identifying_marks|default:"N/A" }}</div>
+                </div>
+
+                <div>
+                    {% if patient.is_identified %}
+                        <span class="badge bg-success">Identified Patient</span>
+                        {% if patient.identified_by %}
+                             <small class="text-muted d-block mt-1">
+                                identified body{{patient.identified_by.get_full_name|default:patient.identified_by.username}}
+                             </small>
+                        {% endif %}
+                    {% else %}
+
+                        <span class="badge bg-warning text-dark">
+                            Not Identified
+                        </span>
+                    {% endif %}
+
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-label">Clothing</div>
+                    <div class="detail-value">{{ patient.clothing_description|default:"N/A" }}</div>
+                </div>
+
+                <div class="detail-row" style="grid-column: 1 / -1;">
+                    <div class="detail-label">Description</div>
+                    <div class="detail-value">{{ patient.description|default:"N/A" }}</div>
+                </div>
+
+                <div class="detail-row" style="grid-column: 1 / -1;">
+                    <div class="detail-label">Hazard</div>
+                    <div class="detail-value">
+                        <a href="{% url 'hazard_detail' patient.hazard.id %}">{{ patient.hazard.title }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+ <form method="POST"
+      action="{% url 'delete_patient' patient.id %}">
+
+    {% csrf_token %}
+
+    <button type="submit"
+            class="btn btn-danger">
+        Delete Patient
+    </button>
+
+</form>
+    </div>
+
+    <div class="history-panel">
+        <div class="history-header">
+            <h3>Transfer History</h3>
+        </div>
+        <div class="history-body">
+            {% if transfers %}
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Action</th>
+                            <th>From</th>
+                            <th>To</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in transfers %}
+                        <tr>
+                            <td>{{ item.created_at|date:"d M Y" }}</td>
+                            <td>{{ item.get_action_display }}</td>
+                            <td>{{ item.from_hospital|default:"-" }}</td>
+                            <td>{{ item.to_hospital|default:"-" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty-history">No transfer history available.</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="footer-actions">
+        <a href="{% url 'patient_list' %}" class="back-btn">← Back to Patient List</a>
+    </div>
+</div>
+{% endblock %}

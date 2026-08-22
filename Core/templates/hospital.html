@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+
+{% block title %}Hospital View | Hazard Management System{% endblock %}
+
+{% block extra_head %}
+<style>
+    body {
+        background: linear-gradient(180deg, #eef6ff 0%, #f8fafc 100%);
+    }
+
+    .hospital-shell {
+        padding: 28px 0 48px;
+    }
+
+    .hospital-hero {
+        background: linear-gradient(135deg, #0f172a 0%, #123b68 45%, #2563eb 100%);
+        border-radius: 28px;
+        position: relative;
+        overflow: hidden;
+        padding: 34px 30px;
+        color: #fff;
+        box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18);
+    }
+
+    .hospital-hero::after {
+        content: "";
+        position: absolute;
+        right: -40px;
+        bottom: -60px;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.08);
+    }
+
+    .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.18);
+        color: rgba(255,255,255,0.9);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    .page-title {
+        position: relative;
+        z-index: 1;
+        font-size: clamp(2.2rem, 4vw, 3rem);
+        font-weight: 800;
+        margin: 18px 0 10px;
+        letter-spacing: -0.05em;
+    }
+
+    .page-subtitle {
+        position: relative;
+        z-index: 1;
+        max-width: 700px;
+        color: rgba(255,255,255,0.82);
+        font-size: 1.03rem;
+        line-height: 1.7;
+    }
+
+    .hospital-actions {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 24px;
+    }
+
+    .page-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+        padding: 12px 18px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+    .page-btn:hover {
+        transform: translateY(-1px);
+        text-decoration: none;
+    }
+
+    .page-btn.primary {
+        background: #fff;
+        color: #0f172a;
+        box-shadow: 0 10px 18px rgba(255,255,255,0.18);
+    }
+
+    .page-btn.outline {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.25);
+        color: #fff;
+    }
+
+    .feature-grid {
+        margin-top: 24px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .feature-card {
+        background: rgba(255,255,255,0.86);
+        border: 1px solid rgba(148,163,184,0.18);
+        border-radius: 22px;
+        padding: 22px 20px;
+        box-shadow: 0 12px 28px rgba(15,23,42,0.05);
+    }
+
+    .feature-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.45rem;
+        margin-bottom: 14px;
+        background: linear-gradient(135deg, #dbeafe, #eff6ff);
+        color: #1d4ed8;
+    }
+
+    .feature-card h3 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 8px;
+    }
+
+    .feature-card p {
+        margin: 0;
+        color: #64748b;
+        line-height: 1.6;
+    }
+
+    .info-panel {
+        margin-top: 24px;
+        background: rgba(255,255,255,0.9);
+        border: 1px solid rgba(148,163,184,0.15);
+        border-radius: 24px;
+        padding: 22px 24px;
+        box-shadow: 0 12px 26px rgba(15,23,42,0.04);
+    }
+
+    .info-panel h2 {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 12px;
+    }
+
+    .info-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .info-chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: #eff6ff;
+        color: #1d4ed8;
+        font-weight: 700;
+        font-size: 0.78rem;
+    }
+
+    @media (max-width: 767.98px) {
+        .feature-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container hospital-shell">
+    <section class="hospital-hero">
+        <span class="eyebrow">Hospital view</span>
+        <h1 class="page-title">Hospital management</h1>
+        <p class="page-subtitle">
+            This section shares the same dashboard styling as the rest of the system, helping staff track facilities, patient flow, and emergency response with clarity.
+        </p>
+        <div class="hospital-actions">
+            <a href="{% url 'hospital_list' %}" class="page-btn primary">View hospital list</a>
+            <a href="{% url 'add_hospital' %}" class="page-btn outline">Add hospital</a>
+        </div>
+    </section>
+
+    <section class="feature-grid">
+        <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-building"></i></div>
+            <h3>Facility overview</h3>
+            <p>Monitor hospital records, locations, and capacity details in one neat dashboard.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-heart-pulse"></i></div>
+            <h3>Patient coordination</h3>
+            <p>Track admissions, transfers, and care updates to improve emergency response times.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon"><i class="bi bi-clipboard-data"></i></div>
+            <h3>Operational visibility</h3>
+            <p>Keep leadership informed with a clear overview of hospital activity and resource status.</p>
+        </div>
+    </section>
+
+    <section class="info-panel">
+        <h2>Hospital operations</h2>
+        <div class="info-list">
+            <span class="info-chip">Emergency readiness</span>
+            <span class="info-chip">Patient tracking</span>
+            <span class="info-chip">Transfer management</span>
+            <span class="info-chip">Capacity monitoring</span>
+        </div>
+    </section>
+</div>
+{% endblock %}

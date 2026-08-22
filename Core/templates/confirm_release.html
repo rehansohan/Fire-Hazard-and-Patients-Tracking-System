@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirm Release{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+  <div class="col-md-6">
+    <div class="surface-card p-4">
+      <h3 class="mb-3">Release patient: {{ patient.name }}</h3>
+      <p class="text-muted">Current hospital: <strong>{{ patient.hospital }}</strong></p>
+      <form method="post">
+        {% csrf_token %}
+        {% if next_url %}
+        <input type="hidden" name="next" value="{{ next_url }}">
+        {% endif %}
+        <div class="mb-3">
+          <label class="form-label">Note (optional)</label>
+          <textarea name="note" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-danger" type="submit">Confirm Release</button>
+          <a class="btn btn-outline-secondary" href="{% if next_url %}{{ next_url }}{% else %}{% url 'patient_list' %}{% endif %}">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,834 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ hospital.name }} Dashboard | Hazard Management System{% endblock %}
+
+{% block extra_head %}
+<style>
+    body {
+        background: linear-gradient(180deg, #eef5ff 0%, #f5f7fb 100%);
+        color: #1f2937;
+    }
+
+    .dashboard-shell {
+        padding: 28px 0 48px;
+    }
+
+    .hospital-hero {
+        background: linear-gradient(135deg, #0f172a 0%, #123b68 45%, #1d4ed8 100%);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 28px;
+        padding: 28px 30px;
+        color: #fff;
+        box-shadow: 0 20px 50px rgba(17, 24, 39, 0.18);
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 24px;
+    }
+
+    .hospital-hero::after {
+        content: "";
+        position: absolute;
+        inset: auto -60px -80px auto;
+        width: 220px;
+        height: 220px;
+        background: rgba(255,255,255,0.08);
+        border-radius: 50%;
+    }
+
+    .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.15);
+        color: rgba(255,255,255,0.86);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    .page-title {
+        font-size: clamp(2rem, 4vw, 2.7rem);
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        margin-top: 16px;
+        margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+        color: rgba(255,255,255,0.82);
+        font-size: 1rem;
+    }
+
+    .hero-meta {
+        position: relative;
+        z-index: 1;
+        text-align: right;
+        font-weight: 500;
+        color: rgba(255,255,255,0.82);
+    }
+
+    .hero-meta strong {
+        display: block;
+        font-size: 0.83rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: rgba(255,255,255,0.7);
+        margin-bottom: 8px;
+    }
+
+    .stat-card {
+        background: rgba(255,255,255,0.9);
+        border: 1px solid rgba(148,163,184,0.22);
+        border-radius: 20px;
+        box-shadow: 0 10px 28px rgba(15,23,42,0.06);
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .stat-card .card-body {
+        padding: 18px 18px 16px;
+    }
+
+    .stat-card .text-muted {
+        display: inline-block;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #64748b !important;
+        font-weight: 700;
+    }
+
+    .stat-value {
+        font-size: clamp(1.8rem, 2vw, 2.3rem);
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        color: #0f172a;
+        margin-top: 10px;
+    }
+
+    .stat-card.primary { border-top: 4px solid #2563eb; }
+    .stat-card.success { border-top: 4px solid #16a34a; }
+    .stat-card.warning { border-top: 4px solid #f59e0b; }
+    .stat-card.danger { border-top: 4px solid #ef4444; }
+
+    .panel-surface {
+        background: rgba(255,255,255,0.86);
+        border: 1px solid rgba(148,163,184,0.18);
+        border-radius: 24px;
+        box-shadow: 0 12px 30px rgba(15,23,42,0.06);
+        backdrop-filter: blur(10px);
+    }
+
+    .sidebar-panel {
+        padding: 22px 18px;
+        height: 100%;
+    }
+
+    .panel-caption {
+        margin-bottom: 14px;
+        color: #64748b;
+        font-weight: 700;
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    .sidebar-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .hazard-link {
+        display: block;
+        padding: 12px 12px;
+        border-radius: 14px;
+        background: #f8fafc;
+        border: 1px solid transparent;
+        color: #1f2937;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .hazard-link:hover,
+    .hazard-link.active {
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        border-color: rgba(37,99,235,0.18);
+        color: #0f172a;
+        text-decoration: none;
+        transform: translateY(-1px);
+    }
+
+    .hazard-link .meta-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .hazard-link .title {
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .small-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 26px;
+        height: 26px;
+        padding: 0 8px;
+        border-radius: 999px;
+        background: #dbeafe;
+        color: #1d4ed8;
+        font-size: 0.72rem;
+        font-weight: 700;
+    }
+
+    .quick-stat-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 12px;
+    }
+
+    .badge-soft {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 0.74rem;
+        font-weight: 700;
+    }
+
+    .badge-soft.info {
+        background: #e0f2fe;
+        color: #0f766e;
+    }
+
+    .badge-soft.warning {
+        background: #fef3c7;
+        color: #b45309;
+    }
+
+    .main-panel {
+        padding: 24px;
+    }
+
+    .detail-header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: flex-start;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(148,163,184,0.2);
+    }
+
+    .detail-header h2 {
+        margin: 5px 0 0;
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .detail-header p {
+        margin: 8px 0 0;
+        color: #64748b;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 0.74rem;
+        font-weight: 700;
+        background: #e0f2fe;
+        color: #0f766e;
+    }
+
+    .severity-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 0.74rem;
+        font-weight: 700;
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .mini-stat-grid {
+        margin-bottom: 20px;
+    }
+
+    .mini-stat {
+        background: #f8fafc;
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        border-radius: 18px;
+        padding: 16px 18px;
+        height: 100%;
+    }
+
+    .mini-stat .label {
+        color: #64748b;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .mini-stat .value {
+        margin-top: 10px;
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .table-wrap {
+        overflow: hidden;
+        border: 1px solid rgba(148,163,184,0.2);
+        border-radius: 18px;
+        background: #fff;
+    }
+
+    .table thead th {
+        background: #f8fafc;
+        color: #475569;
+        font-size: 0.74rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.20);
+        padding: 14px 16px;
+    }
+
+    .table tbody td {
+        padding: 14px 16px;
+        vertical-align: middle;
+        color: #1f2937;
+    }
+
+    .table tbody tr:nth-child(even) {
+        background: rgba(248,250,252,0.65);
+    }
+
+    .action-btn {
+        border-radius: 10px;
+        font-weight: 600;
+        padding: 7px 12px;
+    }
+
+    .table-section {
+        margin-top: 24px;
+    }
+
+    .table-section-title {
+        margin-bottom: 10px;
+        color: #0f172a;
+        font-weight: 700;
+    }
+
+    .empty-state {
+        padding: 36px 20px;
+        text-align: center;
+        color: #64748b;
+        font-weight: 500;
+    }
+
+    @media (max-width: 991.98px) {
+        .hero-meta {
+            text-align: left;
+            margin-top: 18px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-shell">
+    <div class="container">
+        <section class="hospital-hero">
+            <div class="row align-items-end g-3">
+                <div class="col-lg-8">
+                    <span class="eyebrow">Hospital dashboard</span>
+                    <h1 class="page-title">{{ hospital.name }}</h1>
+                    <p class="page-subtitle mb-0"><i class="bi bi-geo-alt-fill me-2"></i>{{ hospital.location }} · {{ hospital.phone }}</p>
+                </div>
+                <div class="col-lg-4 hero-meta">
+                    <strong>Facility capacity</strong>
+                    <div>{{ hospital.capacity }} beds available</div>
+                    <div class="mt-2">Joined {{ hospital.created_at|date:"M d, Y H:i" }}</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="row g-3 mb-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card primary">
+                    <div class="card-body">
+                        <div class="text-muted">Total patients</div>
+                        <div class="stat-value">{{ patients_count }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card success">
+                    <div class="card-body">
+                        <div class="text-muted">Admitted</div>
+                        <div class="stat-value">{{ admitted_count }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card warning">
+                    <div class="card-body">
+                        <div class="text-muted">Transferred</div>
+                        <div class="stat-value">{{ transferred_count }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-card danger">
+                    <div class="card-body">
+                        <div class="text-muted">Released</div>
+                        <div class="stat-value">{{ released_count }}</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="row g-4">
+            <div class="col-lg-3">
+                <div class="panel-surface sidebar-panel">
+                    <div class="panel-caption">Navigation</div>
+                    <div class="sidebar-list">
+                        <a href="{% url 'hospital_dashboard' hospital.id %}" class="hazard-link {% if not selected_hazard %}active{% endif %}">
+                            <div class="meta-row">
+                                <span class="title">All hazards</span>
+                            </div>
+                        </a>
+
+                        <div class="panel-caption mt-3 mb-2">Active hazards</div>
+                        {% for group in hazard_groups %}
+                        {% with hazard=group.hazard %}
+                        <a href="{% url 'hospital_dashboard' hospital.id %}?hazard={{ hazard.id }}" class="hazard-link {% if selected_hazard and selected_hazard.id == hazard.id %}active{% endif %}">
+                            <div class="meta-row">
+                                <span class="title">{{ hazard.title }}</span>
+                                <span class="small-pill">{{ group.patients_count }}</span>
+                            </div>
+                        </a>
+                        {% endwith %}
+                        {% empty %}
+                        <div class="text-muted small">No hazards with hospital patients yet.</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mt-4">
+                        <div class="panel-caption">Quick stats</div>
+                        <div class="quick-stat-badges">
+                            <span class="badge-soft info">Patients: {{ patients_count }}</span>
+                            <span class="badge-soft warning">Critical: {{ critical_count }}</span>
+                        </div>
+                    </div>
+                 <div class="mt-4">
+                        <a href="{% url 'edit_hospital' hospital.id %}"
+                        class="btn btn-primary">
+                            <i class="bi bi-pencil-square"></i>
+                            Edit Hospital
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+               <div class="panel-surface main-panel h-100">
+
+    {% if selected_group %}
+
+        <!-- ================= HAZARD HEADER ================= -->
+
+        <div class="detail-header">
+
+            <div>
+                <div class="panel-caption">
+                    Hazard detail
+                </div>
+
+                <h2>
+                    {{ selected_group.hazard.title }}
+                </h2>
+
+                <p>
+                    {{ selected_group.hazard.description }}
+                </p>
+            </div>
+
+            <div class="d-flex gap-2 flex-wrap">
+
+                <span class="status-badge">
+                    {{ selected_group.hazard.get_status_display }}
+                </span>
+
+                <span class="severity-badge">
+                    {{ selected_group.hazard.get_servity_display }}
+                </span>
+
+                {% if perms.Core.add_patient %}
+                    <a href="{% url 'add_patient' hospital.id selected_group.hazard.id %}"
+                       class="btn btn-primary">
+
+                        <i class="bi bi-person-plus me-1"></i>
+                        Add Patient
+
+                    </a>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= CURRENT PATIENTS ================= -->
+
+        {% if selected_patients %}
+
+            <div class="row g-3 mini-stat-grid">
+
+                <div class="col-md-3">
+                    <div class="mini-stat">
+                        <div class="label">Patients</div>
+                        <div class="value">
+                            {{ selected_group.patients_count }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="mini-stat">
+                        <div class="label">Critical</div>
+                        <div class="value">
+                            {{ selected_group.critical_count }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="mini-stat">
+                        <div class="label">Capacity</div>
+                        <div class="value">
+                            {{ hospital.capacity }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="mini-stat">
+                        <div class="label">Window</div>
+                        <div class="value">
+                            Open
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- CURRENT PATIENT TABLE -->
+
+            <div class="table-wrap">
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead>
+                        <tr>
+                            <th>Patient ID</th>
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>Condition</th>
+                            <th>Status</th>
+                            <th>Transfer</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for patient in selected_group.patients %}
+
+                            <tr>
+
+                                <td class="fw-semibold">
+                                    {{ patient.patient_id }}
+                                </td>
+
+                                <td>
+                                    {{ patient.name }}
+                                </td>
+
+                                <td>
+                                    {{ patient.age }}
+                                </td>
+
+                                <td>
+                                    {{ patient.get_condition_display }}
+                                </td>
+
+                                <td>
+                                    {{ patient.get_status_display }}
+                                </td>
+
+                                <td>
+
+                                    <div class="d-flex gap-2 flex-wrap">
+
+                                        <a href="{% url 'transfer_patient' patient.id %}?next={{ request.get_full_path|urlencode }}"
+                                           class="btn btn-sm btn-outline-warning action-btn">
+                                            Transfer
+                                        </a>
+
+                                        {% if patient.hospital %}
+
+                                            <a href="{% url 'release_patient' patient.id %}?next={{ request.get_full_path|urlencode }}"
+                                               class="btn btn-sm btn-outline-danger action-btn">
+                                                Release
+                                            </a>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </td>
+
+                                <td>
+
+                                    <a href="{% url 'patient_detail' patient.id %}"
+                                       class="btn btn-sm btn-outline-primary action-btn">
+                                        Open
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        {% else %}
+
+            <!-- NO CURRENT PATIENT -->
+
+            <div class="empty-state">
+                No patients are currently assigned to this
+                hazard in this hospital.
+            </div>
+
+        {% endif %}
+
+
+        <!-- ================================================= -->
+        <!-- TRANSFERRED + RELEASED RECORDS                   -->
+        <!-- ================================================= -->
+
+        <div class="row g-4 table-section">
+
+            <!-- ================= TRANSFERRED ================= -->
+
+            <div class="col-lg-6">
+
+                <div class="table-section-title">
+                    Transferred patients
+                </div>
+
+                <div class="table-wrap">
+
+                    <table class="table table-hover align-middle mb-0">
+
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Patient ID</th>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for patient in selected_transferred_patients %}
+
+                                <tr>
+
+                                    <td style="width: 84px;">
+
+                                        <a href="{% url 'patient_detail' patient.id %}"
+                                           class="d-inline-block">
+
+                                            {% if patient.image %}
+
+                                                <img src="{{ patient.image.url }}"
+                                                     alt="{{ patient.name }}"
+                                                     class="rounded-3"
+                                                     style="width:64px;height:64px;object-fit:cover;">
+
+                                            {% else %}
+
+                                                <div class="rounded-3 bg-light border d-flex align-items-center justify-content-center text-muted"
+                                                     style="width:64px;height:64px;font-size:.72rem;">
+                                                    No image
+                                                </div>
+
+                                            {% endif %}
+
+                                        </a>
+
+                                    </td>
+
+                                    <td class="fw-semibold">
+                                        {{ patient.patient_id }}
+                                    </td>
+
+                                    <td>
+
+                                        <a href="{% url 'patient_detail' patient.id %}"
+                                           class="text-decoration-none fw-semibold">
+                                            {{ patient.name }}
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+
+                            {% empty %}
+
+                                <tr>
+                                    <td colspan="3"
+                                        class="text-center text-muted py-3">
+                                        No transferred patients for this hazard.
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= RELEASED ================= -->
+
+            <div class="col-lg-6">
+
+                <div class="table-section-title">
+                    Released patients
+                </div>
+
+                <div class="table-wrap">
+
+                    <table class="table table-hover align-middle mb-0">
+
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Patient ID</th>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for patient in selected_released_patients %}
+
+                                <tr>
+
+                                    <td style="width: 84px;">
+
+                                        <a href="{% url 'patient_detail' patient.id %}"
+                                           class="d-inline-block">
+
+                                            {% if patient.image %}
+
+                                                <img src="{{ patient.image.url }}"
+                                                     alt="{{ patient.name }}"
+                                                     class="rounded-3"
+                                                     style="width:64px;height:64px;object-fit:cover;">
+
+                                            {% else %}
+
+                                                <div class="rounded-3 bg-light border d-flex align-items-center justify-content-center text-muted"
+                                                     style="width:64px;height:64px;font-size:.72rem;">
+                                                    No image
+                                                </div>
+
+                                            {% endif %}
+
+                                        </a>
+
+                                    </td>
+
+                                    <td class="fw-semibold">
+                                        {{ patient.patient_id }}
+                                    </td>
+
+                                    <td>
+
+                                        <a href="{% url 'patient_detail' patient.id %}"
+                                           class="text-decoration-none fw-semibold">
+                                            {{ patient.name }}
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+
+                            {% empty %}
+
+                                <tr>
+                                    <td colspan="3"
+                                        class="text-center text-muted py-3">
+                                        No released patients for this hazard.
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    {% else %}
+
+        <div class="empty-state">
+            No hospital-specific hazards are available yet.
+        </div>
+
+    {% endif %}
+
+</div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

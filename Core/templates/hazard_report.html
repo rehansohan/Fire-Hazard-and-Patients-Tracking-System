@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Report Hazard | Hazard Management System{% endblock %}
+
+{% block content %}
+<section class="surface-card mx-auto" style="max-width: 860px;">
+    <div class="mb-4">
+        <span class="eyebrow">New incident</span>
+        <h1 class="h2 fw-bold mt-3 mb-2">Report a hazard</h1>
+        <p class="text-muted mb-0">Use this form to capture the essential details needed for response and triage.</p>
+    </div>
+
+    <form method="POST" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <div class="mb-3">
+            <label class="form-label">Title</label>
+            {{ form.title }}
+            {{ form.title.errors }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            {{ form.description }}
+            {{ form.description.errors }}
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label">Severity</label>
+            {{ form.servity }}
+            {{ form.servity.errors }}
+        </div>
+
+        <div class="d-flex flex-wrap gap-3">
+            <button type="submit" class="btn btn-danger">Submit Hazard</button>
+            <a href="{% url 'home' %}" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

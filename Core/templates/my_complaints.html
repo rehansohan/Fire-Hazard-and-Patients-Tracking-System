@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <h2 class="mb-4">My Missing Complaints</h2>
+
+    <table class="table table-bordered table-hover">
+
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Missing Person</th>
+                <th>Hazard</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+        {% for complaint in complaints %}
+
+        <tr>
+
+            <td>{{ forloop.counter }}</td>
+
+            <td>{{ complaint.missing_person_name }}</td>
+
+            <td>{{ complaint.hazard.title }}</td>
+
+            <td>
+                <span class="badge bg-warning">
+                    {{ complaint.status }}
+                </span>
+            </td>
+
+            <td>{{ complaint.created_at }}</td>
+
+            <td>
+    <a href="{% url 'complaint_match_dashboard' complaint.id %}">
+        View Matches
+    </a>
+</td>
+
+        </tr>
+
+        {% empty %}
+
+        <tr>
+
+            <td colspan="5" class="text-center">
+                No complaints found.
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

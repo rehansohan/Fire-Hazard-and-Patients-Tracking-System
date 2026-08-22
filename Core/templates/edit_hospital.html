@@ -1,0 +1,376 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Edit {{ hospital.name }} | Hazard Management System
+{% endblock %}
+
+{% block extra_head %}
+
+<style>
+
+.edit-page {
+    min-height: calc(100vh - 80px);
+    background: #f5f8fc;
+    padding: 45px 20px 70px;
+}
+
+.edit-card {
+    max-width: 1000px;
+    margin: auto;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 18px 50px rgba(15,23,42,.08);
+}
+
+.edit-header {
+    background: linear-gradient(
+        135deg,
+        #071322,
+        #12345a
+    );
+    color: white;
+    padding: 30px 35px;
+}
+
+.edit-header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 7px;
+}
+
+.edit-header p {
+    margin: 0;
+    color: rgba(255,255,255,.7);
+    font-size: 13px;
+}
+
+.edit-body {
+    padding: 35px;
+}
+
+.field {
+    margin-bottom: 18px;
+}
+
+.field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 7px;
+}
+
+.field input,
+.field textarea,
+.field select {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1px solid #dbe2ea;
+    border-radius: 10px;
+    font-size: 12px;
+    outline: none;
+}
+
+.field input:focus,
+.field textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,.08);
+}
+
+.field textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.current-image {
+    margin-bottom: 15px;
+}
+
+.current-image img {
+    width: 180px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+}
+
+.actions {
+    border-top: 1px solid #edf1f5;
+    padding-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-cancel {
+    padding: 10px 20px;
+    border: 1px solid #dbe2ea;
+    border-radius: 9px;
+    text-decoration: none;
+    color: #475569;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.btn-update {
+    border: none;
+    padding: 10px 23px;
+    border-radius: 9px;
+    background: #2563eb;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+@media(max-width: 768px) {
+
+    .edit-body,
+    .edit-header {
+        padding: 25px 20px;
+    }
+
+    .actions {
+        flex-direction: column-reverse;
+    }
+
+    .btn-cancel,
+    .btn-update {
+        width: 100%;
+        text-align: center;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="edit-page">
+
+    <div class="edit-card">
+
+        <div class="edit-header">
+
+            <h1>
+                <i class="bi bi-pencil-square me-2"></i>
+                Edit Hospital
+            </h1>
+
+            <p>
+                Update the information of
+                <strong>{{ hospital.name }}</strong>
+            </p>
+
+        </div>
+
+
+        <div class="edit-body">
+
+            <form method="POST"
+                  enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+
+                <div class="row">
+
+                    <div class="col-md-8">
+
+                        <div class="field">
+
+                            <label>Hospital Name</label>
+
+                            {{ form.name }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <div class="field">
+
+                            <label>Established Year</label>
+
+                            {{ form.established_year }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Location</label>
+
+                    {{ form.location }}
+
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-md-6">
+
+                        <div class="field">
+
+                            <label>Hospital Phone</label>
+
+                            {{ form.phone }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <div class="field">
+
+                            <label>Emergency Phone</label>
+
+                            {{ form.emergency_phone }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Description</label>
+
+                    {{ form.description }}
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>Hospital Image</label>
+
+                    {% if hospital.image %}
+
+                    <div class="current-image">
+
+                        <img src="{{ hospital.image.url }}"
+                             alt="{{ hospital.name }}">
+
+                    </div>
+
+                    {% endif %}
+
+                    {{ form.image }}
+
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-md-4">
+
+                        <div class="field">
+
+                            <label>Capacity / Beds</label>
+
+                            {{ form.capacity }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <div class="field">
+
+                            <label>Total Doctors</label>
+
+                            {{ form.total_doctors }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <div class="field">
+
+                            <label>Total Nurses</label>
+
+                            {{ form.total_nurses }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-md-6">
+
+                        <div class="field">
+
+                            <label>Total Departments</label>
+
+                            {{ form.total_departments }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <div class="field">
+
+                            <label>Ambulances</label>
+
+                            {{ form.ambulances }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="actions">
+
+                    <a href="{% url 'view_hospital' hospital.id %}"
+                       class="btn-cancel">
+                        Cancel
+                    </a>
+
+                    <button type="submit"
+                            class="btn-update">
+
+                        <i class="bi bi-check2-circle me-1"></i>
+
+                        Update Hospital
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

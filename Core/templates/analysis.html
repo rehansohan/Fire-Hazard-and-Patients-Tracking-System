@@ -1,0 +1,413 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="row">
+
+<div class="col-lg-10 mx-auto">
+
+<div class="card shadow">
+
+<div class="card-header bg-dark text-white">
+
+<h3 class="mb-0">
+ Matching Analysis Report
+</h3>
+
+</div>
+
+<div class="card-body">
+
+<div class="row">
+
+<div class="col-md-6">
+
+<h5 class="text-primary">Patient Information</h5>
+
+<table class="table table-bordered">
+
+<tr>
+<th>Name</th>
+<td>{{ match.patient.name }}</td>
+</tr>
+
+<tr>
+<th>Age</th>
+<td>{{ match.patient.age }}</td>
+</tr>
+
+<tr>
+<th>Gender</th>
+<td>{{ match.patient.gender }}</td>
+</tr>
+
+<tr>
+<th>Blood Group</th>
+<td>{{ match.patient.blood_group }}</td>
+</tr>
+
+<tr>
+<th>Height</th>
+<td>{{ match.patient.height }}</td>
+</tr>
+
+</table>
+
+</div>
+
+<div class="col-md-6">
+
+<h5 class="text-danger">
+Missing Person Information
+</h5>
+
+<table class="table table-bordered">
+
+<tr>
+<th>Name</th>
+<td>{{ match.complaint.missing_person_name }}</td>
+</tr>
+
+<tr>
+<th>Age</th>
+<td>{{ match.complaint.missing_person_age }}</td>
+</tr>
+
+<tr>
+<th>Gender</th>
+<td>{{ match.complaint.missing_person_gender }}</td>
+</tr>
+
+<tr>
+<th>Blood Group</th>
+<td>{{ match.complaint.blood_group }}</td>
+</tr>
+
+<tr>
+<th>Height</th>
+<td>{{ match.complaint.height }}</td>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+<hr>
+
+<h4>Overall Similarity</h4>
+
+<div class="progress mb-4" style="height:35px;">
+
+<div class="progress-bar
+{% if match.similarity_score >= 80 %}
+bg-success
+{% elif match.similarity_score >= 60 %}
+bg-warning
+{% else %}
+bg-danger
+{% endif %}"
+style="width:{{ match.similarity_score }}%;">
+
+{{ match.similarity_score }}%
+
+</div>
+
+</div>
+
+<table class="table table-striped table-hover">
+
+<thead class="table-dark">
+
+<tr>
+
+<th>Feature</th>
+
+<th>Result</th>
+
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Name Similarity</td>
+
+<td>{{ match.name_similarity }}%</td>
+
+<td>
+✅
+</td>
+
+</tr>
+
+<tr>
+
+<td>Gender</td>
+
+<td>
+
+{{ match.patient.gender }}
+
+/
+
+{{ match.complaint.missing_person_gender }}
+
+</td>
+
+<td>
+
+{% if match.gender_match %}
+
+<span class="badge bg-success">
+
+Matched
+
+</span>
+
+{% else %}
+
+<span class="badge bg-danger">
+
+Not Matched
+
+</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>Age Difference</td>
+
+<td>
+
+{{ match.age_difference }} Year(s)
+
+</td>
+
+<td>
+
+{% if match.age_match %}
+
+<span class="badge bg-success">
+
+Matched
+
+</span>
+
+{% else %}
+
+<span class="badge bg-danger">
+
+Not Matched
+
+</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>Height Difference</td>
+
+<td>
+
+{{ match.height_difference }}
+
+ft
+
+</td>
+
+<td>
+
+{% if match.height_match %}
+
+<span class="badge bg-success">
+
+Matched
+
+</span>
+
+{% else %}
+
+<span class="badge bg-danger">
+
+Not Matched
+
+</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>Blood Group</td>
+
+<td>
+
+{{ match.patient.blood_group }}
+
+/
+
+{{ match.complaint.blood_group }}
+
+</td>
+
+<td>
+
+{% if match.blood_group_match %}
+
+<span class="badge bg-success">
+
+Matched
+
+</span>
+
+{% else %}
+
+<span class="badge bg-danger">
+
+Not Matched
+
+</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>Face Verification</td>
+
+<td>
+
+Distance :
+
+{{ match.face_distance }}
+
+</td>
+
+<td>
+
+{% if match.face_verified %}
+
+<span class="badge bg-success">
+
+Verified
+
+</span>
+
+{% else %}
+
+<span class="badge bg-danger">
+
+Not Verified
+
+</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+<hr>
+
+<h4>
+
+AI Decision
+
+</h4>
+
+{% if match.similarity_score >= 80 %}
+
+<div class="alert alert-success">
+
+<h5>
+
+🟢 High Confidence Match
+
+</h5>
+
+The AI model strongly predicts that the patient and the missing person are the same individual.
+
+</div>
+
+{% elif match.similarity_score >= 60 %}
+
+<div class="alert alert-warning">
+
+<h5>
+
+🟡 Medium Confidence Match
+
+</h5>
+
+Some important attributes matched. Manual verification is recommended.
+
+</div>
+
+{% else %}
+
+<div class="alert alert-danger">
+
+<h5>
+
+🔴 Low Confidence Match
+
+</h5>
+
+Very low probability of being the same person.
+
+</div>
+
+{% endif %}
+
+<div class="text-end">
+
+<a href="#" class="btn btn-success">
+
+Confirm Match
+
+</a>
+
+<a href="#" class="btn btn-danger">
+
+Reject Match
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

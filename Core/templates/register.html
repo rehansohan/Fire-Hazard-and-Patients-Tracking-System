@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Register - Hazard Management{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="surface-card p-4">
+            <div class="text-center mb-3">
+                <h3 class="mb-0">Create your account</h3>
+                <p class="text-muted">Register to report and manage hazards.</p>
+            </div>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            <form method="POST" novalidate>
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                {% endif %}
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label" for="id_username">{{ form.username.label }}</label>
+                        {{ form.username }}
+                        {{ form.username.errors }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="id_email">{{ form.email.label }}</label>
+                        {{ form.email }}
+                        {{ form.email.errors }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="id_password1">{{ form.password1.label }}</label>
+                        {{ form.password1 }}
+                        {{ form.password1.errors }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="id_password2">{{ form.password2.label }}</label>
+                        {{ form.password2 }}
+                        {{ form.password2.errors }}
+                    </div>
+                </div>
+                <div class="mb-3 mt-3">
+                    <label class="form-label" for="id_phone">{{ form.phone.label }}</label>
+                    {{ form.phone }}
+                    {{ form.phone.errors }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="id_address">{{ form.address.label }}</label>
+                    {{ form.address }}
+                    {{ form.address.errors }}
+                </div>
+                <button class="btn btn-primary w-100" type="submit">Create account</button>
+            </form>
+            <div class="text-center mt-3">
+                <small class="text-muted">Already have an account? <a href="{% url 'login' %}">Sign in</a></small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
