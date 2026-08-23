@@ -3,6 +3,237 @@
 {% block title %}Add Patient | Hazard Management{% endblock %}
 
 {% block content %}
+@media (max-width: 767.98px) {
+
+    /* Main page spacing */
+    .container,
+    .row {
+        --bs-gutter-x: 1rem;
+    }
+
+    /* Main surface */
+    .surface-card {
+        border-radius: 14px;
+    }
+
+    /* Page heading */
+    .page-title {
+        font-size: 1.8rem;
+        line-height: 1.25;
+    }
+
+    .page-subtitle {
+        font-size: 0.82rem;
+        line-height: 1.6;
+    }
+
+    .eyebrow {
+        font-size: 0.65rem;
+    }
+
+    /* Status badges */
+    .badge-soft-info,
+    .badge-soft-success {
+        font-size: 0.65rem;
+        padding: 6px 9px;
+    }
+
+    /* Form labels */
+    .form-label {
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    /* Inputs */
+    input,
+    select,
+    textarea {
+        width: 100%;
+        box-sizing: border-box;
+        font-size: 0.85rem;
+        min-height: 43px;
+        padding: 9px 11px;
+        border-radius: 8px;
+    }
+
+    textarea {
+        min-height: 105px;
+    }
+
+    /* Camera section */
+    .surface-card.p-4 {
+        padding: 18px !important;
+    }
+
+    .section-label {
+        font-size: 0.72rem;
+    }
+
+    .h5 {
+        font-size: 1rem;
+    }
+
+    /* Camera buttons */
+    #openCameraBtn,
+    #captureBtn,
+    #retakeBtn {
+        width: 100%;
+        min-height: 44px;
+        font-size: 0.8rem;
+    }
+
+    /* Camera preview */
+    #cameraView {
+        width: 100%;
+        max-height: 300px !important;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    /* Image preview box */
+    #photoPreview {
+        max-width: 100%;
+        max-height: 250px !important;
+        object-fit: cover;
+    }
+
+    #previewPlaceholder h5 {
+        font-size: 0.9rem;
+    }
+
+    #previewPlaceholder small {
+        font-size: 0.7rem;
+    }
+
+    /* Capture guidelines */
+    ul {
+        padding-left: 18px;
+    }
+
+    ul li {
+        font-size: 0.78rem;
+        line-height: 1.6;
+        margin-bottom: 5px;
+    }
+
+    /* Before saving alert */
+    .alert {
+        font-size: 0.78rem;
+        line-height: 1.55;
+        padding: 14px;
+    }
+
+    .alert h5 {
+        font-size: 0.9rem;
+    }
+
+    /* Patient summary */
+    .card-body {
+        padding: 16px !important;
+    }
+
+    .card-body h6 {
+        font-size: 0.9rem;
+    }
+
+    .card-body p {
+        font-size: 0.78rem;
+        line-height: 1.6;
+    }
+
+    /* Bottom buttons */
+    .d-flex.justify-content-between {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .d-flex.justify-content-between > a {
+        width: 100%;
+        text-align: center;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .d-flex.justify-content-between > div {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+    }
+
+    .d-flex.justify-content-between > div .btn {
+        width: 100%;
+        margin: 0 !important;
+        min-height: 44px;
+        font-size: 0.8rem;
+    }
+
+}
+
+
+/* =========================================
+   EXTRA SMALL ANDROID PHONES
+   ========================================= */
+
+@media (max-width: 375px) {
+
+    .surface-card {
+        border-radius: 12px;
+    }
+
+    .page-title {
+        font-size: 1.55rem;
+    }
+
+    .page-subtitle {
+        font-size: 0.75rem;
+    }
+
+    .form-label {
+        font-size: 0.72rem;
+    }
+
+    input,
+    select,
+    textarea {
+        font-size: 0.78rem;
+        min-height: 41px;
+    }
+
+    textarea {
+        min-height: 95px;
+    }
+
+    #cameraView {
+        max-height: 250px !important;
+    }
+
+    #photoPreview {
+        max-height: 210px !important;
+    }
+
+    #openCameraBtn,
+    #captureBtn,
+    #retakeBtn {
+        min-height: 42px;
+        font-size: 0.75rem;
+    }
+
+    .alert {
+        font-size: 0.72rem;
+    }
+
+    .card-body p {
+        font-size: 0.72rem;
+    }
+}
+
+<style>
+
+</style>
 <div class="row justify-content-center">
     <div class="col-12 col-xl-10">
         <div class="surface-card p-4 p-lg-5">

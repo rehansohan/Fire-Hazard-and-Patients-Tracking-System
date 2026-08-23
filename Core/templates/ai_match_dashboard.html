@@ -272,19 +272,301 @@
         font-weight: 600;
     }
 
-    @media (max-width: 767.98px) {
-        .summary-row {
-            grid-template-columns: 1fr;
-        }
+    /* =========================================
+   AI MATCH DASHBOARD - MOBILE RESPONSIVE
+   ========================================= */
 
-        .match-table-wrap {
-            overflow-x: auto;
-        }
+@media (max-width: 767.98px) {
 
-        .match-table {
-            min-width: 700px;
-        }
+    /* Page */
+    .ai-match-page {
+        padding: 15px 8px 30px;
     }
+
+    /* Hero */
+    .ai-hero {
+        padding: 20px 15px;
+        border-radius: 18px;
+    }
+
+    .ai-hero::after {
+        width: 170px;
+        height: 170px;
+        right: -70px;
+        bottom: -70px;
+    }
+
+    .eyebrow {
+        font-size: 0.6rem;
+        padding: 6px 9px;
+        letter-spacing: 0.08em;
+    }
+
+    .ai-title {
+        margin-top: 13px;
+        font-size: 1.8rem;
+        line-height: 1.25;
+        letter-spacing: -0.035em;
+        word-break: break-word;
+    }
+
+    .ai-subtitle {
+        font-size: 0.8rem;
+        line-height: 1.6;
+    }
+
+    /* Summary boxes */
+    .summary-row {
+        grid-template-columns: 1fr;
+        gap: 9px;
+        margin-top: 18px;
+    }
+
+    .summary-box {
+        padding: 13px 15px;
+        border-radius: 13px;
+    }
+
+    .summary-box .label {
+        font-size: 0.62rem;
+    }
+
+    .summary-box .value {
+        margin-top: 6px;
+        font-size: 1.6rem;
+    }
+
+    /* Main panel */
+    .panel {
+        margin-top: 15px;
+        border-radius: 17px;
+    }
+
+    .panel-header {
+        padding: 15px;
+        gap: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .panel-header h3 {
+        font-size: 1rem;
+    }
+
+    .patient-pill {
+        font-size: 0.62rem;
+        padding: 6px 9px;
+    }
+
+    .panel-body {
+        padding: 13px;
+    }
+
+    /* Remove horizontal table scrolling */
+    .match-table-wrap {
+        border: none;
+        overflow: visible;
+        border-radius: 0;
+    }
+
+    .match-table,
+    .match-table tbody,
+    .match-table tr,
+    .match-table td {
+        display: block;
+        width: 100%;
+    }
+
+    /* Hide desktop table heading */
+    .match-table thead {
+        display: none;
+    }
+
+    /* Each match becomes a card */
+    .match-table tbody tr {
+        background: #fff;
+        border: 1px solid rgba(148,163,184,0.16);
+        border-radius: 14px;
+        padding: 12px;
+        margin-bottom: 12px;
+        box-shadow: 0 5px 15px rgba(15,23,42,0.04);
+    }
+
+    .match-table tbody tr:last-child {
+        margin-bottom: 0;
+    }
+
+    .match-table tbody td {
+        border: none;
+        padding: 7px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.8rem;
+    }
+
+    /* Mobile labels */
+    .match-table tbody td:nth-child(1)::before {
+        content: "Rank";
+    }
+
+    .match-table tbody td:nth-child(2)::before {
+        content: "Missing Person";
+    }
+
+    .match-table tbody td:nth-child(3)::before {
+        content: "Score";
+    }
+
+    .match-table tbody td:nth-child(4)::before {
+        content: "Confidence";
+    }
+
+    .match-table tbody td:nth-child(5)::before {
+        content: "Face";
+    }
+
+    .match-table tbody td:nth-child(6)::before {
+        content: "Action";
+    }
+
+    .match-table tbody td::before {
+        min-width: 95px;
+        flex-shrink: 0;
+        color: #64748b;
+        font-size: 0.62rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    /* Rank */
+    .rank-badge {
+        width: 30px;
+        height: 30px;
+        border-radius: 9px;
+        font-size: 0.75rem;
+    }
+
+    /* Name */
+    .match-name {
+        font-size: 0.82rem;
+        word-break: break-word;
+    }
+
+    /* Score */
+    .score {
+        font-size: 0.82rem;
+    }
+
+    /* Confidence */
+    .confidence-badge {
+        padding: 5px 8px;
+        font-size: 0.62rem;
+    }
+
+    /* Face verification */
+    .verified,
+    .not-verified {
+        font-size: 1.2rem;
+    }
+
+    /* Action buttons */
+    .action-group {
+        width: 100%;
+        display: flex;
+        gap: 7px;
+    }
+
+    .action-link {
+        flex: 1;
+        min-height: 40px;
+        padding: 8px 10px;
+        font-size: 0.72rem;
+    }
+
+    /* Empty state */
+    .empty-state {
+        padding: 35px 12px;
+        font-size: 0.8rem;
+        line-height: 1.5;
+    }
+}
+
+
+/* =========================================
+   EXTRA SMALL ANDROID PHONES
+   ========================================= */
+
+@media (max-width: 375px) {
+
+    .ai-match-page {
+        padding: 10px 5px 25px;
+    }
+
+    .ai-hero {
+        padding: 17px 12px;
+        border-radius: 15px;
+    }
+
+    .ai-title {
+        font-size: 1.55rem;
+    }
+
+    .ai-subtitle {
+        font-size: 0.73rem;
+    }
+
+    .summary-box {
+        padding: 11px 12px;
+    }
+
+    .summary-box .value {
+        font-size: 1.45rem;
+    }
+
+    .panel {
+        border-radius: 14px;
+    }
+
+    .panel-header {
+        padding: 13px;
+    }
+
+    .panel-body {
+        padding: 10px;
+    }
+
+    .match-table tbody tr {
+        padding: 10px;
+        border-radius: 12px;
+    }
+
+    .match-table tbody td {
+        font-size: 0.74rem;
+        gap: 7px;
+    }
+
+    .match-table tbody td::before {
+        min-width: 82px;
+        font-size: 0.56rem;
+    }
+
+    .rank-badge {
+        width: 27px;
+        height: 27px;
+        font-size: 0.68rem;
+    }
+
+    .confidence-badge {
+        font-size: 0.56rem;
+    }
+
+    .action-link {
+        min-height: 38px;
+        font-size: 0.66rem;
+    }
+}
 </style>
 {% endblock %}
 

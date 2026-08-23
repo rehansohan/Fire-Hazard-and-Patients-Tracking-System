@@ -1,6 +1,169 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+
+@media (max-width: 767.98px) {
+
+    /* Main container */
+    .container.py-5 {
+        padding-top: 25px !important;
+        padding-bottom: 30px !important;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    /* Card */
+    .container.py-5 .card {
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    /* Header */
+    .container.py-5 .card-header {
+        padding: 18px 16px !important;
+    }
+
+    .container.py-5 .card-header h2 {
+        font-size: 1.35rem;
+        line-height: 1.35;
+        margin-bottom: 5px !important;
+    }
+
+    .container.py-5 .card-header small {
+        display: block;
+        font-size: 0.72rem;
+        line-height: 1.5;
+    }
+
+    /* Card body */
+    .container.py-5 .card-body {
+        padding: 20px 15px !important;
+    }
+
+    /* Section headings */
+    .container.py-5 h4 {
+        font-size: 1.05rem;
+        line-height: 1.4;
+        margin-top: 20px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .container.py-5 h4 i {
+        font-size: 0.95rem;
+    }
+
+    /* Horizontal lines */
+    .container.py-5 hr {
+        margin: 10px 0 18px;
+    }
+
+    /* All Bootstrap columns become full width */
+    .container.py-5 .row > [class*="col-md-"] {
+        width: 100%;
+    }
+
+    /* Form fields */
+    .container.py-5 .form-label {
+        font-size: 0.78rem;
+        margin-bottom: 6px;
+    }
+
+    .container.py-5 input,
+    .container.py-5 select,
+    .container.py-5 textarea {
+        width: 100%;
+        min-height: 43px;
+        font-size: 0.85rem;
+        padding: 9px 11px;
+        border-radius: 8px;
+        box-sizing: border-box;
+    }
+
+    .container.py-5 textarea {
+        min-height: 110px;
+    }
+
+    /* File upload */
+    .container.py-5 input[type="file"] {
+        padding: 9px;
+        font-size: 0.75rem;
+        min-height: auto;
+    }
+
+    /* Form spacing */
+    .container.py-5 .mb-3 {
+        margin-bottom: 14px !important;
+    }
+
+    /* Buttons */
+    .container.py-5 .text-end {
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 10px;
+        margin-top: 22px !important;
+    }
+
+    .container.py-5 .text-end .btn {
+        width: 100%;
+        min-height: 44px;
+        font-size: 0.82rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+}
+
+
+/* =========================================
+   EXTRA SMALL ANDROID PHONES
+   ========================================= */
+
+@media (max-width: 375px) {
+
+    .container.py-5 {
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+
+    .container.py-5 .card-header {
+        padding: 16px 13px !important;
+    }
+
+    .container.py-5 .card-header h2 {
+        font-size: 1.15rem;
+    }
+
+    .container.py-5 .card-header small {
+        font-size: 0.66rem;
+    }
+
+    .container.py-5 .card-body {
+        padding: 17px 12px !important;
+    }
+
+    .container.py-5 h4 {
+        font-size: 0.95rem;
+    }
+
+    .container.py-5 .form-label {
+        font-size: 0.72rem;
+    }
+
+    .container.py-5 input,
+    .container.py-5 select,
+    .container.py-5 textarea {
+        font-size: 0.8rem;
+    }
+
+    .container.py-5 .text-end .btn {
+        min-height: 42px;
+        font-size: 0.76rem;
+    }
+
+}
+</style>
 
 <div class="container py-5">
 

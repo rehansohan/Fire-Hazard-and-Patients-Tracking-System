@@ -3,6 +3,170 @@
 {% block title %}Edit Hazard | Hazard Management System{% endblock %}
 
 {% block content %}
+<style>
+
+    /* ================================
+       EDIT HAZARD - RESPONSIVE
+       ================================ */
+
+    .edit-hazard-page {
+        max-width: 700px;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .edit-hazard-card {
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .edit-hazard-header {
+        padding: 14px 18px;
+        font-size: 0.95rem;
+    }
+
+    .edit-hazard-body {
+        padding: 24px !important;
+    }
+
+    .edit-hazard-body .form-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .edit-hazard-body input,
+    .edit-hazard-body textarea,
+    .edit-hazard-body select {
+        width: 100%;
+        box-sizing: border-box;
+        font-size: 0.88rem;
+        padding: 10px 11px;
+        border-radius: 8px;
+    }
+
+    .edit-hazard-body textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .edit-hazard-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .edit-hazard-actions .btn {
+        min-height: 43px;
+        padding: 9px 18px;
+        font-size: 0.82rem;
+        border-radius: 8px;
+    }
+
+
+    /* =================================
+       MOBILE
+       ================================= */
+
+    @media (max-width: 767.98px) {
+
+        .edit-hazard-page {
+            width: 100%;
+            max-width: none !important;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .edit-hazard-page + * {
+            box-sizing: border-box;
+        }
+
+        .edit-hazard-card {
+            border-radius: 13px;
+        }
+
+        .edit-hazard-header {
+            padding: 13px 15px;
+            font-size: 0.85rem;
+        }
+
+        .edit-hazard-body {
+            padding: 18px !important;
+        }
+
+        .edit-hazard-body .form-label {
+            font-size: 0.78rem;
+        }
+
+        .edit-hazard-body input,
+        .edit-hazard-body textarea,
+        .edit-hazard-body select {
+            font-size: 0.82rem;
+            min-height: 43px;
+            padding: 9px 10px;
+        }
+
+        .edit-hazard-body textarea {
+            min-height: 110px;
+        }
+
+        .edit-hazard-actions {
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .edit-hazard-actions .btn {
+            width: 100%;
+            min-height: 44px;
+            font-size: 0.78rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+
+    /* =================================
+       EXTRA SMALL PHONES
+       ================================= */
+
+    @media (max-width: 375px) {
+
+        .edit-hazard-page {
+            padding-left: 6px;
+            padding-right: 6px;
+        }
+
+        .edit-hazard-header {
+            padding: 11px 12px;
+            font-size: 0.78rem;
+        }
+
+        .edit-hazard-body {
+            padding: 14px !important;
+        }
+
+        .edit-hazard-body .form-label {
+            font-size: 0.72rem;
+        }
+
+        .edit-hazard-body input,
+        .edit-hazard-body textarea,
+        .edit-hazard-body select {
+            font-size: 0.78rem;
+            min-height: 41px;
+        }
+
+        .edit-hazard-body textarea {
+            min-height: 95px;
+        }
+
+        .edit-hazard-actions .btn {
+            min-height: 42px;
+            font-size: 0.72rem;
+        }
+    }
+
+</style>
 <section class="hero-panel mb-4">
     <h1 class="page-title">Edit Hazard Report</h1>
     <p class="page-subtitle mb-0">Update hazard details and severity information.</p>

@@ -147,31 +147,158 @@ body{
     filter: brightness(0) invert(1);
 }
 
-@media(max-width:991px){
-    .custom-navbar{
-        padding: 12px 0;
+@media (max-width: 991px) {
+
+    .custom-navbar {
+        padding: 10px 0;
     }
 
-    .navbar-collapse{
-        margin-top: 18px;
+    /* Logo */
+    .logo-circle {
+        width: 40px;
+        height: 40px;
+        font-size: 17px;
+    }
+
+    .brand-text {
+        font-size: 1.05rem;
+        line-height: 1.2;
+    }
+
+    /* Hamburger */
+    .navbar-toggler {
+        padding: 6px 8px;
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 8px;
+    }
+
+    .navbar-toggler:focus {
+        box-shadow: none;
+    }
+
+    /* Mobile menu */
+    .navbar-collapse {
+        margin-top: 12px;
+        padding: 10px;
         background: rgba(7,19,34,0.98);
-        padding: 15px 14px;
-        border-radius: 14px;
         border: 1px solid rgba(148,163,184,0.15);
+        border-radius: 14px;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
     }
 
     .navbar-nav {
-        align-items: flex-start;
-        gap: 4px;
+        width: 100%;
+        align-items: stretch;
+        gap: 3px;
     }
 
     .navbar-nav .nav-item {
         width: 100%;
-        margin: 4px 0;
+        margin: 0;
     }
 
+    .navbar-nav .nav-link {
+        width: 100%;
+        padding: 11px 12px;
+        font-size: 0.85rem;
+        border-radius: 8px;
+    }
+
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link.active {
+        background: rgba(255,255,255,0.08);
+    }
+
+    /* Remove underline on mobile */
     .navbar-nav .nav-link::after {
-        display:none;
+        display: none;
+    }
+
+    /* Notification */
+    .notification-link {
+        justify-content: flex-start;
+        min-width: 100%;
+        min-height: 42px;
+    }
+
+    .notification-badge {
+        position: relative;
+        top: auto;
+        right: auto;
+        margin-left: 7px;
+        width: 18px;
+        height: 18px;
+        min-width: 18px;
+        padding: 0;
+        border: none;
+    }
+}
+
+
+/* =========================================
+   SMALL ANDROID PHONES
+   ========================================= */
+
+@media (max-width: 576px) {
+
+    .custom-navbar {
+        padding: 8px 0;
+    }
+
+    .logo-circle {
+        width: 37px;
+        height: 37px;
+        font-size: 15px;
+    }
+
+    .brand-text {
+        font-size: 0.95rem;
+    }
+
+    .navbar-toggler {
+        padding: 5px 7px;
+    }
+
+    .navbar-collapse {
+        margin-top: 10px;
+        padding: 8px;
+        border-radius: 12px;
+    }
+
+    .navbar-nav .nav-link {
+        padding: 10px;
+        font-size: 0.8rem;
+    }
+}
+
+
+/* =========================================
+   EXTRA SMALL PHONES
+   ========================================= */
+
+@media (max-width: 375px) {
+
+    .logo-circle {
+        width: 34px;
+        height: 34px;
+        font-size: 14px;
+    }
+
+    .brand-text {
+        font-size: 0.88rem;
+    }
+
+    .navbar-toggler {
+        padding: 4px 6px;
+    }
+
+    .navbar-collapse {
+        padding: 6px;
+    }
+
+    .navbar-nav .nav-link {
+        padding: 9px;
+        font-size: 0.76rem;
     }
 }
     </style>

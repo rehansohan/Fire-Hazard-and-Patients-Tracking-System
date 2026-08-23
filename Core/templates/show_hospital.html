@@ -212,6 +212,280 @@
         color: #64748b;
         font-weight: 500;
     }
+
+    /* =========================================
+   HOSPITAL DIRECTORY - RESPONSIVE
+   ========================================= */
+
+@media (max-width: 991.98px) {
+
+    .hospital-directory-shell {
+        padding: 22px 0 40px;
+    }
+
+    .directory-hero {
+        padding: 25px 22px;
+        border-radius: 22px;
+    }
+
+    .director-meta {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .hero-stat-wrap {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .stat-mini {
+        min-width: 135px;
+    }
+
+    .directory-table-card {
+        border-radius: 20px;
+    }
+}
+
+
+/* =========================================
+   MOBILE / ANDROID
+   ========================================= */
+
+@media (max-width: 767.98px) {
+
+    /* Page */
+    .hospital-directory-shell {
+        padding: 15px 7px 30px;
+    }
+
+
+    /* ===============================
+       HERO
+       =============================== */
+
+    .directory-hero {
+        padding: 20px 16px;
+        border-radius: 18px;
+        margin-bottom: 15px;
+    }
+
+    .eyebrow {
+        padding: 6px 9px;
+        font-size: 8px;
+        letter-spacing: 0.1em;
+    }
+
+    .page-title {
+        font-size: 1.8rem;
+        margin: 13px 0 7px;
+    }
+
+    .page-subtitle {
+        font-size: 0.78rem;
+        line-height: 1.55;
+    }
+
+
+    /* ===============================
+       STAT + ADD BUTTON
+       =============================== */
+
+    .hero-stat-wrap {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 9px;
+        margin-top: 5px;
+    }
+
+    .stat-mini {
+        width: 100%;
+        min-width: 0;
+        padding: 10px 13px;
+        border-radius: 13px;
+    }
+
+    .stat-mini .label {
+        font-size: 0.58rem;
+    }
+
+    .stat-mini .value {
+        margin-top: 4px;
+        font-size: 1.35rem;
+    }
+
+    .primary-btn {
+        width: 100%;
+        min-height: 42px;
+        padding: 10px 14px;
+        border-radius: 11px;
+        font-size: 0.76rem;
+    }
+
+
+    /* ===============================
+       TABLE CARD
+       =============================== */
+
+    .directory-table-card {
+        border-radius: 17px;
+    }
+
+    /*
+       Horizontal scrolling for table
+       */
+    .table-wrap {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .directory-table {
+        min-width: 700px;
+        margin-bottom: 0;
+    }
+
+
+    /* ===============================
+       TABLE HEADER
+       =============================== */
+
+    .directory-table thead th {
+        padding: 11px 10px;
+        font-size: 0.58rem;
+        white-space: nowrap;
+    }
+
+
+    /* ===============================
+       TABLE BODY
+       =============================== */
+
+    .directory-table tbody td {
+        padding: 12px 10px;
+        font-size: 0.7rem;
+        white-space: nowrap;
+    }
+
+    .hospital-name {
+        font-size: 0.72rem;
+    }
+
+    .muted-text {
+        font-size: 0.68rem;
+    }
+
+
+    /* ===============================
+       CAPACITY
+       =============================== */
+
+    .capacity-pill {
+        min-width: 65px;
+        padding: 6px 9px;
+        font-size: 0.62rem;
+    }
+
+
+    /* ===============================
+       BUTTONS
+       =============================== */
+
+    .dashboard-btn {
+        padding: 7px 10px;
+        border-radius: 8px;
+        font-size: 0.65rem;
+        white-space: nowrap;
+    }
+
+
+    /* ===============================
+       EMPTY STATE
+       =============================== */
+
+    .empty-state {
+        padding: 35px 15px;
+        font-size: 0.75rem;
+    }
+}
+
+
+/* =========================================
+   EXTRA SMALL ANDROID
+   ========================================= */
+
+@media (max-width: 375px) {
+
+    .hospital-directory-shell {
+        padding: 12px 5px 25px;
+    }
+
+    .directory-hero {
+        padding: 17px 13px;
+        border-radius: 15px;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    .page-subtitle {
+        font-size: 0.7rem;
+    }
+
+    .stat-mini {
+        padding: 9px 11px;
+    }
+
+    .stat-mini .label {
+        font-size: 0.52rem;
+    }
+
+    .stat-mini .value {
+        font-size: 1.2rem;
+    }
+
+    .primary-btn {
+        min-height: 40px;
+        font-size: 0.7rem;
+    }
+
+    .directory-table-card {
+        border-radius: 14px;
+    }
+
+    .directory-table {
+        min-width: 660px;
+    }
+
+    .directory-table thead th {
+        padding: 9px 8px;
+        font-size: 0.52rem;
+    }
+
+    .directory-table tbody td {
+        padding: 10px 8px;
+        font-size: 0.63rem;
+    }
+
+    .hospital-name {
+        font-size: 0.65rem;
+    }
+
+    .capacity-pill {
+        font-size: 0.56rem;
+        min-width: 58px;
+        padding: 5px 7px;
+    }
+
+    .dashboard-btn {
+        padding: 6px 8px;
+        font-size: 0.58rem;
+    }
+}
 </style>
 {% endblock %}
 

@@ -322,24 +322,393 @@
         background: #f8fafc;
     }
 
-    @media (max-width: 767.98px) {
-        .metric-row {
-            grid-template-columns: 1fr;
-        }
+/* =========================================
+   MOBILE RESPONSIVE
+   ========================================= */
 
-        .panel-header {
-            flex-direction: column;
-            align-items: flex-start;
-        }
+@media (max-width: 767.98px) {
 
-        .table-wrap {
-            overflow-x: auto;
-        }
-
-        .match-table {
-            min-width: 720px;
-        }
+    /* Page */
+    .match-page {
+        padding: 15px 8px 30px;
     }
+
+    /* Hero */
+    .match-hero {
+        padding: 20px 15px;
+        border-radius: 18px;
+    }
+
+    .match-hero::after {
+        width: 170px;
+        height: 170px;
+        right: -70px;
+        bottom: -70px;
+    }
+
+    .eyebrow {
+        font-size: 0.6rem;
+        padding: 6px 9px;
+        letter-spacing: 0.08em;
+    }
+
+    .page-title {
+        margin-top: 13px;
+        font-size: 1.85rem;
+        line-height: 1.25;
+        letter-spacing: -0.035em;
+    }
+
+    .page-subtitle {
+        font-size: 0.8rem;
+        line-height: 1.6;
+    }
+
+
+    /* =====================================
+       METRICS
+       ===================================== */
+
+    .metric-row {
+        grid-template-columns: 1fr;
+        gap: 9px;
+        margin-top: 18px;
+    }
+
+    .metric-box {
+        padding: 13px 15px;
+        border-radius: 13px;
+    }
+
+    .metric-label {
+        font-size: 0.62rem;
+    }
+
+    .metric-value {
+        margin-top: 5px;
+        font-size: 1.6rem;
+    }
+
+
+    /* =====================================
+       MAIN PANEL
+       ===================================== */
+
+    .panel {
+        margin-top: 15px;
+        border-radius: 17px;
+    }
+
+    .panel-header {
+        padding: 15px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .panel-header h3 {
+        font-size: 1rem;
+    }
+
+    .missing-pill {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 0.62rem;
+        padding: 6px 9px;
+    }
+
+    .panel-body {
+        padding: 13px;
+    }
+
+
+    /* =====================================
+       PERSON SUMMARY
+       ===================================== */
+
+    .person-summary {
+        padding: 13px;
+        margin-bottom: 13px;
+        border-radius: 13px;
+    }
+
+    .summary-label {
+        font-size: 0.62rem;
+    }
+
+    .summary-name {
+        margin-top: 4px;
+        font-size: 1.1rem;
+        word-break: break-word;
+    }
+
+
+    /* =====================================
+       TABLE → MOBILE CARDS
+       ===================================== */
+
+    .table-wrap {
+        overflow: visible;
+        border: none;
+        border-radius: 0;
+    }
+
+    .match-table,
+    .match-table tbody,
+    .match-table tr,
+    .match-table td {
+        display: block;
+        width: 100%;
+    }
+
+    /* Hide desktop table header */
+    .match-table thead {
+        display: none;
+    }
+
+    /* Each candidate becomes a card */
+    .match-table tbody tr {
+        background: #fff;
+        border: 1px solid rgba(148,163,184,0.16);
+        border-radius: 14px;
+        padding: 12px;
+        margin-bottom: 12px;
+        box-shadow: 0 5px 15px rgba(15,23,42,0.04);
+    }
+
+    .match-table tbody tr:last-child {
+        margin-bottom: 0;
+    }
+
+    .match-table tbody td {
+        border: none;
+        padding: 7px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.78rem;
+        line-height: 1.4;
+    }
+
+
+    /* Mobile labels */
+
+    .match-table tbody td:nth-child(1)::before {
+        content: "Rank";
+    }
+
+    .match-table tbody td:nth-child(2)::before {
+        content: "Patient";
+    }
+
+    .match-table tbody td:nth-child(3)::before {
+        content: "Score";
+    }
+
+    .match-table tbody td:nth-child(4)::before {
+        content: "Confidence";
+    }
+
+    .match-table tbody td:nth-child(5)::before {
+        content: "Face";
+    }
+
+    .match-table tbody td:nth-child(6)::before {
+        content: "Action";
+    }
+
+    .match-table tbody td::before {
+        min-width: 82px;
+        flex-shrink: 0;
+        color: #64748b;
+        font-size: 0.6rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+
+    /* =====================================
+       RANK
+       ===================================== */
+
+    .rank-badge {
+        width: 29px;
+        height: 29px;
+        border-radius: 9px;
+        font-size: 0.7rem;
+    }
+
+
+    /* =====================================
+       PATIENT NAME
+       ===================================== */
+
+    .patient-name {
+        font-size: 0.8rem;
+        word-break: break-word;
+    }
+
+
+    /* =====================================
+       SCORE
+       ===================================== */
+
+    .score-value {
+        font-size: 0.8rem;
+    }
+
+
+    /* =====================================
+       CONFIDENCE
+       ===================================== */
+
+    .confidence-badge,
+    .verified-badge,
+    .not-verified-badge {
+        padding: 5px 8px;
+        font-size: 0.6rem;
+        white-space: nowrap;
+    }
+
+
+    /* =====================================
+       ACTIONS
+       ===================================== */
+
+    .action-stack {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 7px;
+    }
+
+    .action-btn {
+        width: 100%;
+        min-height: 39px;
+        padding: 8px 9px;
+        font-size: 0.68rem;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    /* Confirm form should fit inside grid */
+    .action-stack form {
+        width: 100%;
+        margin: 0;
+    }
+
+    .action-stack form .action-btn {
+        width: 100%;
+    }
+
+    /* Identified badge */
+    .action-stack > .action-btn.success {
+        width: 100%;
+    }
+
+
+    /* =====================================
+       EMPTY STATE
+       ===================================== */
+
+    .empty-state {
+        padding: 30px 12px;
+        font-size: 0.78rem;
+        line-height: 1.5;
+        border-radius: 12px;
+    }
+
+}
+
+
+/* =========================================
+   EXTRA SMALL ANDROID PHONES
+   ========================================= */
+
+@media (max-width: 375px) {
+
+    .match-page {
+        padding: 10px 5px 25px;
+    }
+
+    .match-hero {
+        padding: 17px 12px;
+        border-radius: 15px;
+    }
+
+    .page-title {
+        font-size: 1.55rem;
+    }
+
+    .page-subtitle {
+        font-size: 0.73rem;
+    }
+
+    .metric-box {
+        padding: 11px 12px;
+    }
+
+    .metric-value {
+        font-size: 1.45rem;
+    }
+
+    .panel {
+        border-radius: 14px;
+    }
+
+    .panel-header {
+        padding: 13px;
+    }
+
+    .panel-body {
+        padding: 10px;
+    }
+
+    .summary-name {
+        font-size: 1rem;
+    }
+
+    .match-table tbody tr {
+        padding: 10px;
+        border-radius: 12px;
+    }
+
+    .match-table tbody td {
+        font-size: 0.72rem;
+        gap: 7px;
+    }
+
+    .match-table tbody td::before {
+        min-width: 75px;
+        font-size: 0.55rem;
+    }
+
+    .rank-badge {
+        width: 27px;
+        height: 27px;
+        font-size: 0.65rem;
+    }
+
+    .confidence-badge,
+    .verified-badge,
+    .not-verified-badge {
+        font-size: 0.55rem;
+        padding: 4px 7px;
+    }
+
+    .action-stack {
+        gap: 6px;
+    }
+
+    .action-btn {
+        min-height: 37px;
+        font-size: 0.62rem;
+    }
+
+}
 </style>
 {% endblock %}
 

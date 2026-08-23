@@ -199,33 +199,260 @@
         color: #0f172a;
     }
 
-    @media (max-width: 767.98px) {
-        .table-header {
-            flex-direction: column;
-            align-items: flex-start;
-        }
+/* ================================
+   RESPONSIVE DESIGN
+   ================================ */
 
-        .hazard-table thead {
-            display: none;
-        }
+@media (max-width: 767.98px) {
 
-        .hazard-table tbody,
-        .hazard-table tr,
-        .hazard-table td {
-            display: block;
-            width: 100%;
-        }
-
-        .hazard-table tbody tr {
-            border-bottom: 1px solid rgba(148,163,184,0.12);
-            padding: 8px 0;
-        }
-
-        .hazard-table tbody td {
-            border: none;
-            padding: 8px 16px;
-        }
+    /* Main container */
+    .hazard-shell {
+        padding: 15px 8px 35px;
     }
+
+    /* Hero section */
+    .hazard-hero {
+        border-radius: 18px;
+        padding: 22px 16px;
+    }
+
+    .hazard-hero::after {
+        width: 170px;
+        height: 170px;
+        right: -75px;
+        bottom: -75px;
+    }
+
+    .hero-badge {
+        padding: 6px 9px;
+        font-size: 0.62rem;
+        letter-spacing: 0.08em;
+    }
+
+    .page-title {
+        margin-top: 14px;
+        margin-bottom: 10px;
+        font-size: 2rem;
+        line-height: 1.2;
+        letter-spacing: -0.035em;
+    }
+
+    .page-subtitle {
+        font-size: 0.88rem;
+        line-height: 1.6;
+    }
+
+    /* Open incidents metric */
+    .hero-metric {
+        width: 100%;
+        padding: 15px;
+        border-radius: 15px;
+    }
+
+    .metric-label {
+        font-size: 0.65rem;
+        letter-spacing: 0.08em;
+    }
+
+    .metric-value {
+        margin-top: 6px;
+        font-size: 1.9rem;
+    }
+
+    /* Table panel */
+    .table-panel {
+        margin-top: 15px;
+        border-radius: 17px;
+    }
+
+    .table-header {
+        padding: 16px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .table-header h4 {
+        font-size: 1.05rem;
+    }
+
+    .table-header small {
+        font-size: 0.72rem;
+        line-height: 1.5;
+    }
+
+    /* Hide desktop table heading */
+    .hazard-table thead {
+        display: none;
+    }
+
+    /* Convert table rows into cards */
+    .hazard-table,
+    .hazard-table tbody,
+    .hazard-table tr,
+    .hazard-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .hazard-table tbody tr {
+        background: #ffffff;
+        border-bottom: 1px solid rgba(148,163,184,0.15);
+        padding: 12px 0;
+    }
+
+    .hazard-table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .hazard-table tbody td {
+        border: none;
+        padding: 7px 15px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 0.82rem;
+        line-height: 1.5;
+    }
+
+    /* Add labels before table data */
+    .hazard-table tbody td:nth-child(1)::before {
+        content: "#";
+    }
+
+    .hazard-table tbody td:nth-child(2)::before {
+        content: "Title";
+    }
+
+    .hazard-table tbody td:nth-child(3)::before {
+        content: "Description";
+    }
+
+    .hazard-table tbody td:nth-child(4)::before {
+        content: "Severity";
+    }
+
+    .hazard-table tbody td:nth-child(5)::before {
+        content: "Reported";
+    }
+
+    .hazard-table tbody td:nth-child(6)::before {
+        content: "Reported By";
+    }
+
+    .hazard-table tbody td:nth-child(7)::before {
+        content: "Action";
+    }
+
+    .hazard-table tbody td::before {
+        min-width: 82px;
+        flex-shrink: 0;
+        color: #64748b;
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    /* Title */
+    .hazard-table tbody td:nth-child(2) strong {
+        color: #0f172a;
+        font-size: 0.85rem;
+    }
+
+    /* Description */
+    .hazard-table tbody td:nth-child(3) {
+        color: #475569;
+    }
+
+    /* Severity */
+    .severity-badge {
+        padding: 5px 9px;
+        font-size: 0.65rem;
+    }
+
+    /* Details button */
+    .hazard-table tbody td:nth-child(7) {
+        padding-top: 10px;
+    }
+
+    .details-btn {
+        width: 100%;
+        min-height: 42px;
+        padding: 9px 12px;
+        font-size: 0.78rem;
+        border-radius: 9px;
+    }
+
+    /* Empty state */
+    .empty-state {
+        padding: 35px 15px;
+    }
+
+    .empty-state h5 {
+        font-size: 1rem;
+    }
+
+    .empty-state p {
+        font-size: 0.78rem;
+    }
+}
+
+
+/* ================================
+   EXTRA SMALL PHONES
+   ================================ */
+
+@media (max-width: 375px) {
+
+    .hazard-shell {
+        padding: 10px 5px 25px;
+    }
+
+    .hazard-hero {
+        padding: 18px 13px;
+        border-radius: 15px;
+    }
+
+    .page-title {
+        font-size: 1.65rem;
+    }
+
+    .page-subtitle {
+        font-size: 0.8rem;
+    }
+
+    .hero-badge {
+        font-size: 0.55rem;
+    }
+
+    .hero-metric {
+        padding: 13px;
+    }
+
+    .metric-value {
+        font-size: 1.7rem;
+    }
+
+    .table-header {
+        padding: 14px;
+    }
+
+    .hazard-table tbody td {
+        padding: 6px 12px;
+        font-size: 0.76rem;
+    }
+
+    .hazard-table tbody td::before {
+        min-width: 70px;
+        font-size: 0.6rem;
+    }
+
+    .details-btn {
+        min-height: 40px;
+        font-size: 0.72rem;
+    }
+}
 </style>
 {% endblock %}
 

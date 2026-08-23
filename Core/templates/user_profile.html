@@ -299,37 +299,353 @@
         font-weight: 600;
     }
 
-    @media (max-width: 991.98px) {
-        .profile-layout {
-            grid-template-columns: 1fr;
-        }
+/* =========================================
+   PROFILE PAGE - MOBILE RESPONSIVE
+   ========================================= */
+
+@media (max-width: 767.98px) {
+
+    .profile-shell {
+        padding: 18px 8px 35px;
     }
 
-    @media (max-width: 767.98px) {
-        .profile-topbar,
-        .profile-panel,
-        .notification-panel {
-            padding-left: 18px;
-            padding-right: 18px;
-        }
-
-        .profile-topbar {
-            border-radius: 18px;
-            flex-wrap: wrap;
-        }
-
-        .info-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .profile-actions {
-            justify-content: stretch;
-        }
-
-        .profile-actions > * {
-            flex: 1 1 100%;
-        }
+    /* Top header */
+    .profile-topbar {
+        padding: 18px 16px;
+        margin-bottom: 15px;
+        border-radius: 18px;
+        gap: 10px;
     }
+
+    .profile-topbar h2 {
+        font-size: 1.45rem;
+        letter-spacing: -0.04em;
+    }
+
+    .profile-badge {
+        padding: 7px 10px;
+        font-size: 0.58rem;
+    }
+
+
+    /* Main layout */
+    .profile-layout {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+
+    /* Profile sidebar */
+    .profile-sidebar {
+        padding: 20px 15px;
+        border-radius: 18px;
+    }
+
+    .avatar-panel {
+        margin-bottom: 13px;
+    }
+
+    .avatar-frame {
+        width: 125px;
+        height: 125px;
+        border-width: 4px;
+    }
+
+    .avatar-placeholder {
+        font-size: 3rem;
+    }
+
+    .profile-name {
+        font-size: 1.25rem;
+        margin-bottom: 5px;
+        word-break: break-word;
+    }
+
+    .profile-role {
+        font-size: 0.75rem;
+        margin-bottom: 14px;
+    }
+
+
+    /* Mini stats */
+    .mini-stats {
+        gap: 8px;
+    }
+
+    .mini-stat {
+        padding: 10px 12px;
+        border-radius: 12px;
+    }
+
+    .mini-stat-label {
+        font-size: 0.58rem;
+    }
+
+    .mini-stat-value {
+        margin-top: 4px;
+        font-size: 0.78rem;
+        word-break: break-word;
+    }
+
+
+    /* Personal information */
+    .profile-panel {
+        padding: 18px 15px 20px;
+        border-radius: 18px;
+    }
+
+    .panel-header {
+        margin-bottom: 14px;
+    }
+
+    .panel-header h3 {
+        font-size: 1.05rem;
+    }
+
+    .header-dot {
+        width: 8px;
+        height: 8px;
+        box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.12);
+    }
+
+
+    /* Information cards */
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 9px;
+    }
+
+    .info-item {
+        padding: 11px 12px;
+        border-radius: 12px;
+        gap: 5px;
+    }
+
+    .info-item[style*="grid-column"] {
+        grid-column: auto !important;
+    }
+
+    .info-item strong {
+        font-size: 0.58rem;
+    }
+
+    .info-item span {
+        font-size: 0.74rem;
+        line-height: 1.5;
+        word-break: break-word;
+    }
+
+
+    /* Action buttons */
+    .profile-actions {
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 16px;
+    }
+
+    .profile-actions > * {
+        width: 100%;
+        flex: none;
+        text-align: center;
+        min-height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.72rem;
+        border-radius: 10px;
+    }
+
+
+    /* Notifications */
+    .notification-panel {
+        margin-top: 15px;
+        padding: 17px 14px;
+        border-radius: 18px;
+    }
+
+    .notification-header {
+        margin-bottom: 12px;
+    }
+
+    .notification-header h4 {
+        font-size: 1rem;
+    }
+
+    .badge-danger {
+        min-width: 24px;
+        height: 24px;
+        font-size: 0.65rem;
+    }
+
+    .notification-list {
+        gap: 8px;
+    }
+
+    .notification-item {
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .notification-item.unread {
+        border-left-width: 3px;
+    }
+
+    .notification-item h6 {
+        font-size: 0.8rem;
+        margin-bottom: 6px;
+        word-break: break-word;
+    }
+
+    .notification-item p {
+        font-size: 0.7rem;
+        line-height: 1.5;
+        margin-bottom: 7px;
+        word-break: break-word;
+    }
+
+    .notification-item small {
+        font-size: 0.6rem;
+    }
+
+
+    /* Patient information inside notification */
+    .patient-info {
+        font-size: 0.68rem;
+        line-height: 1.6;
+    }
+
+    .patient-info strong {
+        font-size: 0.66rem;
+    }
+
+    .patient-info .btn {
+        width: 100%;
+        min-height: 38px;
+        font-size: 0.68rem;
+        border-radius: 8px;
+    }
+}
+
+
+/* =========================================
+   EXTRA SMALL ANDROID
+   ========================================= */
+
+@media (max-width: 375px) {
+
+    .profile-shell {
+        padding: 12px 5px 28px;
+    }
+
+    .profile-topbar {
+        padding: 15px 12px;
+        border-radius: 15px;
+    }
+
+    .profile-topbar h2 {
+        font-size: 1.25rem;
+    }
+
+    .profile-badge {
+        font-size: 0.52rem;
+        padding: 6px 8px;
+    }
+
+    .profile-sidebar,
+    .profile-panel,
+    .notification-panel {
+        border-radius: 15px;
+    }
+
+    .profile-sidebar {
+        padding: 17px 12px;
+    }
+
+    .avatar-frame {
+        width: 105px;
+        height: 105px;
+    }
+
+    .profile-name {
+        font-size: 1.1rem;
+    }
+
+    .profile-role {
+        font-size: 0.68rem;
+    }
+
+    .mini-stat {
+        padding: 9px 10px;
+    }
+
+    .mini-stat-label {
+        font-size: 0.52rem;
+    }
+
+    .mini-stat-value {
+        font-size: 0.7rem;
+    }
+
+    .profile-panel {
+        padding: 15px 12px 17px;
+    }
+
+    .panel-header h3 {
+        font-size: 0.95rem;
+    }
+
+    .info-item {
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .info-item strong {
+        font-size: 0.52rem;
+    }
+
+    .info-item span {
+        font-size: 0.68rem;
+    }
+
+    .profile-actions > * {
+        min-height: 40px;
+        font-size: 0.66rem;
+    }
+
+    .notification-panel {
+        padding: 14px 11px;
+    }
+
+    .notification-header h4 {
+        font-size: 0.9rem;
+    }
+
+    .notification-item {
+        padding: 10px;
+    }
+
+    .notification-item h6 {
+        font-size: 0.72rem;
+    }
+
+    .notification-item p {
+        font-size: 0.64rem;
+    }
+
+    .notification-item small {
+        font-size: 0.55rem;
+    }
+
+    .patient-info {
+        font-size: 0.62rem;
+    }
+
+    .patient-info .btn {
+        min-height: 36px;
+        font-size: 0.62rem;
+    }
+}
 </style>
 {% endblock %}
 

@@ -343,60 +343,356 @@
         margin-top: 6px;
     }
 
-    @media (max-width: 992px) {
-        .hospital-hero {
-            height: 390px;
-        }
+/* =========================================
+   HOSPITAL PROFILE - MOBILE RESPONSIVE
+   ========================================= */
 
-        .quick-contact {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
+@media (max-width: 767.98px) {
 
-        .hospital-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .facilities-grid {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-        }
+    /* Main page */
+    .hospital-page {
+        padding-bottom: 30px;
     }
 
-    @media (max-width: 576px) {
-        .hospital-hero {
-            height: 360px;
-        }
-
-        .hero-content {
-            bottom: 42px;
-        }
-
-        .hero-content-inner {
-            padding: 0 16px;
-        }
-
-        .quick-contact {
-            grid-template-columns: 1fr;
-            margin: 0 12px;
-        }
-
-        .contact-item {
-            border-right: none;
-            border-bottom: 1px solid #e8edf3;
-        }
-
-        .contact-item:last-child {
-            border-bottom: none;
-        }
-
-        .hospital-container {
-            padding-left: 16px;
-            padding-right: 16px;
-        }
-
-        .facilities-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
+    /* Hero */
+    .hospital-hero {
+        height: 390px;
+        border-radius: 0;
     }
+
+    .hospital-hero-overlay {
+        background: linear-gradient(
+            180deg,
+            rgba(7, 19, 34, 0.25) 0%,
+            rgba(7, 19, 34, 0.65) 55%,
+            rgba(7, 19, 34, 0.92) 100%
+        );
+    }
+
+    .hospital-hero img {
+        object-position: center;
+    }
+
+    .hero-content {
+        bottom: 30px;
+    }
+
+    .hero-content-inner {
+        padding: 0 16px;
+    }
+
+    .emergency-badge {
+        padding: 6px 10px;
+        font-size: 9px;
+        margin-bottom: 12px;
+    }
+
+    .emergency-badge i {
+        font-size: 11px;
+    }
+
+    .hero-content h1 {
+        font-size: 2rem;
+        line-height: 1.15;
+        letter-spacing: -0.04em;
+        margin-bottom: 8px;
+    }
+
+    .hero-content p {
+        font-size: 0.76rem;
+        line-height: 1.55;
+        max-width: 100%;
+    }
+
+    /* Hero chips */
+    .hero-chips {
+        gap: 6px;
+        margin-top: 12px;
+    }
+
+    .hero-chip {
+        padding: 6px 9px;
+        font-size: 0.61rem;
+        gap: 5px;
+    }
+
+
+    /* Quick contact */
+    .quick-contact-wrapper {
+        margin-top: -20px;
+        padding: 0 8px;
+    }
+
+    .quick-contact {
+        margin: 0;
+        border-radius: 16px;
+        grid-template-columns: 1fr;
+    }
+
+    .contact-item {
+        padding: 13px 14px;
+        gap: 10px;
+        border-right: none;
+        border-bottom: 1px solid #e8edf3;
+    }
+
+    .contact-item:last-child {
+        border-bottom: none;
+    }
+
+    .contact-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        font-size: 0.85rem;
+    }
+
+    .contact-item small {
+        font-size: 0.57rem;
+    }
+
+    .contact-item strong {
+        font-size: 0.74rem;
+        margin-top: 2px;
+        word-break: break-word;
+    }
+
+
+    /* Main content */
+    .hospital-container {
+        padding: 22px 14px 0;
+    }
+
+    .hospital-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+
+    /* About section */
+    .section-title {
+        font-size: 1.35rem;
+        line-height: 1.3;
+        margin-bottom: 9px;
+    }
+
+    .about-text {
+        font-size: 0.78rem;
+        line-height: 1.7;
+        margin-bottom: 13px;
+    }
+
+    .learn-btn {
+        padding: 9px 13px;
+        border-radius: 9px;
+        font-size: 0.7rem;
+    }
+
+
+    /* Hospital glance */
+    .glance-card {
+        padding: 15px 12px;
+        border-radius: 16px;
+    }
+
+    .glance-title {
+        font-size: 0.95rem;
+        margin-bottom: 11px;
+    }
+
+    .glance-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    .glance-item {
+        gap: 7px;
+        padding: 9px 7px;
+        border-radius: 10px;
+    }
+
+    .glance-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        font-size: 0.75rem;
+    }
+
+    .glance-item small {
+        font-size: 0.5rem;
+    }
+
+    .glance-item strong {
+        font-size: 0.68rem;
+        margin-top: 2px;
+        word-break: break-word;
+    }
+
+
+    /* Facilities */
+    .facilities-section {
+        margin-top: 22px;
+    }
+
+    .facilities-title {
+        font-size: 1.35rem;
+        margin-bottom: 13px;
+    }
+
+    .facilities-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+    }
+
+    .facility-card {
+        border-radius: 13px;
+        padding: 14px 7px 12px;
+    }
+
+    .facility-card:hover {
+        transform: none;
+    }
+
+    .facility-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        font-size: 0.85rem;
+        margin-bottom: 7px;
+    }
+
+    .facility-card h4 {
+        font-size: 0.7rem;
+        line-height: 1.3;
+    }
+
+    .facility-card span {
+        font-size: 0.57rem;
+        margin-top: 3px;
+    }
+}
+
+
+/* =========================================
+   EXTRA SMALL ANDROID PHONES
+   ========================================= */
+
+@media (max-width: 375px) {
+
+    .hospital-hero {
+        height: 365px;
+    }
+
+    .hero-content {
+        bottom: 24px;
+    }
+
+    .hero-content-inner {
+        padding: 0 13px;
+    }
+
+    .emergency-badge {
+        font-size: 8px;
+        padding: 5px 8px;
+    }
+
+    .hero-content h1 {
+        font-size: 1.7rem;
+    }
+
+    .hero-content p {
+        font-size: 0.68rem;
+        line-height: 1.5;
+    }
+
+    .hero-chip {
+        font-size: 0.55rem;
+        padding: 5px 7px;
+    }
+
+    .quick-contact-wrapper {
+        padding: 0 6px;
+    }
+
+    .contact-item {
+        padding: 11px 12px;
+    }
+
+    .contact-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 0.75rem;
+    }
+
+    .contact-item small {
+        font-size: 0.52rem;
+    }
+
+    .contact-item strong {
+        font-size: 0.68rem;
+    }
+
+    .hospital-container {
+        padding-left: 11px;
+        padding-right: 11px;
+    }
+
+    .section-title {
+        font-size: 1.2rem;
+    }
+
+    .about-text {
+        font-size: 0.7rem;
+    }
+
+    .glance-card {
+        padding: 13px 10px;
+    }
+
+    .glance-title {
+        font-size: 0.85rem;
+    }
+
+    .glance-item {
+        padding: 8px 6px;
+    }
+
+    .glance-icon {
+        width: 27px;
+        height: 27px;
+        font-size: 0.68rem;
+    }
+
+    .glance-item small {
+        font-size: 0.44rem;
+    }
+
+    .glance-item strong {
+        font-size: 0.62rem;
+    }
+
+    .facilities-title {
+        font-size: 1.2rem;
+    }
+
+    .facility-card {
+        padding: 12px 5px 10px;
+    }
+
+    .facility-icon {
+        width: 30px;
+        height: 30px;
+        font-size: 0.72rem;
+    }
+
+    .facility-card h4 {
+        font-size: 0.63rem;
+    }
+
+    .facility-card span {
+        font-size: 0.5rem;
+    }
+}
 </style>
 {% endblock %}
 

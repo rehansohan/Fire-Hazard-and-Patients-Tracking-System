@@ -343,12 +343,415 @@
         font-weight: 500;
     }
 
-    @media (max-width: 991.98px) {
-        .hero-meta {
-            text-align: left;
-            margin-top: 18px;
-        }
+/* =========================================
+   HOSPITAL DASHBOARD RESPONSIVE
+   ========================================= */
+
+/* ---------- TABLET ---------- */
+
+@media (max-width: 991.98px) {
+
+    .dashboard-shell {
+        padding: 22px 12px 40px;
     }
+
+    .hospital-hero {
+        padding: 24px 22px;
+        border-radius: 22px;
+    }
+
+    .page-title {
+        font-size: 2rem;
+    }
+
+    .hero-meta {
+        text-align: left;
+        margin-top: 12px;
+    }
+
+    .sidebar-panel {
+        padding: 20px;
+    }
+
+    .main-panel {
+        padding: 20px;
+    }
+
+    .detail-header {
+        align-items: flex-start;
+    }
+
+}
+
+
+/* =========================================
+   MOBILE / ANDROID
+   ========================================= */
+
+@media (max-width: 767.98px) {
+
+    .dashboard-shell {
+        padding: 14px 7px 30px;
+    }
+
+
+    /* =====================================
+       HOSPITAL HERO
+       ===================================== */
+
+    .hospital-hero {
+        padding: 19px 15px;
+        border-radius: 18px;
+        margin-bottom: 15px;
+    }
+
+    .hospital-hero::after {
+        width: 150px;
+        height: 150px;
+        right: -55px;
+        bottom: -55px;
+    }
+
+    .eyebrow {
+        padding: 6px 9px;
+        font-size: 0.58rem;
+        letter-spacing: 0.08em;
+    }
+
+    .page-title {
+        font-size: 1.55rem;
+        line-height: 1.3;
+        margin-top: 12px;
+        margin-bottom: 7px;
+        word-break: break-word;
+    }
+
+    .page-subtitle {
+        font-size: 0.72rem;
+        line-height: 1.6;
+        word-break: break-word;
+    }
+
+    .hero-meta {
+        text-align: left;
+        margin-top: 8px;
+        font-size: 0.7rem;
+        line-height: 1.55;
+    }
+
+    .hero-meta strong {
+        font-size: 0.65rem;
+        margin-bottom: 5px;
+    }
+
+
+    /* =====================================
+       TOP STAT CARDS
+       ===================================== */
+
+    .stat-card {
+        border-radius: 14px;
+    }
+
+    .stat-card .card-body {
+        padding: 13px 14px;
+    }
+
+    .stat-card .text-muted {
+        font-size: 0.58rem;
+    }
+
+    .stat-value {
+        font-size: 1.45rem;
+        margin-top: 6px;
+    }
+
+
+    /* =====================================
+       SIDEBAR
+       ===================================== */
+
+    .sidebar-panel {
+        padding: 15px;
+        border-radius: 17px;
+    }
+
+    .panel-caption {
+        font-size: 0.6rem;
+        margin-bottom: 10px;
+    }
+
+    .hazard-link {
+        padding: 10px;
+        border-radius: 11px;
+    }
+
+    .hazard-link .title {
+        font-size: 0.75rem;
+        max-width: 80%;
+    }
+
+    .small-pill {
+        min-width: 23px;
+        height: 23px;
+        font-size: 0.65rem;
+    }
+
+    .quick-stat-badges {
+        gap: 6px;
+    }
+
+    .badge-soft {
+        padding: 6px 9px;
+        font-size: 0.63rem;
+    }
+
+    .sidebar-panel .btn {
+        width: 100%;
+        min-height: 42px;
+        font-size: 0.75rem;
+    }
+
+
+    /* =====================================
+       MAIN PANEL
+       ===================================== */
+
+    .main-panel {
+        padding: 15px;
+        border-radius: 17px;
+    }
+
+    .detail-header {
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 15px;
+        padding-bottom: 12px;
+    }
+
+    .detail-header h2 {
+        font-size: 1.15rem;
+        line-height: 1.35;
+        word-break: break-word;
+    }
+
+    .detail-header p {
+        font-size: 0.72rem;
+        line-height: 1.55;
+        word-break: break-word;
+    }
+
+    .detail-header > div:last-child {
+        width: 100%;
+    }
+
+    .status-badge,
+    .severity-badge {
+        padding: 6px 9px;
+        font-size: 0.6rem;
+    }
+
+    .detail-header .btn {
+        min-height: 40px;
+        font-size: 0.7rem;
+        padding: 8px 11px;
+    }
+
+
+    /* =====================================
+       MINI STAT CARDS
+       ===================================== */
+
+    .mini-stat-grid {
+        margin-bottom: 15px;
+    }
+
+    .mini-stat {
+        padding: 11px 12px;
+        border-radius: 13px;
+    }
+
+    .mini-stat .label {
+        font-size: 0.57rem;
+    }
+
+    .mini-stat .value {
+        margin-top: 5px;
+        font-size: 1.25rem;
+    }
+
+
+    /* =====================================
+       ALL PATIENTS TABLE
+       ===================================== */
+
+    .table-wrap {
+        border-radius: 13px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table {
+        min-width: 680px;
+        margin-bottom: 0;
+    }
+
+    .table thead th {
+        font-size: 0.6rem;
+        padding: 10px 9px;
+        white-space: nowrap;
+    }
+
+    .table tbody td {
+        font-size: 0.68rem;
+        padding: 10px 9px;
+        white-space: nowrap;
+    }
+
+    .action-btn {
+        padding: 6px 9px;
+        font-size: 0.62rem;
+        border-radius: 7px;
+    }
+
+
+    /* =====================================
+       TRANSFERRED / RELEASED SECTION
+       ===================================== */
+
+    .table-section {
+        margin-top: 18px;
+    }
+
+    .table-section-title {
+        font-size: 0.85rem;
+        margin-bottom: 8px;
+    }
+
+    .table-section .table {
+        min-width: 430px;
+    }
+
+    .table-section .table tbody td {
+        font-size: 0.68rem;
+    }
+
+    .table-section img,
+    .table-section .rounded-3 {
+        width: 52px !important;
+        height: 52px !important;
+    }
+
+
+    /* =====================================
+       EMPTY STATE
+       ===================================== */
+
+    .empty-state {
+        padding: 25px 12px;
+        font-size: 0.72rem;
+        line-height: 1.5;
+    }
+
+}
+
+
+/* =========================================
+   EXTRA SMALL ANDROID
+   ========================================= */
+
+@media (max-width: 375px) {
+
+    .dashboard-shell {
+        padding: 10px 5px 25px;
+    }
+
+    .hospital-hero {
+        padding: 16px 12px;
+        border-radius: 15px;
+    }
+
+    .page-title {
+        font-size: 1.35rem;
+    }
+
+    .page-subtitle {
+        font-size: 0.66rem;
+    }
+
+    .hero-meta {
+        font-size: 0.64rem;
+    }
+
+    .stat-card {
+        border-radius: 12px;
+    }
+
+    .stat-card .card-body {
+        padding: 11px;
+    }
+
+    .stat-card .text-muted {
+        font-size: 0.52rem;
+    }
+
+    .stat-value {
+        font-size: 1.25rem;
+    }
+
+    .sidebar-panel,
+    .main-panel {
+        padding: 12px;
+        border-radius: 14px;
+    }
+
+    .detail-header h2 {
+        font-size: 1.02rem;
+    }
+
+    .detail-header p {
+        font-size: 0.65rem;
+    }
+
+    .mini-stat {
+        padding: 9px 10px;
+    }
+
+    .mini-stat .label {
+        font-size: 0.51rem;
+    }
+
+    .mini-stat .value {
+        font-size: 1.1rem;
+    }
+
+    .table {
+        min-width: 620px;
+    }
+
+    .table thead th {
+        font-size: 0.55rem;
+    }
+
+    .table tbody td {
+        font-size: 0.62rem;
+        padding: 8px;
+    }
+
+    .action-btn {
+        font-size: 0.58rem;
+        padding: 5px 7px;
+    }
+
+    .table-section .table {
+        min-width: 400px;
+    }
+
+    .table-section .table tbody td {
+        font-size: 0.62rem;
+    }
+
+}
 </style>
 {% endblock %}
 

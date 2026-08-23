@@ -381,15 +381,531 @@
         }
     }
 
-    @media (max-width: 767.98px) {
-        .summary-grid {
-            grid-template-columns: 1fr;
-        }
+/* =========================================
+   TABLET
+   ========================================= */
 
-        .complaint-card {
-            flex-direction: column;
-        }
+@media (max-width: 991.98px) {
+
+    .hazard-detail-shell {
+        padding: 22px 12px 40px;
     }
+
+    .hazard-hero {
+        padding: 25px 22px;
+        border-radius: 22px;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .hero-meta {
+        text-align: left;
+    }
+
+    .hero-meta .status-row {
+        justify-content: flex-start;
+    }
+
+    .hero-actions {
+        justify-content: flex-start;
+    }
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 767.98px) {
+
+    .hazard-detail-shell {
+        padding: 15px 7px 30px;
+    }
+
+
+    /* =====================================
+       HERO
+       ===================================== */
+
+    .hazard-hero {
+        padding: 20px 15px;
+        border-radius: 18px;
+    }
+
+    .hazard-hero::after {
+        width: 160px;
+        height: 160px;
+        right: -65px;
+        bottom: -65px;
+    }
+
+    .eyebrow {
+        padding: 6px 9px;
+        font-size: 0.58rem;
+        letter-spacing: 0.08em;
+    }
+
+    .page-title {
+        margin-top: 12px;
+        margin-bottom: 8px;
+        font-size: 1.7rem;
+        line-height: 1.25;
+        letter-spacing: -0.035em;
+        word-break: break-word;
+    }
+
+    .page-subtitle {
+        font-size: 0.78rem;
+        line-height: 1.6;
+        word-break: break-word;
+    }
+
+
+    /* =====================================
+       STATUS
+       ===================================== */
+
+    .hero-meta {
+        text-align: left;
+        font-size: 0.7rem;
+        line-height: 1.5;
+    }
+
+    .hero-meta .status-row {
+        justify-content: flex-start;
+        gap: 6px;
+        margin-bottom: 9px;
+    }
+
+    .status-pill {
+        padding: 6px 9px;
+        font-size: 0.6rem;
+    }
+
+
+    /* =====================================
+       ACTION BUTTONS
+       ===================================== */
+
+    .hero-actions {
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 14px;
+    }
+
+    .action-btn,
+    .hero-actions form {
+        width: 100%;
+    }
+
+    .action-btn {
+        min-height: 43px;
+        padding: 9px 12px;
+        font-size: 0.75rem;
+        border-radius: 9px;
+    }
+
+    .hero-actions form .action-btn {
+        width: 100%;
+    }
+
+
+    /* =====================================
+       PANELS
+       ===================================== */
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        margin-top: 15px;
+    }
+
+    .panel {
+        border-radius: 17px;
+    }
+
+    .panel-header {
+        padding: 15px;
+        align-items: flex-start;
+    }
+
+    .panel-title {
+        font-size: 0.95rem;
+    }
+
+    .panel-body {
+        padding: 15px;
+    }
+
+    .section-label {
+        margin-bottom: 7px;
+        font-size: 0.6rem;
+        letter-spacing: 0.09em;
+    }
+
+    .muted-text {
+        font-size: 0.78rem;
+        line-height: 1.6;
+    }
+
+
+    /* =====================================
+       SUMMARY BOXES
+       ===================================== */
+
+    .summary-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 14px;
+    }
+
+    .summary-box {
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .summary-box .label {
+        font-size: 0.58rem;
+    }
+
+    .summary-box .value {
+        margin-top: 6px;
+        font-size: 1.45rem;
+    }
+
+
+    /* =====================================
+       PATIENT SEARCH
+       ===================================== */
+
+    .patient-search {
+        margin-bottom: 12px;
+    }
+
+    .patient-search .input-group {
+        flex-wrap: nowrap;
+    }
+
+    .patient-search input {
+        min-width: 0;
+        font-size: 0.75rem;
+        min-height: 42px;
+    }
+
+    .patient-search .btn {
+        min-height: 42px;
+        font-size: 0.72rem;
+        padding: 8px 12px;
+    }
+
+
+    /* =====================================
+       PATIENT TABLE → MOBILE CARDS
+       ===================================== */
+
+    .patient-table-wrap {
+        overflow: visible;
+        border: none;
+        border-radius: 0;
+    }
+
+    .patient-table,
+    .patient-table tbody,
+    .patient-table tr,
+    .patient-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .patient-table thead {
+        display: none;
+    }
+
+    .patient-table tbody tr {
+        padding: 11px;
+        margin-bottom: 10px;
+        border: 1px solid rgba(148,163,184,0.15);
+        border-radius: 13px;
+        background: #fff;
+        box-shadow: 0 4px 12px rgba(15,23,42,0.04);
+    }
+
+    .patient-table tbody td {
+        border: none;
+        padding: 6px 0;
+        font-size: 0.75rem;
+    }
+
+    .patient-table tbody td:first-child {
+        text-align: center;
+    }
+
+    .patient-table tbody td:nth-child(2)::before {
+        content: "Patient ID: ";
+        color: #64748b;
+        font-weight: 600;
+    }
+
+    .patient-table tbody td:nth-child(3)::before {
+        content: "Name: ";
+        color: #64748b;
+        font-weight: 600;
+    }
+
+    .patient-image {
+        width: 65px;
+        height: 65px;
+        border-radius: 11px;
+        margin: auto;
+    }
+
+
+    /* =====================================
+       MISSING PERSON CARDS
+       ===================================== */
+
+    .report-grid {
+        gap: 10px;
+    }
+
+    .complaint-card {
+        flex-direction: column;
+        gap: 10px;
+        padding: 12px;
+        border-radius: 13px;
+    }
+
+    .complaint-image {
+        width: 90px;
+        height: 90px;
+        border-radius: 12px;
+    }
+
+    .complaint-card-body {
+        width: 100%;
+    }
+
+    .complaint-head {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .complaint-head strong {
+        font-size: 0.9rem;
+        word-break: break-word;
+    }
+
+    .complaint-head small {
+        font-size: 0.67rem;
+    }
+
+    .complaint-meta {
+        font-size: 0.7rem;
+        line-height: 1.5;
+        word-break: break-word;
+    }
+
+    .complaint-actions {
+        width: 100%;
+        gap: 6px;
+    }
+
+    .mini-btn {
+        min-height: 37px;
+        padding: 8px 10px;
+        font-size: 0.68rem;
+        border-radius: 8px;
+    }
+
+
+    /* =====================================
+       MODAL
+       ===================================== */
+
+    .modal-dialog {
+        margin: 10px;
+    }
+
+    .modal-content {
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .modal-header {
+        padding: 13px 15px;
+    }
+
+    .modal-title {
+        font-size: 1rem;
+        word-break: break-word;
+    }
+
+    .modal-body {
+        padding: 15px;
+        font-size: 0.78rem;
+    }
+
+    .modal-body h6 {
+        margin-top: 8px;
+        font-size: 0.75rem;
+    }
+
+    .modal-body p {
+        font-size: 0.74rem;
+        line-height: 1.55;
+        word-break: break-word;
+    }
+
+    .modal-body img {
+        max-height: 220px;
+        width: auto;
+        max-width: 100%;
+        object-fit: contain;
+    }
+
+    .modal-footer {
+        padding: 10px 15px;
+    }
+
+    .modal-footer .btn {
+        min-height: 40px;
+        font-size: 0.72rem;
+    }
+
+
+    /* =====================================
+       EMPTY STATE
+       ===================================== */
+
+    .empty-box {
+        padding: 25px 12px;
+        font-size: 0.74rem;
+        line-height: 1.5;
+    }
+}
+
+
+/* =========================================
+   EXTRA SMALL ANDROID
+   ========================================= */
+
+@media (max-width: 375px) {
+
+    .hazard-detail-shell {
+        padding: 10px 5px 25px;
+    }
+
+    .hazard-hero {
+        padding: 17px 12px;
+        border-radius: 15px;
+    }
+
+    .page-title {
+        font-size: 1.45rem;
+    }
+
+    .page-subtitle {
+        font-size: 0.7rem;
+    }
+
+    .status-pill {
+        font-size: 0.55rem;
+        padding: 5px 7px;
+    }
+
+    .action-btn {
+        min-height: 41px;
+        font-size: 0.7rem;
+    }
+
+    .panel {
+        border-radius: 14px;
+    }
+
+    .panel-header {
+        padding: 12px;
+    }
+
+    .panel-body {
+        padding: 12px;
+    }
+
+    .panel-title {
+        font-size: 0.88rem;
+    }
+
+    .summary-grid {
+        gap: 6px;
+    }
+
+    .summary-box {
+        padding: 10px;
+    }
+
+    .summary-box .label {
+        font-size: 0.52rem;
+    }
+
+    .summary-box .value {
+        font-size: 1.25rem;
+    }
+
+    .patient-search input {
+        font-size: 0.68rem;
+    }
+
+    .patient-search .btn {
+        font-size: 0.65rem;
+        padding: 7px 9px;
+    }
+
+    .patient-table tbody tr {
+        padding: 9px;
+    }
+
+    .patient-table tbody td {
+        font-size: 0.68rem;
+    }
+
+    .patient-image {
+        width: 58px;
+        height: 58px;
+    }
+
+    .complaint-card {
+        padding: 10px;
+    }
+
+    .complaint-image {
+        width: 78px;
+        height: 78px;
+    }
+
+    .complaint-head strong {
+        font-size: 0.82rem;
+    }
+
+    .complaint-meta {
+        font-size: 0.65rem;
+    }
+
+    .mini-btn {
+        min-height: 35px;
+        font-size: 0.62rem;
+    }
+
+    .modal-dialog {
+        margin: 6px;
+    }
+
+    .modal-body {
+        padding: 12px;
+    }
+}
 </style>
 {% endblock %}
 

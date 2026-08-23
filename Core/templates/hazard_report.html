@@ -3,6 +3,212 @@
 {% block title %}Report Hazard | Hazard Management System{% endblock %}
 
 {% block content %}
+<style>
+
+    /* =========================================
+       REPORT HAZARD
+       ========================================= */
+
+    .report-hazard-card {
+        max-width: 860px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 32px;
+    }
+
+    .report-hazard-card .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: #fee2e2;
+        color: #b91c1c;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .report-hazard-card h1 {
+        color: #0f172a;
+    }
+
+    .report-hazard-card .form-label {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #334155;
+        margin-bottom: 7px;
+    }
+
+    .report-hazard-card input,
+    .report-hazard-card textarea,
+    .report-hazard-card select {
+        width: 100%;
+        box-sizing: border-box;
+        border-radius: 10px;
+        border: 1px solid #dfe7f1;
+        background: #f8fafc;
+        padding: 11px 13px;
+        font-size: 0.88rem;
+        color: #0f172a;
+    }
+
+    .report-hazard-card input,
+    .report-hazard-card select {
+        min-height: 46px;
+    }
+
+    .report-hazard-card textarea {
+        min-height: 130px;
+        resize: vertical;
+    }
+
+    .report-hazard-card input:focus,
+    .report-hazard-card textarea:focus,
+    .report-hazard-card select:focus {
+        border-color: #f87171;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(239,68,68,0.08);
+        outline: none;
+    }
+
+    .report-hazard-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .report-hazard-actions .btn {
+        min-height: 44px;
+        padding: 10px 20px;
+        border-radius: 9px;
+        font-size: 0.82rem;
+        font-weight: 700;
+    }
+
+    /* Django form errors */
+    .report-hazard-card .errorlist {
+        margin: 6px 0 0;
+        padding: 0;
+        list-style: none;
+        color: #dc2626;
+        font-size: 0.75rem;
+    }
+
+
+    /* =========================================
+       MOBILE
+       ========================================= */
+
+    @media (max-width: 767.98px) {
+
+        .report-hazard-card {
+            width: calc(100% - 16px);
+            max-width: none !important;
+            padding: 20px 16px;
+            border-radius: 17px;
+        }
+
+        .report-hazard-card .eyebrow {
+            padding: 6px 9px;
+            font-size: 0.58rem;
+        }
+
+        .report-hazard-card h1 {
+            font-size: 1.55rem;
+            line-height: 1.3;
+            margin-top: 12px !important;
+        }
+
+        .report-hazard-card > div:first-child p {
+            font-size: 0.76rem;
+            line-height: 1.6;
+        }
+
+        .report-hazard-card .form-label {
+            font-size: 0.75rem;
+            margin-bottom: 6px;
+        }
+
+        .report-hazard-card input,
+        .report-hazard-card textarea,
+        .report-hazard-card select {
+            font-size: 0.8rem;
+            padding: 9px 10px;
+            border-radius: 9px;
+        }
+
+        .report-hazard-card input,
+        .report-hazard-card select {
+            min-height: 43px;
+        }
+
+        .report-hazard-card textarea {
+            min-height: 110px;
+        }
+
+        .report-hazard-actions {
+            flex-direction: column;
+            gap: 8px !important;
+        }
+
+        .report-hazard-actions .btn {
+            width: 100%;
+            min-height: 44px;
+            font-size: 0.76rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .report-hazard-card .errorlist {
+            font-size: 0.68rem;
+        }
+    }
+
+
+    /* =========================================
+       EXTRA SMALL ANDROID
+       ========================================= */
+
+    @media (max-width: 375px) {
+
+        .report-hazard-card {
+            width: calc(100% - 10px);
+            padding: 16px 12px;
+            border-radius: 14px;
+        }
+
+        .report-hazard-card h1 {
+            font-size: 1.3rem;
+        }
+
+        .report-hazard-card > div:first-child p {
+            font-size: 0.7rem;
+        }
+
+        .report-hazard-card .form-label {
+            font-size: 0.69rem;
+        }
+
+        .report-hazard-card input,
+        .report-hazard-card textarea,
+        .report-hazard-card select {
+            font-size: 0.75rem;
+        }
+
+        .report-hazard-card textarea {
+            min-height: 95px;
+        }
+
+        .report-hazard-actions .btn {
+            min-height: 42px;
+            font-size: 0.71rem;
+        }
+    }
+
+</style>
+
 <section class="surface-card mx-auto" style="max-width: 860px;">
     <div class="mb-4">
         <span class="eyebrow">New incident</span>

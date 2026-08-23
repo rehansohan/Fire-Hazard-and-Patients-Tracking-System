@@ -1,3 +1,5 @@
+<!--
+
 {% extends 'base.html' %}
 
 {% block title %}Transfer Patient{% endblock %}
@@ -31,4 +33,271 @@
     </div>
   </div>
 </div>
+{% endblock %}
+-->
+
+{% extends 'base.html' %}
+
+{% block title %}Transfer Patient{% endblock %}
+
+{% block extra_head %}
+<style>
+
+    /* =========================================
+       TRANSFER PATIENT PAGE
+       ========================================= */
+
+    .transfer-page {
+        padding: 25px 12px 45px;
+    }
+
+    .transfer-card {
+        background: #fff;
+        border-radius: 20px;
+        border: 1px solid rgba(148,163,184,0.18);
+        box-shadow: 0 14px 32px rgba(15,23,42,0.07);
+        padding: 28px;
+    }
+
+    .transfer-title {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 10px;
+    }
+
+    .current-hospital {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 12px 14px;
+        margin-bottom: 22px;
+        font-size: 0.9rem;
+    }
+
+    .transfer-card .form-label {
+        font-weight: 700;
+        color: #334155;
+        font-size: 0.84rem;
+    }
+
+    .transfer-card .form-control,
+    .transfer-card select,
+    .transfer-card textarea {
+        width: 100%;
+        border: 1px solid #dbe3ec;
+        border-radius: 11px;
+        padding: 11px 13px;
+        background: #f8fafc;
+        font-size: 0.86rem;
+        min-height: 45px;
+    }
+
+    .transfer-card textarea {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+    .transfer-card .form-control:focus,
+    .transfer-card select:focus,
+    .transfer-card textarea:focus {
+        border-color: #60a5fa;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
+        outline: none;
+    }
+
+    .transfer-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 22px;
+    }
+
+    .transfer-actions .btn {
+        border-radius: 10px;
+        padding: 10px 18px;
+        font-weight: 700;
+    }
+
+    .transfer-error {
+        color: #dc2626;
+        font-size: 0.75rem;
+        margin-top: 5px;
+    }
+
+
+    /* =========================================
+       TABLET
+       ========================================= */
+
+    @media (max-width: 767.98px) {
+
+        .transfer-page {
+            padding: 18px 9px 35px;
+        }
+
+        .transfer-card {
+            padding: 20px 17px;
+            border-radius: 17px;
+        }
+
+        .transfer-title {
+            font-size: 1.35rem;
+        }
+
+        .current-hospital {
+            font-size: 0.78rem;
+            padding: 10px 12px;
+        }
+
+        .transfer-card .form-label {
+            font-size: 0.76rem;
+        }
+
+        .transfer-card .form-control,
+        .transfer-card select,
+        .transfer-card textarea {
+            font-size: 0.78rem;
+            padding: 10px 11px;
+        }
+
+        .transfer-actions {
+            flex-direction: column;
+        }
+
+        .transfer-actions .btn {
+            width: 100%;
+            min-height: 43px;
+            font-size: 0.76rem;
+        }
+    }
+
+
+    /* =========================================
+       EXTRA SMALL ANDROID
+       ========================================= */
+
+    @media (max-width: 375px) {
+
+        .transfer-page {
+            padding: 12px 5px 28px;
+        }
+
+        .transfer-card {
+            padding: 16px 13px;
+            border-radius: 14px;
+        }
+
+        .transfer-title {
+            font-size: 1.15rem;
+        }
+
+        .current-hospital {
+            font-size: 0.7rem;
+            padding: 9px 10px;
+        }
+
+        .transfer-card .form-label {
+            font-size: 0.68rem;
+        }
+
+        .transfer-card .form-control,
+        .transfer-card select,
+        .transfer-card textarea {
+            font-size: 0.7rem;
+            min-height: 42px;
+        }
+
+        .transfer-card textarea {
+            min-height: 95px;
+        }
+
+        .transfer-actions .btn {
+            min-height: 41px;
+            font-size: 0.7rem;
+        }
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="container transfer-page">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-8">
+
+            <div class="surface-card transfer-card">
+
+                <h3 class="transfer-title">
+                    Transfer patient: {{ patient.name }}
+                </h3>
+
+                <div class="current-hospital">
+                    <span class="text-muted">Current hospital:</span>
+                    <strong>{{ patient.hospital }}</strong>
+                </div>
+
+                <form method="post">
+
+                    {% csrf_token %}
+
+                    {% if next_url %}
+                        <input type="hidden" name="next" value="{{ next_url }}">
+                    {% endif %}
+
+                    <div class="mb-3">
+
+                        {{ form.hospital.label_tag }}
+
+                        {{ form.hospital }}
+
+                        {% if form.hospital.errors %}
+                            <div class="transfer-error">
+                                {{ form.hospital.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        {{ form.note.label_tag }}
+
+                        {{ form.note }}
+
+                        {% if form.note.errors %}
+                            <div class="transfer-error">
+                                {{ form.note.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+                    <div class="transfer-actions">
+
+                        <button class="btn btn-primary" type="submit">
+                            <i class="bi bi-arrow-left-right me-1"></i>
+                            Transfer
+                        </button>
+
+                        <a class="btn btn-outline-secondary"
+                           href="{% if next_url %}{{ next_url }}{% else %}{% url 'patient_list' %}{% endif %}">
+                            Cancel
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
 {% endblock %}

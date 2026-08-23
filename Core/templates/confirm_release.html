@@ -3,6 +3,148 @@
 {% block title %}Confirm Release{% endblock %}
 
 {% block content %}
+<style>
+
+    /* ================================
+       CONFIRM RELEASE - RESPONSIVE
+       ================================ */
+
+    .release-page {
+        padding: 20px 12px;
+    }
+
+    .release-card {
+        border-radius: 16px;
+    }
+
+    .release-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 1.35;
+    }
+
+    .release-info {
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    .release-card textarea {
+        width: 100%;
+        resize: vertical;
+        min-height: 100px;
+        font-size: 0.9rem;
+        border-radius: 9px;
+    }
+
+    .release-card .form-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .release-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .release-actions .btn {
+        min-height: 43px;
+        padding: 9px 18px;
+        font-size: 0.85rem;
+        border-radius: 8px;
+    }
+
+
+    /* =================================
+       MOBILE
+       ================================= */
+
+    @media (max-width: 767.98px) {
+
+        .release-page {
+            padding: 15px 8px;
+        }
+
+        .release-card {
+            padding: 18px !important;
+            border-radius: 14px;
+        }
+
+        .release-title {
+            font-size: 1.25rem;
+            line-height: 1.35;
+            margin-bottom: 10px !important;
+        }
+
+        .release-info {
+            font-size: 0.8rem;
+            margin-bottom: 18px;
+        }
+
+        .release-card .form-label {
+            font-size: 0.78rem;
+        }
+
+        .release-card textarea {
+            min-height: 105px;
+            font-size: 0.82rem;
+            padding: 10px;
+        }
+
+        .release-actions {
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .release-actions .btn {
+            width: 100%;
+            min-height: 44px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+
+    /* =================================
+       EXTRA SMALL PHONES
+       ================================= */
+
+    @media (max-width: 375px) {
+
+        .release-page {
+            padding: 10px 5px;
+        }
+
+        .release-card {
+            padding: 15px !important;
+            border-radius: 12px;
+        }
+
+        .release-title {
+            font-size: 1.1rem;
+        }
+
+        .release-info {
+            font-size: 0.74rem;
+        }
+
+        .release-card .form-label {
+            font-size: 0.72rem;
+        }
+
+        .release-card textarea {
+            min-height: 95px;
+            font-size: 0.78rem;
+        }
+
+        .release-actions .btn {
+            min-height: 42px;
+            font-size: 0.74rem;
+        }
+    }
+
+</style>
 <div class="row justify-content-center mt-4">
   <div class="col-md-6">
     <div class="surface-card p-4">

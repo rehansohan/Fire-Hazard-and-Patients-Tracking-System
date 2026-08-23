@@ -176,11 +176,238 @@
         font-size: 0.78rem;
     }
 
-    @media (max-width: 767.98px) {
-        .feature-grid {
-            grid-template-columns: 1fr;
-        }
+/* =========================================
+   HOSPITAL VIEW RESPONSIVE
+   ========================================= */
+
+/* ---------- TABLET ---------- */
+
+@media (max-width: 991.98px) {
+
+    .hospital-shell {
+        padding: 22px 12px 40px;
     }
+
+    .hospital-hero {
+        padding: 28px 24px;
+        border-radius: 23px;
+    }
+
+    .page-title {
+        font-size: 2.2rem;
+    }
+
+    .page-subtitle {
+        font-size: 0.95rem;
+    }
+
+    .feature-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+}
+
+
+/* =========================================
+   MOBILE / ANDROID
+   ========================================= */
+
+@media (max-width: 767.98px) {
+
+    .hospital-shell {
+        padding: 14px 7px 30px;
+    }
+
+
+    /* =====================================
+       HERO
+       ===================================== */
+
+    .hospital-hero {
+        padding: 20px 15px;
+        border-radius: 18px;
+    }
+
+    .hospital-hero::after {
+        width: 150px;
+        height: 150px;
+        right: -55px;
+        bottom: -55px;
+    }
+
+    .eyebrow {
+        padding: 6px 9px;
+        font-size: 0.57rem;
+        letter-spacing: 0.08em;
+    }
+
+    .page-title {
+        font-size: 1.55rem;
+        line-height: 1.3;
+        letter-spacing: -0.035em;
+        margin: 12px 0 8px;
+        word-break: break-word;
+    }
+
+    .page-subtitle {
+        max-width: 100%;
+        font-size: 0.73rem;
+        line-height: 1.6;
+        word-break: break-word;
+    }
+
+
+    /* =====================================
+       HERO BUTTONS
+       ===================================== */
+
+    .hospital-actions {
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 17px;
+        width: 100%;
+    }
+
+    .page-btn {
+        width: 100%;
+        min-height: 44px;
+        padding: 10px 13px;
+        border-radius: 10px;
+        font-size: 0.75rem;
+    }
+
+
+    /* =====================================
+       FEATURE CARDS
+       ===================================== */
+
+    .feature-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-top: 15px;
+    }
+
+    .feature-card {
+        padding: 17px 15px;
+        border-radius: 16px;
+    }
+
+    .feature-icon {
+        width: 43px;
+        height: 43px;
+        border-radius: 12px;
+        font-size: 1.15rem;
+        margin-bottom: 11px;
+    }
+
+    .feature-card h3 {
+        font-size: 0.95rem;
+        margin-bottom: 6px;
+    }
+
+    .feature-card p {
+        font-size: 0.72rem;
+        line-height: 1.55;
+    }
+
+
+    /* =====================================
+       OPERATIONS PANEL
+       ===================================== */
+
+    .info-panel {
+        margin-top: 15px;
+        padding: 17px 15px;
+        border-radius: 17px;
+    }
+
+    .info-panel h2 {
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+
+    .info-list {
+        gap: 7px;
+    }
+
+    .info-chip {
+        padding: 7px 9px;
+        font-size: 0.63rem;
+    }
+
+}
+
+
+/* =========================================
+   EXTRA SMALL ANDROID
+   ========================================= */
+
+@media (max-width: 375px) {
+
+    .hospital-shell {
+        padding: 10px 5px 25px;
+    }
+
+    .hospital-hero {
+        padding: 17px 12px;
+        border-radius: 15px;
+    }
+
+    .eyebrow {
+        font-size: 0.52rem;
+        padding: 5px 8px;
+    }
+
+    .page-title {
+        font-size: 1.35rem;
+    }
+
+    .page-subtitle {
+        font-size: 0.67rem;
+        line-height: 1.55;
+    }
+
+    .page-btn {
+        min-height: 42px;
+        font-size: 0.69rem;
+    }
+
+    .feature-card {
+        padding: 14px 12px;
+        border-radius: 14px;
+    }
+
+    .feature-icon {
+        width: 39px;
+        height: 39px;
+        font-size: 1rem;
+        border-radius: 10px;
+    }
+
+    .feature-card h3 {
+        font-size: 0.88rem;
+    }
+
+    .feature-card p {
+        font-size: 0.66rem;
+    }
+
+    .info-panel {
+        padding: 14px 12px;
+        border-radius: 14px;
+    }
+
+    .info-panel h2 {
+        font-size: 0.9rem;
+    }
+
+    .info-chip {
+        font-size: 0.57rem;
+        padding: 6px 8px;
+    }
+
+}
 </style>
 {% endblock %}
 

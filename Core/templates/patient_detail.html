@@ -236,26 +236,290 @@
         color: #0f172a;
     }
 
-    @media (max-width: 900px) {
-        .profile-layout {
-            grid-template-columns: 1fr;
-        }
+/* =========================================
+   PATIENT DETAILS - MOBILE RESPONSIVE
+   ========================================= */
 
-        .detail-list {
-            grid-template-columns: 1fr;
-        }
+@media (max-width: 767.98px) {
 
-        .detail-row {
-            grid-template-columns: 1fr;
-            padding: 12px 0;
-        }
-
-        .detail-row:nth-child(odd),
-        .detail-row:nth-child(even) {
-            padding-left: 0;
-            padding-right: 0;
-        }
+    /* Page */
+    .patient-page {
+        padding: 18px 8px 35px;
     }
+
+
+    /* =====================================
+       HEADER
+       ===================================== */
+
+    .patient-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+
+    .patient-header h2 {
+        font-size: 1.55rem;
+        line-height: 1.3;
+        word-break: break-word;
+    }
+
+    .patient-id {
+        margin-top: 5px;
+        font-size: 0.62rem;
+    }
+
+    .status-badge {
+        padding: 7px 10px;
+        font-size: 0.62rem;
+    }
+
+
+    /* =====================================
+       PROFILE LAYOUT
+       ===================================== */
+
+    .profile-layout {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+
+    /* =====================================
+       PATIENT PHOTO
+       ===================================== */
+
+    .profile-photo-wrap {
+        padding: 12px;
+        border-radius: 17px;
+    }
+
+    .profile-photo {
+        height: 300px;
+        border-radius: 14px;
+    }
+
+    .photo-placeholder {
+        height: 300px;
+        border-radius: 14px;
+        font-size: 0.68rem;
+    }
+
+
+    /* =====================================
+       INFORMATION PANEL
+       ===================================== */
+
+    .info-panel {
+        padding: 16px 14px 8px;
+        border-radius: 17px;
+    }
+
+    .panel-title {
+        margin-bottom: 12px;
+        padding-bottom: 9px;
+    }
+
+    .panel-title h3 {
+        font-size: 0.98rem;
+    }
+
+    .detail-list {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-row {
+        display: block;
+        padding: 10px 0 !important;
+    }
+
+    .detail-label {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 0.58rem;
+    }
+
+    .detail-value {
+        font-size: 0.76rem;
+        line-height: 1.5;
+        word-break: break-word;
+    }
+
+    .detail-list > div:not(.detail-row) {
+        padding: 10px 0;
+    }
+
+    .detail-list > div:not(.detail-row) .badge {
+        font-size: 0.62rem;
+    }
+
+
+    /* =====================================
+       DELETE BUTTON
+       ===================================== */
+
+    .patient-page > div > form {
+        margin-top: 14px;
+    }
+
+    .patient-page > div > form .btn {
+        width: 100%;
+        min-height: 42px;
+        font-size: 0.74rem;
+        border-radius: 10px;
+    }
+
+
+    /* =====================================
+       TRANSFER HISTORY
+       ===================================== */
+
+    .history-panel {
+        margin-top: 16px;
+        border-radius: 17px;
+    }
+
+    .history-header {
+        padding: 14px 15px;
+    }
+
+    .history-header h3 {
+        font-size: 0.98rem;
+    }
+
+    .history-body {
+        padding: 12px 12px 6px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .history-table {
+        min-width: 470px;
+    }
+
+    .history-table thead th {
+        font-size: 0.58rem;
+        padding: 9px 8px;
+        white-space: nowrap;
+    }
+
+    .history-table tbody td {
+        font-size: 0.68rem;
+        padding: 10px 8px;
+        white-space: nowrap;
+    }
+
+    .empty-history {
+        font-size: 0.72rem;
+        padding: 15px 0;
+    }
+
+
+    /* =====================================
+       BACK BUTTON
+       ===================================== */
+
+    .footer-actions {
+        margin-top: 14px;
+    }
+
+    .back-btn {
+        width: 100%;
+        min-height: 42px;
+        padding: 10px 14px;
+        font-size: 0.72rem;
+        border-radius: 10px;
+    }
+
+}
+
+
+/* =========================================
+   EXTRA SMALL ANDROID
+   ========================================= */
+
+@media (max-width: 375px) {
+
+    .patient-page {
+        padding: 12px 5px 25px;
+    }
+
+    .patient-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .patient-id {
+        font-size: 0.56rem;
+    }
+
+    .status-badge {
+        font-size: 0.56rem;
+        padding: 6px 9px;
+    }
+
+    .profile-photo-wrap {
+        padding: 9px;
+        border-radius: 14px;
+    }
+
+    .profile-photo,
+    .photo-placeholder {
+        height: 250px;
+        border-radius: 12px;
+    }
+
+    .info-panel {
+        padding: 13px 11px 6px;
+        border-radius: 14px;
+    }
+
+    .panel-title h3 {
+        font-size: 0.9rem;
+    }
+
+    .detail-row {
+        padding: 8px 0 !important;
+    }
+
+    .detail-label {
+        font-size: 0.53rem;
+    }
+
+    .detail-value {
+        font-size: 0.68rem;
+    }
+
+    .history-panel {
+        border-radius: 14px;
+    }
+
+    .history-header {
+        padding: 12px;
+    }
+
+    .history-header h3 {
+        font-size: 0.88rem;
+    }
+
+    .history-body {
+        padding: 9px;
+    }
+
+    .history-table {
+        min-width: 430px;
+    }
+
+    .history-table thead th {
+        font-size: 0.52rem;
+    }
+
+    .history-table tbody td {
+        font-size: 0.62rem;
+        padding: 8px 6px;
+    }
+
+}
 </style>
 {% endblock %}
 
