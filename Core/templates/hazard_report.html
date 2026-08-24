@@ -2,17 +2,18 @@
 
 {% block title %}Report Hazard | Hazard Management System{% endblock %}
 
-{% block content %}
-<style>
+{% block extra_head %}
 
-    /* =========================================
-       REPORT HAZARD
-       ========================================= */
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<style>
 
     .report-hazard-card {
         max-width: 860px;
-        margin-left: auto;
-        margin-right: auto;
+        margin: 28px auto 48px;
         padding: 32px;
     }
 
@@ -72,6 +73,140 @@
         outline: none;
     }
 
+
+    /* =========================================
+       LOCATION SECTION
+       ========================================= */
+
+    .location-section {
+        margin-top: 10px;
+        margin-bottom: 25px;
+    }
+
+    .location-title {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: #334155;
+        margin-bottom: 6px;
+    }
+
+    .location-help {
+        color: #64748b;
+        font-size: 0.76rem;
+        line-height: 1.5;
+        margin-bottom: 12px;
+    }
+
+
+    /* GPS BUTTONS */
+
+    .location-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+        margin-bottom: 12px;
+    }
+
+    .location-btn {
+        border: none;
+        border-radius: 10px;
+        padding: 10px 15px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .location-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .detect-btn {
+        background: linear-gradient(135deg, #dc2626, #ef4444);
+        color: white;
+        box-shadow: 0 7px 16px rgba(220,38,38,0.18);
+    }
+
+    .update-btn {
+        background: #eff6ff;
+        color: #1d4ed8;
+        border: 1px solid #bfdbfe;
+    }
+
+
+    /* MAP */
+
+    #hazardMap {
+        width: 100%;
+        height: 360px;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid #dfe7f1;
+        box-shadow: 0 8px 22px rgba(15,23,42,0.08);
+    }
+
+
+    /* STATUS */
+
+    .location-status {
+        margin-top: 10px;
+        padding: 10px 13px;
+        border-radius: 10px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        color: #64748b;
+        font-size: 0.76rem;
+    }
+
+    .location-status.selected {
+        background: #ecfdf5;
+        border-color: #bbf7d0;
+        color: #166534;
+    }
+
+    .location-status.error {
+        background: #fef2f2;
+        border-color: #fecaca;
+        color: #b91c1c;
+    }
+
+
+    /* COORDINATES */
+
+    .coordinate-display {
+        display: none;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .coordinate-box {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 9px 12px;
+    }
+
+    .coordinate-label {
+        display: block;
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+
+    .coordinate-value {
+        display: block;
+        margin-top: 3px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+
+    /* SUBMIT */
+
     .report-hazard-actions {
         display: flex;
         flex-wrap: wrap;
@@ -86,7 +221,9 @@
         font-weight: 700;
     }
 
-    /* Django form errors */
+
+    /* ERRORS */
+
     .report-hazard-card .errorlist {
         margin: 6px 0 0;
         padding: 0;
@@ -127,7 +264,6 @@
 
         .report-hazard-card .form-label {
             font-size: 0.75rem;
-            margin-bottom: 6px;
         }
 
         .report-hazard-card input,
@@ -147,6 +283,37 @@
             min-height: 110px;
         }
 
+
+        /* GPS BUTTONS */
+
+        .location-actions {
+            flex-direction: column;
+        }
+
+        .location-btn {
+            width: 100%;
+            min-height: 44px;
+        }
+
+
+        /* MAP */
+
+        #hazardMap {
+            height: 290px;
+            border-radius: 13px;
+        }
+
+
+        /* COORDINATES */
+
+        .coordinate-display {
+            grid-template-columns: 1fr;
+            gap: 7px;
+        }
+
+
+        /* SUBMIT */
+
         .report-hazard-actions {
             flex-direction: column;
             gap: 8px !important;
@@ -155,15 +322,11 @@
         .report-hazard-actions .btn {
             width: 100%;
             min-height: 44px;
-            font-size: 0.76rem;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .report-hazard-card .errorlist {
-            font-size: 0.68rem;
-        }
     }
 
 
@@ -197,54 +360,611 @@
             font-size: 0.75rem;
         }
 
-        .report-hazard-card textarea {
-            min-height: 95px;
+        #hazardMap {
+            height: 250px;
+        }
+
+        .location-help {
+            font-size: 0.67rem;
+        }
+
+        .location-btn {
+            font-size: 0.7rem;
         }
 
         .report-hazard-actions .btn {
             min-height: 42px;
             font-size: 0.71rem;
         }
+
     }
 
 </style>
 
-<section class="surface-card mx-auto" style="max-width: 860px;">
+{% endblock %}
+
+
+{% block content %}
+
+<section class="surface-card report-hazard-card">
+
+    <!-- HEADER -->
+
     <div class="mb-4">
-        <span class="eyebrow">New incident</span>
-        <h1 class="h2 fw-bold mt-3 mb-2">Report a hazard</h1>
-        <p class="text-muted mb-0">Use this form to capture the essential details needed for response and triage.</p>
+
+        <span class="eyebrow">
+            New incident
+        </span>
+
+        <h1 class="h2 fw-bold mt-3 mb-2">
+            Report a hazard
+        </h1>
+
+        <p class="text-muted mb-0">
+            Use this form to capture the essential details needed for response and triage.
+        </p>
+
     </div>
 
+
     <form method="POST" novalidate>
+
         {% csrf_token %}
 
+
         {% if form.non_field_errors %}
-            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+
+            <div class="alert alert-danger">
+                {{ form.non_field_errors }}
+            </div>
+
         {% endif %}
 
-        <div class="mb-3">
-            <label class="form-label">Title</label>
-            {{ form.title }}
-            {{ form.title.errors }}
-        </div>
+
+        <!-- TITLE -->
 
         <div class="mb-3">
-            <label class="form-label">Description</label>
-            {{ form.description }}
-            {{ form.description.errors }}
+
+            <label class="form-label">
+                Title
+            </label>
+
+            {{ form.title }}
+
+            {{ form.title.errors }}
+
         </div>
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                Description
+            </label>
+
+            {{ form.description }}
+
+            {{ form.description.errors }}
+
+        </div>
+
+
+        <!-- SEVERITY -->
 
         <div class="mb-4">
-            <label class="form-label">Severity</label>
+
+            <label class="form-label">
+                Severity
+            </label>
+
             {{ form.servity }}
+
             {{ form.servity.errors }}
+
         </div>
 
-        <div class="d-flex flex-wrap gap-3">
-            <button type="submit" class="btn btn-danger">Submit Hazard</button>
-            <a href="{% url 'home' %}" class="btn btn-outline-secondary">Cancel</a>
+
+        <!-- =====================================
+             HAZARD LOCATION
+             ===================================== -->
+
+        <div class="location-section">
+
+            <div class="location-title">
+
+                <i class="bi bi-geo-alt-fill text-danger"></i>
+
+                Hazard Location
+
+            </div>
+
+
+            <div class="location-help">
+
+                Detect your current location automatically.
+                You can update it anytime or adjust the exact location manually on the map.
+
+            </div>
+
+
+            <!-- LOCATION BUTTONS -->
+
+            <div class="location-actions">
+
+                <button
+                    type="button"
+                    id="detectLocationBtn"
+                    class="location-btn detect-btn"
+                >
+                    <i class="bi bi-crosshair me-1"></i>
+                    Detect My Location
+                </button>
+
+
+                <button
+                    type="button"
+                    id="updateLocationBtn"
+                    class="location-btn update-btn"
+                >
+                    <i class="bi bi-arrow-clockwise me-1"></i>
+                    Update Location
+                </button>
+
+            </div>
+
+
+            <!-- MAP -->
+
+            <div id="hazardMap"></div>
+
+
+            <!-- STATUS -->
+
+            <div
+                id="locationStatus"
+                class="location-status"
+            >
+
+                <i class="bi bi-info-circle"></i>
+
+                Location not detected yet.
+
+            </div>
+
+
+            <!-- COORDINATES -->
+
+            <div
+                id="coordinateDisplay"
+                class="coordinate-display"
+            >
+
+                <div class="coordinate-box">
+
+                    <span class="coordinate-label">
+                        Latitude
+                    </span>
+
+                    <span
+                        id="latitudeDisplay"
+                        class="coordinate-value"
+                    >
+                        -
+                    </span>
+
+                </div>
+
+
+                <div class="coordinate-box">
+
+                    <span class="coordinate-label">
+                        Longitude
+                    </span>
+
+                    <span
+                        id="longitudeDisplay"
+                        class="coordinate-value"
+                    >
+                        -
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- DJANGO HIDDEN FIELDS -->
+
+            {{ form.latitude }}
+            {{ form.longitude }}
+
+            {{ form.latitude.errors }}
+            {{ form.longitude.errors }}
+
         </div>
+
+
+        <!-- ACTIONS -->
+
+        <div class="report-hazard-actions">
+
+            <button
+                type="submit"
+                class="btn btn-danger"
+            >
+
+                <i class="bi bi-send-fill me-1"></i>
+
+                Submit Hazard
+
+            </button>
+
+
+            <a
+                href="{% url 'home' %}"
+                class="btn btn-outline-secondary"
+            >
+
+                Cancel
+
+            </a>
+
+        </div>
+
     </form>
+
 </section>
+
+
+<!-- LEAFLET -->
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+
+    /* =========================================
+       INITIAL MAP
+       ========================================= */
+
+    const bangladeshCenter = [23.6850, 90.3563];
+
+
+    const map = L.map("hazardMap").setView(
+        bangladeshCenter,
+        7
+    );
+
+
+    L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+            maxZoom: 19,
+            attribution: "&copy; OpenStreetMap contributors"
+        }
+    ).addTo(map);
+
+
+    /* =========================================
+       ELEMENTS
+       ========================================= */
+
+    const latitudeField =
+        document.getElementById("id_latitude");
+
+    const longitudeField =
+        document.getElementById("id_longitude");
+
+
+    const detectButton =
+        document.getElementById("detectLocationBtn");
+
+    const updateButton =
+        document.getElementById("updateLocationBtn");
+
+
+    const status =
+        document.getElementById("locationStatus");
+
+
+    const coordinateDisplay =
+        document.getElementById("coordinateDisplay");
+
+
+    const latitudeDisplay =
+        document.getElementById("latitudeDisplay");
+
+
+    const longitudeDisplay =
+        document.getElementById("longitudeDisplay");
+
+
+    let marker = null;
+
+
+    /* =========================================
+       UPDATE UI
+       ========================================= */
+
+    function updateLocation(lat, lng) {
+
+        const latitude =
+            Number(lat).toFixed(6);
+
+        const longitude =
+            Number(lng).toFixed(6);
+
+
+        /* Save to Django fields */
+
+        latitudeField.value = latitude;
+
+        longitudeField.value = longitude;
+
+
+        /* Remove previous marker */
+
+        if (marker) {
+
+            map.removeLayer(marker);
+
+        }
+
+
+        /* Add new marker */
+
+        marker = L.marker([
+            Number(latitude),
+            Number(longitude)
+        ])
+        .addTo(map)
+        .bindPopup(
+            "<strong>Hazard Location</strong><br>" +
+            "Latitude: " + latitude + "<br>" +
+            "Longitude: " + longitude
+        )
+        .openPopup();
+
+
+        /* Move map */
+
+        map.setView(
+            [Number(latitude), Number(longitude)],
+            15
+        );
+
+
+        /* Status */
+
+        status.classList.remove("error");
+
+        status.classList.add("selected");
+
+        status.innerHTML =
+            '<i class="bi bi-check-circle-fill"></i> ' +
+            'Location detected successfully.';
+
+
+        /* Coordinates */
+
+        coordinateDisplay.style.display =
+            "grid";
+
+        latitudeDisplay.textContent =
+            latitude;
+
+        longitudeDisplay.textContent =
+            longitude;
+
+    }
+
+
+    /* =========================================
+       ERROR
+       ========================================= */
+
+    function showLocationError(message) {
+
+        status.classList.remove("selected");
+
+        status.classList.add("error");
+
+        status.innerHTML =
+            '<i class="bi bi-exclamation-triangle-fill"></i> ' +
+            message;
+
+    }
+
+
+    /* =========================================
+       GET GPS LOCATION
+       ========================================= */
+
+    function detectLocation() {
+
+
+        if (!navigator.geolocation) {
+
+            showLocationError(
+                "Your browser does not support location detection."
+            );
+
+            return;
+        }
+
+
+        status.classList.remove("selected", "error");
+
+        status.innerHTML =
+            '<i class="bi bi-hourglass-split"></i> ' +
+            'Detecting your location...';
+
+
+        detectButton.disabled = true;
+
+        updateButton.disabled = true;
+
+
+        navigator.geolocation.getCurrentPosition(
+
+            function (position) {
+
+                const latitude =
+                    position.coords.latitude;
+
+                const longitude =
+                    position.coords.longitude;
+
+
+                updateLocation(
+                    latitude,
+                    longitude
+                );
+
+
+                detectButton.disabled = false;
+
+                updateButton.disabled = false;
+
+            },
+
+
+            function (error) {
+
+                detectButton.disabled = false;
+
+                updateButton.disabled = false;
+
+
+                let message =
+                    "Unable to detect your location.";
+
+
+                if (error.code === 1) {
+
+                    message =
+                        "Location permission was denied. Please allow location access in your browser.";
+
+                }
+
+                else if (error.code === 2) {
+
+                    message =
+                        "Your location could not be determined. Please try again.";
+
+                }
+
+                else if (error.code === 3) {
+
+                    message =
+                        "Location detection timed out. Please try again.";
+
+                }
+
+
+                showLocationError(message);
+
+            },
+
+
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            }
+
+        );
+
+    }
+
+
+    /* =========================================
+       DETECT BUTTON
+       ========================================= */
+
+    detectButton.addEventListener(
+        "click",
+        detectLocation
+    );
+
+
+    /* =========================================
+       UPDATE BUTTON
+       ========================================= */
+
+    updateButton.addEventListener(
+        "click",
+        detectLocation
+    );
+
+
+    /* =========================================
+       MANUAL MAP LOCATION
+       ========================================= */
+
+    map.on("click", function (event) {
+
+        updateLocation(
+            event.latlng.lat,
+            event.latlng.lng
+        );
+
+    });
+
+
+    /* =========================================
+       EXISTING LOCATION
+       ========================================= */
+
+    if (
+        latitudeField &&
+        longitudeField &&
+        latitudeField.value &&
+        longitudeField.value
+    ) {
+
+        const latitude =
+            parseFloat(latitudeField.value);
+
+        const longitude =
+            parseFloat(longitudeField.value);
+
+
+        if (
+            !isNaN(latitude) &&
+            !isNaN(longitude)
+        ) {
+
+            updateLocation(
+                latitude,
+                longitude
+            );
+
+        }
+
+    }
+
+
+    /* =========================================
+       LEAFLET RESPONSIVE FIX
+       ========================================= */
+
+    setTimeout(function () {
+
+        map.invalidateSize();
+
+    }, 300);
+
+
+});
+
+</script>
+
 {% endblock %}

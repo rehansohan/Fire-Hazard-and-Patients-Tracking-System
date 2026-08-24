@@ -1,5 +1,5 @@
 from django import forms 
-from.models import HazardReport,Hospital,Patient,MissingComplaint,Profile,PatientTransfer,User
+from.models import HazardReport,Hospital,Patient,MissingComplaint,Profile,PatientTransfer,User,EmergencyReport
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 
@@ -8,7 +8,7 @@ User = get_user_model()
 class HazardReportForm(forms.ModelForm):
     class Meta:
         model = HazardReport
-        fields=['title','description','servity']
+        fields=['title','description','servity','latitude','longitude']
         
         widgets ={
             'title':forms.TextInput(attrs={
@@ -22,7 +22,9 @@ class HazardReportForm(forms.ModelForm):
             }),
             'servity':forms.Select(attrs={
                 'class':'form-select'
-            })
+            }),
+            'latitude':forms.HiddenInput(),
+            'longityde':forms.HiddenInput(),
         }
         
 class HospitalForm(forms.ModelForm):
@@ -293,7 +295,55 @@ class ProfileForm(forms.ModelForm):
                 }
             ),
         }
-
         
 
-        
+
+class EmergencyReportForm(forms.ModelForm):
+    
+    class Meta:
+        model = EmergencyReport
+
+        fields = [
+            'description',
+            'latitude',
+            'longitude',
+            'image',
+            'video',
+            'estimated_injured',
+            'contact_number',
+        ]
+
+        widgets = {
+
+            'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Describe what is happening...',
+                'rows': 4
+            }),
+
+            'latitude': forms.HiddenInput(),
+
+            'longitude': forms.HiddenInput(),
+
+            'image': forms.ClearableFileInput(attrs={
+                'class': 'form-control',
+                'accept': 'image/*',
+            }),
+
+                'video': forms.ClearableFileInput(attrs={
+            'class': 'form-control',
+            'accept': 'video/*',
+        }),
+
+            'estimated_injured': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': 0,
+                'placeholder': 'Estimated injured people'
+            }),
+
+            'contact_number': forms.TextInput(attrs={
+                'class': 'form-control',
+                'type': 'tel',
+                'placeholder': 'Your contact number'
+            }),
+        }

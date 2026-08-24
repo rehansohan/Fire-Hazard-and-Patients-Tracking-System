@@ -1,0 +1,1291 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Emergency Reports
+{% endblock %}
+
+
+{% block extra_head %}
+
+<style>
+
+    body {
+        background: #f8fafc;
+    }
+
+    .emergency-admin-shell {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 35px 15px 60px;
+    }
+
+
+    /* ================================
+       HEADER
+    ================================= */
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .page-header h1 {
+        margin: 0 0 7px;
+        color: #0f172a;
+        font-size: 2rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+    }
+
+    .page-header p {
+        margin: 0;
+        color: #64748b;
+        font-size: 0.9rem;
+    }
+
+    .pending-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+
+        padding: 9px 15px;
+
+        border-radius: 999px;
+
+        background: #fef3c7;
+        color: #92400e;
+
+        font-size: 0.75rem;
+        font-weight: 800;
+
+        white-space: nowrap;
+    }
+
+
+    /* ================================
+       REPORT
+    ================================= */
+
+    .report-item {
+        background: #ffffff;
+
+        border: 1px solid #e2e8f0;
+
+        border-radius: 16px;
+
+        margin-bottom: 22px;
+
+        overflow: hidden;
+
+        box-shadow:
+            0 5px 18px
+            rgba(15, 23, 42, 0.05);
+    }
+
+
+    .report-header {
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: flex-start;
+
+        gap: 20px;
+
+        padding: 22px 24px;
+
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+
+    .report-number {
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        width: 30px;
+        height: 30px;
+
+        margin-right: 8px;
+
+        border-radius: 8px;
+
+        background: #eff6ff;
+
+        color: #2563eb;
+
+        font-size: 0.75rem;
+
+        font-weight: 800;
+    }
+
+
+    .report-title {
+        display: flex;
+
+        align-items: center;
+
+        flex-wrap: wrap;
+
+        margin-bottom: 5px;
+
+        color: #0f172a;
+
+        font-size: 1.1rem;
+
+        font-weight: 800;
+    }
+
+
+    .reporter {
+        color: #64748b;
+
+        font-size: 0.78rem;
+    }
+
+    .reporter strong {
+        color: #334155;
+    }
+
+
+    .status-pending {
+        display: inline-flex;
+
+        align-items: center;
+
+        padding: 7px 11px;
+
+        border-radius: 999px;
+
+        background: #fef3c7;
+
+        color: #92400e;
+
+        font-size: 0.7rem;
+
+        font-weight: 800;
+
+        white-space: nowrap;
+    }
+
+
+    /* ================================
+       REPORT BODY
+    ================================= */
+
+    .report-body {
+        padding: 24px;
+    }
+
+
+    .section-title {
+        margin-bottom: 9px;
+
+        color: #334155;
+
+        font-size: 0.78rem;
+
+        font-weight: 800;
+
+        text-transform: uppercase;
+
+        letter-spacing: 0.06em;
+    }
+
+
+    .description {
+        margin-bottom: 22px;
+
+        color: #475569;
+
+        font-size: 0.88rem;
+
+        line-height: 1.7;
+
+        white-space: pre-wrap;
+    }
+
+
+    /* ================================
+       INFORMATION
+    ================================= */
+
+    .info-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
+        gap: 12px;
+
+        margin-bottom: 25px;
+    }
+
+
+    .info-item {
+        padding: 14px;
+
+        border: 1px solid #e2e8f0;
+
+        border-radius: 11px;
+
+        background: #f8fafc;
+    }
+
+
+    .info-label {
+        display: block;
+
+        margin-bottom: 5px;
+
+        color: #64748b;
+
+        font-size: 0.68rem;
+
+        font-weight: 700;
+
+        text-transform: uppercase;
+
+        letter-spacing: 0.05em;
+    }
+
+
+    .info-value {
+        display: block;
+
+        color: #0f172a;
+
+        font-size: 0.84rem;
+
+        font-weight: 700;
+
+        word-break: break-word;
+    }
+
+
+    /* ================================
+       LOCATION
+    ================================= */
+
+    .location-section {
+        margin-bottom: 25px;
+    }
+
+
+    .location-box {
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 15px;
+
+        flex-wrap: wrap;
+
+        padding: 14px 16px;
+
+        border: 1px solid #bae6fd;
+
+        border-radius: 11px;
+
+        background: #f0f9ff;
+    }
+
+
+    .coordinates {
+        color: #075985;
+
+        font-size: 0.8rem;
+
+        line-height: 1.7;
+    }
+
+
+    .coordinates strong {
+        color: #0c4a6e;
+    }
+
+
+    .map-link {
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 6px;
+
+        padding: 8px 12px;
+
+        border-radius: 8px;
+
+        background: #0284c7;
+
+        color: #ffffff;
+
+        text-decoration: none;
+
+        font-size: 0.72rem;
+
+        font-weight: 700;
+    }
+
+
+    .map-link:hover {
+        background: #0369a1;
+
+        color: #ffffff;
+    }
+
+
+    /* ================================
+       EVIDENCE
+    ================================= */
+
+    .evidence-section {
+        margin-top: 25px;
+
+        padding-top: 24px;
+
+        border-top: 1px solid #e2e8f0;
+    }
+
+
+    .evidence-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 18px;
+    }
+
+
+    .evidence-item {
+        min-width: 0;
+
+        border: 1px solid #e2e8f0;
+
+        border-radius: 12px;
+
+        overflow: hidden;
+
+        background: #ffffff;
+    }
+
+
+    .evidence-heading {
+        padding: 12px 14px;
+
+        border-bottom: 1px solid #e2e8f0;
+
+        color: #334155;
+
+        font-size: 0.76rem;
+
+        font-weight: 800;
+    }
+
+
+    .evidence-content {
+        padding: 12px;
+
+        background: #f8fafc;
+    }
+
+
+    .evidence-image {
+        display: block;
+
+        width: 100%;
+
+        height: 300px;
+
+        object-fit: contain;
+
+        border-radius: 8px;
+
+        background: #e2e8f0;
+    }
+
+
+    .evidence-video {
+        display: block;
+
+        width: 100%;
+
+        height: 300px;
+
+        border-radius: 8px;
+
+        background: #020617;
+    }
+
+
+    .evidence-link {
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 6px;
+
+        margin-top: 10px;
+
+        padding: 7px 11px;
+
+        border: 1px solid #cbd5e1;
+
+        border-radius: 7px;
+
+        background: #ffffff;
+
+        color: #334155;
+
+        text-decoration: none;
+
+        font-size: 0.7rem;
+
+        font-weight: 700;
+    }
+
+
+    .evidence-link:hover {
+        background: #f1f5f9;
+
+        color: #0f172a;
+
+        text-decoration: none;
+    }
+
+
+    .no-evidence {
+        padding: 15px;
+
+        border-radius: 10px;
+
+        background: #f1f5f9;
+
+        color: #64748b;
+
+        font-size: 0.78rem;
+    }
+
+
+    /* ================================
+       ACTIONS
+    ================================= */
+
+    .report-actions {
+        display: flex;
+
+        align-items: center;
+
+        gap: 10px;
+
+        flex-wrap: wrap;
+
+        margin-top: 25px;
+
+        padding-top: 20px;
+
+        border-top: 1px solid #e2e8f0;
+    }
+
+
+    .action-btn {
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 7px;
+
+        min-height: 42px;
+
+        padding: 9px 16px;
+
+        border: none;
+
+        border-radius: 9px;
+
+        font-size: 0.76rem;
+
+        font-weight: 800;
+
+        cursor: pointer;
+    }
+
+
+    .verify-btn {
+        background: #16a34a;
+
+        color: #ffffff;
+    }
+
+
+    .verify-btn:hover {
+        background: #15803d;
+    }
+
+
+    .reject-btn {
+        background: #dc2626;
+
+        color: #ffffff;
+    }
+
+
+    .reject-btn:hover {
+        background: #b91c1c;
+    }
+
+
+    /* ================================
+       EMPTY
+    ================================= */
+
+    .empty-state {
+        padding: 70px 20px;
+
+        text-align: center;
+
+        border-top: 1px solid #e2e8f0;
+    }
+
+
+    .empty-icon {
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        width: 60px;
+        height: 60px;
+
+        margin-bottom: 15px;
+
+        border-radius: 50%;
+
+        background: #dcfce7;
+
+        color: #16a34a;
+
+        font-size: 1.7rem;
+    }
+
+
+    .empty-state h3 {
+        margin-bottom: 7px;
+
+        color: #0f172a;
+
+        font-size: 1.1rem;
+
+        font-weight: 800;
+    }
+
+
+    .empty-state p {
+        margin: 0;
+
+        color: #64748b;
+
+        font-size: 0.8rem;
+    }
+
+
+    /* ================================
+       MOBILE
+    ================================= */
+
+    @media (max-width: 767.98px) {
+
+        .emergency-admin-shell {
+            padding-top: 22px;
+            padding-bottom: 35px;
+        }
+
+
+        .page-header {
+            flex-direction: column;
+
+            align-items: flex-start;
+
+            margin-bottom: 22px;
+        }
+
+
+        .page-header h1 {
+            font-size: 1.6rem;
+        }
+
+
+        .page-header p {
+            font-size: 0.76rem;
+        }
+
+
+        .pending-badge {
+            font-size: 0.68rem;
+        }
+
+
+        .report-header {
+            padding: 17px;
+
+            gap: 12px;
+        }
+
+
+        .report-body {
+            padding: 17px;
+        }
+
+
+        .report-title {
+            font-size: 0.95rem;
+        }
+
+
+        .reporter {
+            font-size: 0.7rem;
+        }
+
+
+        .info-grid {
+            grid-template-columns: 1fr;
+
+            gap: 9px;
+        }
+
+
+        .evidence-grid {
+            grid-template-columns: 1fr;
+
+            gap: 13px;
+        }
+
+
+        .evidence-image,
+        .evidence-video {
+            height: 240px;
+        }
+
+
+        .location-box {
+            align-items: flex-start;
+
+            flex-direction: column;
+        }
+
+
+        .map-link {
+            width: 100%;
+        }
+
+
+        .action-btn {
+            width: 100%;
+        }
+
+    }
+
+
+    /* ================================
+       EXTRA SMALL
+    ================================= */
+
+    @media (max-width: 375px) {
+
+        .emergency-admin-shell {
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+
+
+        .page-header h1 {
+            font-size: 1.4rem;
+        }
+
+
+        .report-header {
+            padding: 14px;
+        }
+
+
+        .report-body {
+            padding: 14px;
+        }
+
+
+        .report-title {
+            font-size: 0.88rem;
+        }
+
+
+        .description {
+            font-size: 0.78rem;
+        }
+
+
+        .info-value {
+            font-size: 0.78rem;
+        }
+
+
+        .evidence-image,
+        .evidence-video {
+            height: 210px;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="container emergency-admin-shell">
+
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                Emergency Reports
+            </h1>
+
+            <p>
+                Review reports submitted by the public.
+            </p>
+
+        </div>
+
+
+        <span class="pending-badge">
+
+            <i class="bi bi-clock-fill"></i>
+
+            {{ reports|length }} Pending
+
+        </span>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         REPORTS
+    ====================================================== -->
+
+    {% for report in reports %}
+
+
+    <article class="report-item">
+
+
+        <!-- =================================================
+             REPORT HEADER
+        ================================================== -->
+
+        <div class="report-header">
+
+
+            <div>
+
+                <div class="report-title">
+
+                    <span class="report-number">
+
+                        {{ forloop.counter }}
+
+                    </span>
+
+
+                    {% if report.hazard_type %}
+
+                        {{ report.get_hazard_type_display }}
+
+                    {% else %}
+
+                        Emergency Report
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="reporter">
+
+                    Reported by:
+
+                    <strong>
+
+                        {% if report.reporter %}
+
+                            {{ report.reporter.username }}
+
+                        {% else %}
+
+                            Anonymous
+
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <span class="status-pending">
+
+                <i class="bi bi-clock me-1"></i>
+
+                Pending
+
+            </span>
+
+        </div>
+
+
+
+        <!-- =================================================
+             REPORT BODY
+        ================================================== -->
+
+        <div class="report-body">
+
+
+            <!-- DESCRIPTION -->
+
+            <div>
+
+                <div class="section-title">
+
+                    Incident Description
+
+                </div>
+
+
+                <div class="description">
+
+                    {% if report.description %}
+
+                        {{ report.description }}
+
+                    {% else %}
+
+                        No description provided.
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+
+            <!-- BASIC INFORMATION -->
+
+            <div class="info-grid">
+
+
+                <!-- CONTACT -->
+
+                <div class="info-item">
+
+                    <span class="info-label">
+
+                        Contact Number
+
+                    </span>
+
+
+                    <span class="info-value">
+
+                        {{ report.contact_number|default:"Not provided" }}
+
+                    </span>
+
+                </div>
+
+
+
+                <!-- INJURED -->
+
+                <div class="info-item">
+
+                    <span class="info-label">
+
+                        Estimated Injured
+
+                    </span>
+
+
+                    <span class="info-value">
+
+                        {{ report.estimated_injured|default:"0" }}
+
+                    </span>
+
+                </div>
+
+
+
+                <!-- DATE -->
+
+                <div class="info-item">
+
+                    <span class="info-label">
+
+                        Reported At
+
+                    </span>
+
+
+                    <span class="info-value">
+
+                        {{ report.created_at|date:"M d, Y, h:i A" }}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 LOCATION
+            ================================================== -->
+
+            {% if report.latitude and report.longitude %}
+
+
+            <div class="location-section">
+
+
+                <div class="section-title">
+
+                    <i class="bi bi-geo-alt-fill text-danger"></i>
+
+                    Incident Location
+
+                </div>
+
+
+                <div class="location-box">
+
+
+                    <div class="coordinates">
+
+                        <strong>
+                            Latitude:
+                        </strong>
+
+                        {{ report.latitude }}
+
+                        <br>
+
+                        <strong>
+                            Longitude:
+                        </strong>
+
+                        {{ report.longitude }}
+
+                    </div>
+
+
+                    <a
+                        href="https://www.google.com/maps?q={{ report.latitude }},{{ report.longitude }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="map-link"
+                    >
+
+                        <i class="bi bi-map-fill"></i>
+
+                        Open in Google Maps
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            {% endif %}
+
+
+
+            <!-- =================================================
+                 EVIDENCE
+            ================================================== -->
+
+            <div class="evidence-section">
+
+
+                <div class="section-title">
+
+                    <i class="bi bi-shield-check text-primary"></i>
+
+                    Submitted Evidence
+
+                </div>
+
+
+                {% if report.image or report.video %}
+
+
+                <div class="evidence-grid">
+
+
+                    <!-- ================================
+                         IMAGE
+                    ================================= -->
+
+                    {% if report.image %}
+
+
+                    <div class="evidence-item">
+
+
+                        <div class="evidence-heading">
+
+                            <i class="bi bi-image me-1"></i>
+
+                            Evidence Photo
+
+                        </div>
+
+
+                        <div class="evidence-content">
+
+
+                            <img
+                                src="{{ report.image.url }}"
+                                alt="Emergency evidence photo"
+                                class="evidence-image"
+                            >
+
+
+                            <a
+                                href="{{ report.image.url }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="evidence-link"
+                            >
+
+                                <i class="bi bi-arrows-fullscreen"></i>
+
+                                View Full Image
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+
+                    {% endif %}
+
+
+
+                    <!-- ================================
+                         VIDEO
+                    ================================= -->
+
+                    {% if report.video %}
+
+
+                    <div class="evidence-item">
+
+
+                        <div class="evidence-heading">
+
+                            <i class="bi bi-camera-video me-1"></i>
+
+                            Evidence Video
+
+                        </div>
+
+
+                        <div class="evidence-content">
+
+
+                            <video
+                                controls
+                                playsinline
+                                preload="metadata"
+                                class="evidence-video"
+                            >
+
+                                <source
+                                    src="{{ report.video.url }}"
+                                >
+
+                                Your browser does not support
+                                video playback.
+
+                            </video>
+
+
+                            <a
+                                href="{{ report.video.url }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="evidence-link"
+                            >
+
+                                <i class="bi bi-box-arrow-up-right"></i>
+
+                                Open Video
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+
+                    {% endif %}
+
+
+                </div>
+
+
+                {% else %}
+
+
+                <div class="no-evidence">
+
+                    <i class="bi bi-info-circle me-1"></i>
+
+                    No photo or video evidence was submitted
+                    with this report.
+
+                </div>
+
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- =================================================
+                 ADMIN ACTIONS
+            ================================================== -->
+
+            <div class="report-actions">
+
+
+                <!-- VERIFY -->
+
+                <form
+                    method="POST"
+                    action="{% url 'verify_emergency' report.id %}"
+                >
+
+                    {% csrf_token %}
+
+
+                    <button
+                        type="submit"
+                        class="action-btn verify-btn"
+                    >
+
+                        <i class="bi bi-check-circle-fill"></i>
+
+                        Verify & Activate
+
+                    </button>
+
+                </form>
+
+
+
+                <!-- REJECT -->
+
+                <form
+                    method="POST"
+                    action="{% url 'reject_emergency' report.id %}"
+                >
+
+                    {% csrf_token %}
+
+
+                    <button
+                        type="submit"
+                        class="action-btn reject-btn"
+                    >
+
+                        <i class="bi bi-x-circle-fill"></i>
+
+                        Reject
+
+                    </button>
+
+                </form>
+
+
+            </div>
+
+
+        </div>
+
+    </article>
+
+
+    {% empty %}
+
+
+    <!-- =====================================================
+         EMPTY STATE
+    ====================================================== -->
+
+    <div class="empty-state">
+
+
+        <div class="empty-icon">
+
+            <i class="bi bi-check-lg"></i>
+
+        </div>
+
+
+        <h3>
+            No Pending Reports
+        </h3>
+
+
+        <p>
+            There are currently no pending emergency
+            reports in the database.
+        </p>
+
+
+    </div>
+
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, HttpResponseForbidden
-from .forms import HazardReportForm,HospitalForm,PatientForm,MissingComplaintForm,RegisterForm,PatientTransferForm,ProfileForm
+from .forms import HazardReportForm,HospitalForm,PatientForm,MissingComplaintForm,RegisterForm,PatientTransferForm,ProfileForm,EmergencyReportForm
 from.models import HazardReport,Hospital,Patient,MissingComplaint,Profile,PatientTransfer
 from django.contrib.auth import get_user_model
 from django.db.models import Q
@@ -917,5 +917,410 @@ def edit_hospital(request, id):
             'hospital': hospital
         }
     )
+    
+from django.contrib import messages 
+import base64
+import uuid
+
+from django.core.files.base import ContentFile
+@login_required
+def emergency_report(request):
+
+    if request.method == "POST":
+
+        print("========== EMERGENCY REPORT ==========")
+
+        print(
+            "CAPTURED IMAGE EXISTS:",
+            bool(request.POST.get("captured_image"))
+        )
+
+        print(
+            "CAPTURED IMAGE LENGTH:",
+            len(request.POST.get("captured_image", ""))
+        )
+
+        print(
+            "CAPTURED VIDEO EXISTS:",
+            bool(request.POST.get("captured_video"))
+        )
+
+        print(
+            "CAPTURED VIDEO LENGTH:",
+            len(request.POST.get("captured_video", ""))
+        )
+
+        print(
+            "FILES:",
+            request.FILES
+        )
+
+        print("======================================")
+
+
+        # ============================================
+        # CAMERA DATA
+        # ============================================
+
+        image_base64 = request.POST.get(
+            "captured_image",
+            ""
+        )
+
+        video_base64 = request.POST.get(
+            "captured_video",
+            ""
+        )
+
+
+        # ============================================
+        # NORMAL FORM DATA
+        # ============================================
+
+        form = EmergencyReportForm(
+            request.POST,
+            request.FILES
+        )
+
+
+        if form.is_valid():
+
+            emergency = form.save(
+                commit=False
+            )
+
+            emergency.reporter = request.user
+
+            emergency.status = "PENDING"
+
+
+            # ============================================
+            # SAVE CAPTURED IMAGE
+            # ============================================
+
+            if image_base64:
+
+                try:
+
+                    print(
+                        "IMAGE DATA RECEIVED"
+                    )
+
+
+                    if "," in image_base64:
+
+                        header, encoded = (
+                            image_base64.split(
+                                ",",
+                                1
+                            )
+                        )
+
+                    else:
+
+                        encoded = image_base64
+
+
+                    encoded = encoded.strip()
+
+
+                    image_data = base64.b64decode(
+                        encoded
+                    )
+
+
+                    filename = (
+                        "emergency_photo_"
+                        + uuid.uuid4().hex
+                        + ".jpg"
+                    )
+
+
+                    emergency.image.save(
+                        filename,
+                        ContentFile(
+                            image_data
+                        ),
+                        save=False
+                    )
+
+
+                    print(
+                        "IMAGE SAVED:",
+                        emergency.image.name
+                    )
+
+
+                except Exception as e:
+
+                    print(
+                        "IMAGE SAVE ERROR:",
+                        repr(e)
+                    )
+
+
+            else:
+
+                print(
+                    "NO CAPTURED IMAGE"
+                )
+
+
+            # ============================================
+            # SAVE CAPTURED VIDEO
+            # ============================================
+
+            if video_base64:
+
+                try:
+
+                    print(
+                        "VIDEO DATA RECEIVED"
+                    )
+
+
+                    if "," in video_base64:
+
+                        header, encoded = (
+                            video_base64.split(
+                                ",",
+                                1
+                            )
+                        )
+
+                    else:
+
+                        encoded = video_base64
+
+
+                    encoded = encoded.strip()
+
+
+                    video_data = base64.b64decode(
+                        encoded
+                    )
+
+
+                    filename = (
+                        "emergency_video_"
+                        + uuid.uuid4().hex
+                        + ".webm"
+                    )
+
+
+                    emergency.video.save(
+                        filename,
+                        ContentFile(
+                            video_data
+                        ),
+                        save=False
+                    )
+
+
+                    print(
+                        "VIDEO SAVED:",
+                        emergency.video.name
+                    )
+
+
+                except Exception as e:
+
+                    print(
+                        "VIDEO SAVE ERROR:",
+                        repr(e)
+                    )
+
+
+            else:
+
+                print(
+                    "NO CAPTURED VIDEO"
+                )
+
+
+            # ============================================
+            # SAVE DATABASE
+            # ============================================
+
+            emergency.save()
+
+
+            print(
+                "======================================"
+            )
+
+            print(
+                "DATABASE SAVED:",
+                emergency.id
+            )
+
+            print(
+                "IMAGE DATABASE PATH:",
+                emergency.image.name
+                if emergency.image
+                else "NO IMAGE"
+            )
+
+            print(
+                "VIDEO DATABASE PATH:",
+                emergency.video.name
+                if emergency.video
+                else "NO VIDEO"
+            )
+
+            print(
+                "======================================"
+            )
+
+
+            messages.success(
+                request,
+                "Emergency report submitted successfully."
+            )
+
+            return redirect("home")
+
+
+        else:
+
+            print(
+                "FORM ERRORS:",
+                form.errors
+            )
+
+            messages.error(
+                request,
+                "Please correct the errors and submit again."
+            )
+
+
+    else:
+
+        form = EmergencyReportForm()
+
+
+    return render(
+        request,
+        "emergency_report.html",
+        {
+            "form": form
+        }
+    )
+
+    
+def emergency_report_success(request):
+    
+    return render(
+        request,
+        'emergency_report_success.html'
+    )
+    
+@login_required
+def emergency_admin(request):
+
+    # Only staff/admin can access this page
+    if not request.user.is_staff:
+
+        messages.error(
+            request,
+            "You are not authorized to access this page."
+        )
+
+        return redirect("home")
+
+
+    # Only pending reports
+    reports = (
+        EmergencyReport.objects
+        .filter(status="PENDING")
+        .select_related(
+            "reporter",
+            "reviewed_by"
+        )
+        .order_by("-created_at")
+    )
+
+
+    return render(
+        request,
+        "admin_emergency_report.html",
+        {
+            "reports": reports
+        }
+    )
+    
+@login_required
+@login_required
+def verify_emergency(request, report_id):
+
+    if not request.user.is_staff:
+        return redirect('home')
+
+    emergency = get_object_or_404(
+        EmergencyReport,
+        id=report_id,
+        status='PENDING'
+    )
+
+    if request.method == 'POST':
+
+        emergency.status = 'CONFIRMED'
+
+        emergency.reviewed_by = request.user
+
+        emergency.reviewed_at = timezone.now()
+
+        emergency.save()
+
+        # Create Active Hazard
+        hazard = HazardReport.objects.create(
+
+            title='Emergency Incident',
+
+            description=emergency.description,
+
+            servity='High',
+
+            user=emergency.reporter,
+
+            # Copy emergency map location
+            latitude=emergency.latitude,
+
+            longitude=emergency.longitude,
+
+        )
+
+        return redirect('emergency_admin')
+
+    return redirect('emergency_admin')
+
+
+
+from django.utils import timezone
+@login_required
+@login_required
+def reject_emergency(request, report_id):
+
+    if not request.user.is_staff:
+        return redirect('home')
+
+    emergency = get_object_or_404(
+        EmergencyReport,
+        id=report_id
+    )
+
+    if request.method == 'POST':
+
+        emergency.status = 'REJECTED'
+
+        emergency.reviewed_by = request.user
+
+        emergency.reviewed_at = timezone.now()
+
+        emergency.save()
+
+        return redirect('emergency_admin')
+
+    return redirect('emergency_admin')
     
         

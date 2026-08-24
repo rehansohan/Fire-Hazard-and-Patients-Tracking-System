@@ -3,6 +3,10 @@
 {% block title %}Hazard Details | Hazard Management System{% endblock %}
 
 {% block extra_head %}
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
 <style>
     body {
         background: linear-gradient(180deg, #eef6ff 0%, #f8fafc 100%);
@@ -367,6 +371,99 @@
         font-weight: 700;
     }
 
+        .hazard-location-card {
+        margin-top: 24px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 22px;
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
+    }
+
+    .hazard-location-title {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 6px;
+        color: #0f172a;
+        font-size: 1.2rem;
+        font-weight: 800;
+    }
+
+    .hazard-location-subtitle {
+        color: #64748b;
+        font-size: 0.82rem;
+        margin-bottom: 16px;
+    }
+
+    #hazardDetailMap {
+        width: 100%;
+        height: 360px;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+    }
+
+    .location-coordinates {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 14px;
+    }
+
+    .coordinate-item {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 9px 13px;
+    }
+
+    .coordinate-label {
+        display: block;
+        color: #64748b;
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+
+    .coordinate-value {
+        display: block;
+        margin-top: 3px;
+        color: #0f172a;
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+
+    .google-map-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 14px;
+        padding: 10px 16px;
+        border-radius: 10px;
+        background: #dc2626;
+        color: #fff;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .google-map-btn:hover {
+        background: #b91c1c;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .location-unavailable {
+        padding: 22px;
+        border-radius: 12px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        color: #64748b;
+        text-align: center;
+    }
+
     @media (max-width: 991.98px) {
         .detail-grid {
             grid-template-columns: 1fr;
@@ -379,6 +476,7 @@
         .hero-meta .status-row {
             justify-content: flex-start;
         }
+
     }
 
 /* =========================================
@@ -413,6 +511,56 @@
         justify-content: flex-start;
     }
 }
+
+    @media (max-width: 767.98px) {
+
+        .hazard-location-card {
+            padding: 16px;
+            border-radius: 16px;
+        }
+
+        .hazard-location-title {
+            font-size: 1rem;
+        }
+
+        .hazard-location-subtitle {
+            font-size: 0.72rem;
+        }
+
+        #hazardDetailMap {
+            height: 280px;
+            border-radius: 12px;
+        }
+
+        .location-coordinates {
+            flex-direction: column;
+        }
+
+        .coordinate-item {
+            width: 100%;
+        }
+
+        .google-map-btn {
+            width: 100%;
+            min-height: 44px;
+        }
+    }
+
+    @media (max-width: 375px) {
+
+        #hazardDetailMap {
+            height: 240px;
+        }
+
+        .hazard-location-card {
+            padding: 13px;
+        }
+
+        .hazard-location-title {
+            font-size: 0.92rem;
+        }
+
+    }
 
 
 /* =========================================
@@ -941,6 +1089,54 @@
         </div>
     </section>
 
+
+    {% if hazard.latitude and hazard.longitude %}
+
+<section class="hazard-location-card">
+
+    <div class="hazard-location-title">
+        <i class="bi bi-geo-alt-fill text-danger"></i>
+        Hazard Location
+    </div>
+
+    <div class="hazard-location-subtitle">
+        Location where this hazard was reported.
+    </div>
+
+    <div id="hazardDetailMap"></div>
+
+    <div class="location-coordinates">
+
+        <div class="coordinate-item">
+            <span class="coordinate-label">Latitude</span>
+            <span class="coordinate-value">
+                {{ hazard.latitude }}
+            </span>
+        </div>
+
+        <div class="coordinate-item">
+            <span class="coordinate-label">Longitude</span>
+            <span class="coordinate-value">
+                {{ hazard.longitude }}
+            </span>
+        </div>
+
+    </div>
+
+    <a
+        href="https://www.google.com/maps?q={{ hazard.latitude }},{{ hazard.longitude }}"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="google-map-btn"
+    >
+        <i class="bi bi-map me-2"></i>
+        Open in Google Maps
+    </a>
+
+</section>
+
+{% endif %}
+
     <section class="detail-grid">
         <div class="panel">
             <div class="panel-header">
@@ -1096,4 +1292,64 @@
         </div>
     </section>
 </div>
+
+
+{% if hazard.latitude and hazard.longitude %}
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const latitude = parseFloat("{{ hazard.latitude }}");
+    const longitude = parseFloat("{{ hazard.longitude }}");
+
+    if (
+        isNaN(latitude) ||
+        isNaN(longitude)
+    ) {
+        return;
+    }
+
+    const map = L.map("hazardDetailMap").setView(
+        [latitude, longitude],
+        15
+    );
+
+    L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+            maxZoom: 19,
+            attribution: "&copy; OpenStreetMap contributors"
+        }
+    ).addTo(map);
+
+
+    const marker = L.marker([
+        latitude,
+        longitude
+    ]).addTo(map);
+
+
+    marker.bindPopup(
+        "<strong>Hazard Location</strong><br>" +
+        "Latitude: " + latitude.toFixed(6) + "<br>" +
+        "Longitude: " + longitude.toFixed(6)
+    ).openPopup();
+
+
+    setTimeout(function () {
+
+        map.invalidateSize();
+
+    }, 300);
+
+});
+
+</script>
+
+{% endif %}
 {% endblock %}

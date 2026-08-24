@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User,HazardReport,Hospital,Patient,MissingComplaint,Profile,PatientTransfer,PatientMatch
+from .models import User,HazardReport,Hospital,Patient,MissingComplaint,Profile,PatientTransfer,PatientMatch,EmergencyReport
 
 admin.site.register(User)
 admin.site.register(HazardReport)
@@ -9,6 +9,8 @@ admin.site.register(MissingComplaint)
 admin.site.register(Profile)
 admin.site.register(PatientTransfer)
 admin.site.register(PatientMatch)
+admin.site.register(EmergencyReport)
+
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin

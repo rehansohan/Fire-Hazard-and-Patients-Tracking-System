@@ -60,4 +60,34 @@ path(
     views.edit_hospital,
     name='edit_hospital'
 ),
+
+path(
+    'emergency-report/',
+    views.emergency_report,
+    name='emergency_report'
+),
+
+path(
+    'emergency-report/success/',
+    views.emergency_report_success,
+    name='emergency_report_success'
+),
+
+path(
+    'emergency-reports-admin/',
+    views.emergency_admin,
+    name='emergency_admin'
+),
+
+path(
+    'emergency/<int:report_id>/verify/',
+    views.verify_emergency,
+    name='verify_emergency'
+),
+
+path(
+    'emergency/<int:report_id>/reject/',
+    views.reject_emergency,
+    name='reject_emergency'
+),
 ]
