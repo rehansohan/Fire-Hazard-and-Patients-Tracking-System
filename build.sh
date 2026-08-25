@@ -1,3 +1,13 @@
+#!/usr/bin/env bash
+set -o errexit
+
+echo "Installing dependencies..."
+pip install -r requirements.txt
+
+echo "Running migrations..."
+python manage.py migrate --noinput
+
+echo "Creating/updating superuser..."
 python manage.py shell -c "
 from django.contrib.auth import get_user_model
 import os
@@ -29,3 +39,8 @@ if username and password:
     else:
         print('Superuser password updated successfully.')
 "
+
+echo "Collecting static files..."
+python manage.py collectstatic --noinput
+
+echo "Build completed successfully."
