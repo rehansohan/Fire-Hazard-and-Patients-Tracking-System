@@ -597,6 +597,7 @@ def delete_missing_complaint(request, id):
     return render(request, 'delete_confirm.html', {'object': complaint, 'type': 'Missing Report'})
 
 from django.contrib.auth.models import Group
+
 def register(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
@@ -605,7 +606,10 @@ def register(request):
 
             user = form.save()
 
-            group = Group.objects.get(name="General User")
+            group, created = Group.objects.get_or_create(
+                name="General User"
+            )
+
             user.groups.add(group)
 
             Profile.objects.create(
@@ -622,7 +626,11 @@ def register(request):
     else:
         form = RegisterForm()
 
-    return render(request, "register.html", {"form": form})
+    return render(
+        request,
+        "register.html",
+        {"form": form}
+    )
     
 def user_login(request):
     if request.method =='POST':
@@ -1322,5 +1330,150 @@ def reject_emergency(request, report_id):
         return redirect('emergency_admin')
 
     return redirect('emergency_admin')
+
+
+@login_required
+def hospital_active_hazard(request, id):
+
+    hospital = get_object_or_404(
+        Hospital,
+        id=id
+    )
+
+    hazards = HazardReport.objects.filter(
+        status='ACTIVE'
+    ).order_by('-id')
+
+    selected_hazard = None
+    selected_patients = Patient.objects.none()
+
+    hazard_id = request.GET.get('hazard')
+
+    if hazard_id:
+
+        selected_hazard = get_object_or_404(
+            HazardReport,
+            id=hazard_id,
+            status='ACTIVE'
+        )
+
+        selected_patients = Patient.objects.filter(
+            hazard=selected_hazard,
+            hospital=hospital
+        )
+
+    context = {
+        'hospital': hospital,
+        'hazards': hazards,
+        'selected_hazard': selected_hazard,
+        'selected_patients': selected_patients,
+
+        'high_hazards_count':
+            hazards.filter(servity='High').count(),
+
+        'total_patients':
+            Patient.objects.filter(
+                hospital=hospital
+            ).count(),
+
+        'hospitals_count':
+            Hospital.objects.count(),
+    }
+
+    return render(
+        request,
+        'hospital_active_hazard.html',
+        context
+    )
     
-        
+    
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404
+from django.db.models import Q
+
+from .models import Hospital, HazardReport
+
+
+@login_required
+def hospital_active_hazard(request, id):
+
+    # -------------------------------------------------
+    # Hospital
+    # -------------------------------------------------
+
+    hospital = get_object_or_404(
+        Hospital,
+        id=id
+    )
+
+
+    # -------------------------------------------------
+    # ALL ACTIVE HAZARDS
+    # -------------------------------------------------
+    #
+    # iexact means:
+    # ACTIVE
+    # Active
+    # active
+    #
+    # সবকেই Active হিসেবে ধরবে।
+    # -------------------------------------------------
+
+    hazards = HazardReport.objects.filter(
+        status__iexact='ACTIVE'
+    ).order_by('-id')
+
+
+    # -------------------------------------------------
+    # Context
+    # -------------------------------------------------
+
+    context = {
+        'hospital': hospital,
+        'hazards': hazards,
+    }
+
+
+    return render(
+        request,
+        'hospital_active_hazard.html',
+        context
+    )
+    
+@login_required
+def hazard_patients(request, id):
+
+    hazard = get_object_or_404(
+        HazardReport,
+        id=id
+    )
+
+    patients = Patient.objects.filter(
+        hazard=hazard
+    )
+
+    critical_count = patients.filter(
+        condition__iexact='Critical'
+    ).count()
+
+    transferred_patients = patients.filter(
+        status__iexact='Transferred'
+    )
+
+    released_patients = patients.filter(
+        status__iexact='Released'
+    )
+
+    context = {
+        'hazard': hazard,
+        'patients': patients,
+        'critical_count': critical_count,
+        'transferred_patients': transferred_patients,
+        'released_patients': released_patients,
+    }
+
+    return render(
+        request,
+        'hazard_patients.html',
+        context
+    )        
