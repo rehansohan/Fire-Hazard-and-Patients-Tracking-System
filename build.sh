@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 set -e
 
 echo "Installing dependencies..."
@@ -7,24 +8,26 @@ pip install -r requirements.txt
 echo "Running database migrations..."
 python manage.py migrate --noinput
 
-echo "Creating/updating admin user..."
-python manage.py shell -c "
-from django.contrib.auth import get_user_model
+echo "Creating/updating superuser..."
+
+python manage.py shell <<'PY'
 import os
+from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-username = os.environ.get('DJANGO_SUPERUSER_USERNAME')
-email = os.environ.get('DJANGO_SUPERUSER_EMAIL')
-password = os.environ.get('DJANGO_SUPERUSER_PASSWORD')
+username = os.environ.get("DJANGO_SUPERUSER_USERNAME")
+email = os.environ.get("DJANGO_SUPERUSER_EMAIL")
+password = os.environ.get("DJANGO_SUPERUSER_PASSWORD")
 
 if username and password:
     user, created = User.objects.get_or_create(
         username=username,
         defaults={
-            'email': email or '',
-            'is_staff': True,
-            'is_superuser': True,
+            "email": email or "",
+            "is_staff": True,
+            "is_superuser": True,
+            "is_active": True,
         }
     )
 
@@ -32,12 +35,18 @@ if username and password:
     user.set_password(password)
     user.is_staff = True
     user.is_superuser = True
+    user.is_active = True
     user.save()
 
     if created:
-        print('Superuser created successfully.')
+        print("Superuser created successfully.")
     else:
-        print('Superuser password updated successfully.')
-"
+        print("Superuser password updated successfully.")
+else:
+    print("Superuser environment variables are missing.")
+PY
+
+echo "Collecting static files..."
+python manage.py collectstatic --noinput
 
 echo "Build completed successfully."
