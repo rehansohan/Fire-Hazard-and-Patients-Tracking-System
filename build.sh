@@ -8,13 +8,11 @@ echo "========================================"
 
 pip install -r requirements.txt
 
-
 echo "========================================"
 echo "Running database migrations..."
 echo "========================================"
 
 python manage.py migrate --noinput
-
 
 echo "========================================"
 echo "Creating/updating superuser..."
@@ -67,13 +65,11 @@ else:
 
 "
 
-
 echo "========================================"
 echo "Collecting static files..."
 echo "========================================"
 
 python manage.py collectstatic --noinput
-
 
 echo "========================================"
 echo "Build completed successfully."
