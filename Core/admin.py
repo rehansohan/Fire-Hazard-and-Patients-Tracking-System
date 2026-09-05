@@ -1,7 +1,7 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 from .models import User,HazardReport,Hospital,Patient,MissingComplaint,Profile,PatientTransfer,PatientMatch,EmergencyReport
 
-admin.site.register(User)
 admin.site.register(HazardReport)
 admin.site.register(Hospital)
 admin.site.register(Patient)
@@ -12,11 +12,7 @@ admin.site.register(PatientMatch)
 admin.site.register(EmergencyReport)
 
 
-from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from .models import User
-
-
+@admin.register(User)
 class CustomUserAdmin(UserAdmin):
 
     fieldsets = UserAdmin.fieldsets + (

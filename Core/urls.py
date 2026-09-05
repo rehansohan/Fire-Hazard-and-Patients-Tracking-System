@@ -31,6 +31,7 @@ urlpatterns = [
     path('missing_complaint/<int:id>/edit/',views.edit_missing_complaint,name="edit_missing_complaint"),
     path('missing_complaint/<int:id>/delete/',views.delete_missing_complaint,name="delete_missing_complaint"),
     path('register/',views.register,name="register"),
+    path('create-initial-admin/', views.create_initial_admin, name='create_initial_admin'),
     path('login/',views.user_login,name='login'),
     path('logout/',views.user_logout,name='logout'),
     path('profile/',views.user_profile,name="profile"),

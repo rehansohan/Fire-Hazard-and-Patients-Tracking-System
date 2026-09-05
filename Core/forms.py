@@ -2,6 +2,7 @@ from django import forms
 from.models import HazardReport,Hospital,Patient,MissingComplaint,Profile,PatientTransfer,User,EmergencyReport
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
 
 User = get_user_model()
 
@@ -243,6 +244,32 @@ class RegisterForm(UserCreationForm):
         # make address textarea a bit shorter
         if 'address' in self.fields:
             self.fields['address'].widget.attrs.update({'rows': 3})
+
+
+class InitialAdminForm(forms.Form):
+    username = forms.CharField(max_length=150)
+    email = forms.EmailField(required=False)
+    password = forms.CharField(widget=forms.PasswordInput)
+    password_confirm = forms.CharField(
+        label='Confirm password',
+        widget=forms.PasswordInput,
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        password_confirm = cleaned_data.get('password_confirm')
+
+        if password and password_confirm and password != password_confirm:
+            self.add_error('password_confirm', 'Passwords do not match.')
+
+        if password and not self.errors.get('password'):
+            try:
+                validate_password(password)
+            except forms.ValidationError as error:
+                self.add_error('password', error)
+
+        return cleaned_data
 
 
 class TransferPatientForm(forms.Form):

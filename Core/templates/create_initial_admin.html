@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create initial admin</title>
+    <style>
+        body { background: #f4f6f8; color: #1f2937; font-family: Arial, sans-serif; margin: 0; }
+        main { background: #fff; border: 1px solid #dbe1e8; border-radius: 8px; margin: 8vh auto; max-width: 440px; padding: 28px; }
+        h1 { font-size: 24px; margin-top: 0; }
+        label { display: block; font-weight: 600; margin: 16px 0 6px; }
+        input { border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box; font-size: 16px; padding: 10px; width: 100%; }
+        button { background: #1d4ed8; border: 0; border-radius: 4px; color: #fff; cursor: pointer; font-size: 16px; margin-top: 22px; padding: 11px 16px; width: 100%; }
+        .error { color: #b91c1c; }
+        .success { color: #166534; }
+        ul { padding-left: 20px; }
+    </style>
+</head>
+<body>
+    <main>
+        {% if success %}
+            <h1 class="success">Admin account is ready</h1>
+            <p>The account was created or updated successfully. You can now sign in at <a href="/admin/">/admin/</a>.</p>
+        {% else %}
+            <h1>Create initial admin</h1>
+            <p>Use this temporary page to create or update the Django admin account.</p>
+            {% if form.non_field_errors %}<div class="error">{{ form.non_field_errors }}</div>{% endif %}
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}<div class="error">{{ field.errors }}</div>{% endif %}
+                {% endfor %}
+                <button type="submit">Create Admin</button>
+            </form>
+        {% endif %}
+    </main>
+</body>
+</html>

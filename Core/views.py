@@ -1,6 +1,9 @@
+import hmac
+import os
+
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, HttpResponseForbidden
-from .forms import HazardReportForm,HospitalForm,PatientForm,MissingComplaintForm,RegisterForm,PatientTransferForm,ProfileForm,EmergencyReportForm
+from .forms import HazardReportForm,HospitalForm,PatientForm,MissingComplaintForm,RegisterForm,PatientTransferForm,ProfileForm,EmergencyReportForm,InitialAdminForm
 from.models import HazardReport,Hospital,Patient,MissingComplaint,Profile,PatientTransfer
 from django.contrib.auth import get_user_model
 from django.db.models import Q
@@ -631,6 +634,53 @@ def register(request):
         "register.html",
         {"form": form}
     )
+
+
+def create_initial_admin(request):
+    configured_key = os.environ.get('ADMIN_SETUP_KEY')
+    provided_key = request.GET.get('key')
+
+    if not configured_key:
+        return HttpResponseForbidden('Admin setup is not enabled.')
+
+    if provided_key is not None:
+        if not hmac.compare_digest(provided_key, configured_key):
+            return HttpResponseForbidden('Invalid setup key.')
+        request.session['initial_admin_setup_authorized'] = True
+    elif not request.session.get('initial_admin_setup_authorized'):
+        return HttpResponseForbidden('A valid setup key is required.')
+
+    if request.method == 'POST':
+        form = InitialAdminForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            user = User.objects.filter(username=username).first()
+            if user is None:
+                user = User(username=username)
+
+            email = form.cleaned_data['email']
+            if email:
+                user.email = email
+
+            gender_field = User._meta.get_field('gender')
+            if not gender_field.blank and not user.gender:
+                user.gender = 'Male'
+
+            user.set_password(form.cleaned_data['password'])
+            user.is_staff = True
+            user.is_superuser = True
+            user.is_active = True
+            user.save()
+
+            if not user.check_password(form.cleaned_data['password']):
+                return HttpResponse('Admin password verification failed.', status=500)
+
+            request.session.pop('initial_admin_setup_authorized', None)
+            return render(request, 'create_initial_admin.html', {'success': True})
+    else:
+        form = InitialAdminForm()
+
+    return render(request, 'create_initial_admin.html', {'form': form})
     
 def user_login(request):
     if request.method =='POST':
