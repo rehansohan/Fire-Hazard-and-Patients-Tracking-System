@@ -1,0 +1,1606 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+    {{ station.name }} | FHPTS
+{% endblock %}
+
+
+{% block extra_head %}
+
+<style>
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.station-detail-page {
+    background: #f8fafc;
+    min-height: 100vh;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.detail-hero {
+    min-height: 540px;
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    color: white;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   LIGHT IMAGE OVERLAY
+   IMPORTANT:
+   No blur/filter is applied to the image.
+========================================================= */
+
+.detail-hero-overlay {
+    position: absolute;
+    inset: 0;
+
+    background: rgba(127, 29, 29, 0.25);
+
+    z-index: 1;
+}
+
+
+/* =========================================================
+   DECORATIVE CIRCLES
+========================================================= */
+
+.hero-circle-one {
+    position: absolute;
+
+    width: 420px;
+    height: 420px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.06);
+
+    top: -250px;
+    right: -100px;
+
+    z-index: 2;
+
+    pointer-events: none;
+}
+
+
+.hero-circle-two {
+    position: absolute;
+
+    width: 300px;
+    height: 300px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.05);
+
+    bottom: -210px;
+    left: -100px;
+
+    z-index: 2;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   HERO CONTENT
+========================================================= */
+
+.detail-hero-content {
+    position: relative;
+
+    z-index: 3;
+
+    width: 100%;
+
+    padding: 70px 0;
+}
+
+
+/* =========================================================
+   BREADCRUMB
+========================================================= */
+
+.breadcrumb-custom {
+    margin-bottom: 45px;
+
+    font-size: 1rem;
+}
+
+
+.breadcrumb-custom a {
+    color: rgba(255, 255, 255, 0.90);
+
+    text-decoration: none;
+
+    transition: 0.2s ease;
+}
+
+
+.breadcrumb-custom a:hover {
+    color: white;
+}
+
+
+.breadcrumb-custom .separator {
+    margin: 0 12px;
+
+    opacity: 0.75;
+}
+
+
+.breadcrumb-custom .current {
+    color: white;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   HERO STATION CONTENT
+========================================================= */
+
+.hero-station-content {
+    max-width: 900px;
+
+    margin: auto;
+
+    text-align: center;
+}
+
+
+.station-photo-badge {
+    width: 88px;
+    height: 88px;
+
+    margin: 0 auto 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 22px;
+
+    background: rgba(255, 255, 255, 0.16);
+
+    border: 1px solid rgba(255, 255, 255, 0.35);
+
+    font-size: 2.5rem;
+
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+
+.hero-station-title {
+    font-size: clamp(2.4rem, 5vw, 4rem);
+
+    font-weight: 800;
+
+    line-height: 1.15;
+
+    margin-bottom: 18px;
+
+    color: white;
+
+    text-shadow:
+        0 3px 15px rgba(0, 0, 0, 0.30);
+}
+
+
+.hero-location {
+    font-size: 1.15rem;
+
+    color: rgba(255, 255, 255, 0.95);
+
+    margin-bottom: 28px;
+}
+
+
+.hero-location i {
+    margin-right: 7px;
+}
+
+
+/* =========================================================
+   ACTIVE BADGE
+========================================================= */
+
+.active-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 8px 15px;
+
+    border-radius: 50px;
+
+    background: rgba(255, 255, 255, 0.14);
+
+    border: 1px solid rgba(255, 255, 255, 0.28);
+
+    font-size: 0.85rem;
+
+    font-weight: 600;
+
+    backdrop-filter: none;
+}
+
+
+.active-dot {
+    width: 9px;
+    height: 9px;
+
+    border-radius: 50%;
+
+    background: #86efac;
+
+    box-shadow:
+        0 0 0 4px rgba(134, 239, 172, 0.15);
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.detail-content {
+    position: relative;
+
+    z-index: 5;
+
+    margin-top: -45px;
+
+    padding-bottom: 70px;
+}
+
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.detail-card {
+    background: white;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 18px 45px rgba(15, 23, 42, 0.08);
+}
+
+
+.detail-card-header {
+    padding: 25px 30px;
+
+    border-bottom: 1px solid #e2e8f0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.detail-card-header-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: #fef2f2;
+
+    color: #dc2626;
+
+    flex-shrink: 0;
+}
+
+
+.detail-card-header h4 {
+    margin: 0;
+
+    color: #0f172a;
+
+    font-size: 1.2rem;
+
+    font-weight: 700;
+}
+
+
+.detail-card-body {
+    padding: 30px;
+}
+
+
+/* =========================================================
+   INFORMATION ITEMS
+========================================================= */
+
+.detail-info-item {
+    display: flex;
+
+    gap: 17px;
+
+    padding: 21px 0;
+
+    border-bottom: 1px solid #f1f5f9;
+}
+
+
+.detail-info-item:first-child {
+    padding-top: 0;
+}
+
+
+.detail-info-item:last-child {
+    border-bottom: none;
+
+    padding-bottom: 0;
+}
+
+
+.detail-info-icon {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #fef2f2;
+
+    color: #dc2626;
+
+    border-radius: 12px;
+
+    font-size: 1.1rem;
+
+    flex-shrink: 0;
+}
+
+
+.detail-info-content {
+    min-width: 0;
+}
+
+
+.detail-info-content small {
+    display: block;
+
+    color: #94a3b8;
+
+    font-size: 0.75rem;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+
+    margin-bottom: 5px;
+}
+
+
+.detail-info-content strong {
+    display: block;
+
+    color: #334155;
+
+    font-size: 0.98rem;
+
+    line-height: 1.6;
+}
+
+
+.detail-info-content a {
+    color: #dc2626;
+
+    font-size: 0.98rem;
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    word-break: break-word;
+}
+
+
+.detail-info-content a:hover {
+    color: #991b1b;
+
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   MAP
+========================================================= */
+
+.map-box {
+    min-height: 290px;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f8fafc,
+            #f1f5f9
+        );
+
+    border: 1px dashed #cbd5e1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 35px;
+}
+
+
+.map-icon {
+    width: 70px;
+    height: 70px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 18px;
+
+    background: #fef2f2;
+
+    color: #dc2626;
+
+    font-size: 1.8rem;
+
+    margin-bottom: 18px;
+}
+
+
+.map-box h5 {
+    color: #0f172a;
+
+    font-weight: 700;
+
+    margin-bottom: 8px;
+}
+
+
+.map-box p {
+    color: #64748b;
+
+    max-width: 500px;
+
+    margin-bottom: 20px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.detail-btn {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 12px 18px;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+    font-size: 0.9rem;
+
+    font-weight: 700;
+
+    transition:
+        transform 0.25s ease,
+        background 0.25s ease,
+        border-color 0.25s ease;
+}
+
+
+.detail-btn:hover {
+    transform: translateY(-2px);
+}
+
+
+.detail-btn-primary {
+    background: #dc2626;
+
+    color: white;
+
+    border: 1px solid #dc2626;
+}
+
+
+.detail-btn-primary:hover {
+    background: #b91c1c;
+
+    color: white;
+
+    border-color: #b91c1c;
+}
+
+
+.detail-btn-secondary {
+    background: white;
+
+    color: #334155;
+
+    border: 1px solid #e2e8f0;
+}
+
+
+.detail-btn-secondary:hover {
+    background: #f8fafc;
+
+    color: #dc2626;
+
+    border-color: #fecaca;
+}
+
+
+/* =========================================================
+   EMERGENCY CARD
+========================================================= */
+
+.emergency-card {
+    background: white;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 20px;
+
+    padding: 30px;
+
+    box-shadow:
+        0 18px 45px rgba(15, 23, 42, 0.08);
+
+    position: sticky;
+
+    top: 100px;
+}
+
+
+.emergency-icon {
+    width: 64px;
+    height: 64px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 16px;
+
+    background: #fef2f2;
+
+    color: #dc2626;
+
+    font-size: 1.7rem;
+
+    margin-bottom: 18px;
+}
+
+
+.emergency-card h4 {
+    color: #0f172a;
+
+    font-size: 1.3rem;
+
+    font-weight: 800;
+
+    margin-bottom: 10px;
+}
+
+
+.emergency-card > p {
+    color: #64748b;
+
+    line-height: 1.7;
+
+    margin-bottom: 22px;
+}
+
+
+/* =========================================================
+   EMERGENCY BUTTONS
+========================================================= */
+
+.emergency-btn {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+
+    padding: 13px 18px;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+    font-weight: 700;
+
+    margin-top: 10px;
+
+    transition: 0.25s ease;
+}
+
+
+.emergency-btn-primary {
+    background: #dc2626;
+
+    color: white;
+}
+
+
+.emergency-btn-primary:hover {
+    background: #b91c1c;
+
+    color: white;
+
+    transform: translateY(-2px);
+}
+
+
+.emergency-btn-secondary {
+    background: #f8fafc;
+
+    color: #334155;
+
+    border: 1px solid #e2e8f0;
+}
+
+
+.emergency-btn-secondary:hover {
+    background: #f1f5f9;
+
+    color: #dc2626;
+
+    border-color: #fecaca;
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   SOURCE BOX
+========================================================= */
+
+.source-box {
+    margin-top: 25px;
+
+    padding: 18px;
+
+    background: #f8fafc;
+
+    border-radius: 12px;
+
+    border: 1px solid #e2e8f0;
+}
+
+
+.source-label {
+    display: block;
+
+    color: #94a3b8;
+
+    font-size: 0.72rem;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+
+    margin-bottom: 7px;
+}
+
+
+.source-box a {
+    color: #dc2626;
+
+    font-size: 0.9rem;
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    line-height: 1.5;
+}
+
+
+.source-box a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   PHOTO INFORMATION
+========================================================= */
+
+.photo-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: #16a34a;
+
+    font-size: 0.82rem;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+========================================================= */
+
+.back-wrapper {
+    text-align: center;
+
+    margin-top: 30px;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .detail-hero {
+        min-height: 500px;
+    }
+
+
+    .detail-content {
+        margin-top: -25px;
+    }
+
+
+    .emergency-card {
+        position: static;
+    }
+
+}
+
+
+@media (max-width: 768px) {
+
+    .detail-hero {
+        min-height: 470px;
+    }
+
+
+    .detail-hero-content {
+        padding: 50px 0;
+    }
+
+
+    .breadcrumb-custom {
+        margin-bottom: 35px;
+
+        font-size: 0.9rem;
+    }
+
+
+    .station-photo-badge {
+        width: 75px;
+        height: 75px;
+
+        border-radius: 18px;
+
+        font-size: 2rem;
+    }
+
+
+    .hero-location {
+        font-size: 1rem;
+    }
+
+
+    .detail-card-body {
+        padding: 22px;
+    }
+
+
+    .detail-card-header {
+        padding: 20px 22px;
+    }
+
+
+    .emergency-card {
+        padding: 22px;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .hero-station-title {
+        font-size: 2.15rem;
+    }
+
+
+    .breadcrumb-custom .separator {
+        margin: 0 6px;
+    }
+
+
+    .detail-info-item {
+        gap: 12px;
+    }
+
+
+    .detail-info-icon {
+        width: 42px;
+        height: 42px;
+
+        font-size: 1rem;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="station-detail-page">
+
+
+    <!-- =========================================================
+         HERO
+    ========================================================= -->
+
+    <section
+        class="detail-hero"
+
+        {% if station.image %}
+
+        style="
+            background-image:
+                url('{{ station.image.url }}');
+        "
+
+        {% endif %}
+    >
+
+
+        <!-- LIGHT RED OVERLAY -->
+
+        <div class="detail-hero-overlay"></div>
+
+
+        <!-- DECORATIVE CIRCLES -->
+
+        <div class="hero-circle-one"></div>
+
+        <div class="hero-circle-two"></div>
+
+
+        <div class="container">
+
+            <div class="detail-hero-content">
+
+
+                <!-- =================================================
+                     BREADCRUMB
+                ================================================= -->
+
+                <div class="breadcrumb-custom">
+
+                    <a href="{% url 'home' %}">
+                        Home
+                    </a>
+
+                    <span class="separator">
+                        /
+                    </span>
+
+                    <a href="{% url 'fire_station_list' %}">
+                        Fire Stations
+                    </a>
+
+                    <span class="separator">
+                        /
+                    </span>
+
+                    <span class="current">
+                        Details
+                    </span>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     STATION CONTENT
+                ================================================= -->
+
+                <div class="hero-station-content">
+
+
+                    <!-- SHOW ICON ONLY IF THERE IS NO IMAGE -->
+
+                    {% if not station.image %}
+
+                    <div class="station-photo-badge">
+
+                        <i class="fas fa-fire-extinguisher"></i>
+
+                    </div>
+
+                    {% endif %}
+
+
+                    <h1 class="hero-station-title">
+
+                        {{ station.name }}
+
+                    </h1>
+
+
+                    <div class="hero-location">
+
+                        <i class="fas fa-location-dot"></i>
+
+                        {{ station.upazila|default:"Noakhali" }},
+                        {{ station.district }}
+
+                    </div>
+
+
+                    {% if station.is_active %}
+
+                    <div class="active-badge">
+
+                        <span class="active-dot"></span>
+
+                        Active Fire Station
+
+                    </div>
+
+                    {% endif %}
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================================
+         MAIN CONTENT
+    ========================================================= -->
+
+    <section class="detail-content">
+
+        <div class="container">
+
+            <div class="row g-4">
+
+
+                <!-- =================================================
+                     LEFT COLUMN
+                ================================================= -->
+
+                <div class="col-lg-8">
+
+
+                    <!-- =================================================
+                         STATION INFORMATION
+                    ================================================= -->
+
+                    <div class="detail-card mb-4">
+
+
+                        <div class="detail-card-header">
+
+                            <div class="detail-card-header-icon">
+
+                                <i class="fas fa-circle-info"></i>
+
+                            </div>
+
+
+                            <h4>
+                                Station Information
+                            </h4>
+
+                        </div>
+
+
+
+                        <div class="detail-card-body">
+
+
+                            <!-- LOCATION -->
+
+                            <div class="detail-info-item">
+
+                                <div class="detail-info-icon">
+
+                                    <i class="fas fa-location-dot"></i>
+
+                                </div>
+
+
+                                <div class="detail-info-content">
+
+                                    <small>
+                                        Location
+                                    </small>
+
+                                    <strong>
+
+                                        {{ station.upazila|default:"Noakhali" }},
+                                        {{ station.district }}
+
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- ADDRESS -->
+
+                            {% if station.address %}
+
+                            <div class="detail-info-item">
+
+                                <div class="detail-info-icon">
+
+                                    <i class="fas fa-map-location-dot"></i>
+
+                                </div>
+
+
+                                <div class="detail-info-content">
+
+                                    <small>
+                                        Full Address
+                                    </small>
+
+                                    <strong>
+
+                                        {{ station.address }}
+
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                            {% endif %}
+
+
+
+                            <!-- PHONE -->
+
+                            {% if station.phone %}
+
+                            <div class="detail-info-item">
+
+                                <div class="detail-info-icon">
+
+                                    <i class="fas fa-phone"></i>
+
+                                </div>
+
+
+                                <div class="detail-info-content">
+
+                                    <small>
+                                        Contact Number
+                                    </small>
+
+                                    <a href="tel:{{ station.phone }}">
+
+                                        {{ station.phone }}
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                            {% endif %}
+
+
+
+                            <!-- DISTRICT -->
+
+                            <div class="detail-info-item">
+
+                                <div class="detail-info-icon">
+
+                                    <i class="fas fa-building"></i>
+
+                                </div>
+
+
+                                <div class="detail-info-content">
+
+                                    <small>
+                                        District
+                                    </small>
+
+                                    <strong>
+                                        {{ station.district }}
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- UPAZILA -->
+
+                            {% if station.upazila %}
+
+                            <div class="detail-info-item">
+
+                                <div class="detail-info-icon">
+
+                                    <i class="fas fa-map"></i>
+
+                                </div>
+
+
+                                <div class="detail-info-content">
+
+                                    <small>
+                                        Upazila
+                                    </small>
+
+                                    <strong>
+                                        {{ station.upazila }}
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                            {% endif %}
+
+
+
+                            <!-- PHOTO STATUS -->
+
+                            {% if station.image %}
+
+                            <div class="detail-info-item">
+
+                                <div class="detail-info-icon">
+
+                                    <i class="fas fa-image"></i>
+
+                                </div>
+
+
+                                <div class="detail-info-content">
+
+                                    <small>
+                                        Station Photo
+                                    </small>
+
+                                    <div class="photo-status">
+
+                                        <i class="fas fa-check-circle"></i>
+
+                                        Official station image available
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            {% endif %}
+
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         MAP
+                    ================================================= -->
+
+                    <div class="detail-card">
+
+
+                        <div class="detail-card-header">
+
+                            <div class="detail-card-header-icon">
+
+                                <i class="fas fa-map-marked-alt"></i>
+
+                            </div>
+
+
+                            <h4>
+                                Station Location
+                            </h4>
+
+                        </div>
+
+
+
+                        <div class="detail-card-body">
+
+
+                            {% if station.google_maps_url %}
+
+                            <div class="map-box">
+
+                                <div class="map-icon">
+
+                                    <i class="fas fa-location-dot"></i>
+
+                                </div>
+
+
+                                <h5>
+
+                                    {{ station.name }}
+
+                                </h5>
+
+
+                                <p>
+
+                                    Find the exact location of
+                                    this fire service station
+                                    on Google Maps.
+
+                                </p>
+
+
+                                <a
+                                    href="{{ station.google_maps_url }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="detail-btn detail-btn-primary"
+                                >
+
+                                    <i class="fas fa-map-location-dot"></i>
+
+                                    Open in Google Maps
+
+                                </a>
+
+                            </div>
+
+                            {% else %}
+
+                            <div class="map-box">
+
+                                <div class="map-icon">
+
+                                    <i class="fas fa-map-location-dot"></i>
+
+                                </div>
+
+
+                                <h5>
+                                    Location Map
+                                </h5>
+
+
+                                <p>
+
+                                    Google Maps location has not
+                                    been added for this station yet.
+
+                                </p>
+
+                            </div>
+
+                            {% endif %}
+
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =================================================
+                     RIGHT COLUMN
+                ================================================= -->
+
+                <div class="col-lg-4">
+
+
+                    <div class="emergency-card">
+
+
+                        <!-- ICON -->
+
+                        <div class="emergency-icon">
+
+                            <i class="fas fa-truck-fast"></i>
+
+                        </div>
+
+
+                        <h4>
+                            Emergency Service
+                        </h4>
+
+
+                        <p>
+
+                            For immediate fire or emergency
+                            assistance in Noakhali, contact
+                            the emergency service.
+
+                        </p>
+
+
+
+                        <!-- =================================================
+                             EMERGENCY 999
+                        ================================================= -->
+
+                        <a
+                            href="tel:999"
+                            class="emergency-btn emergency-btn-primary"
+                        >
+
+                            <i class="fas fa-phone-volume"></i>
+
+                            Call Emergency — 999
+
+                        </a>
+
+
+
+                        <!-- =================================================
+                             STATION PHONE
+                        ================================================= -->
+
+                        {% if station.phone %}
+
+                        <a
+                            href="tel:{{ station.phone }}"
+                            class="emergency-btn emergency-btn-secondary"
+                        >
+
+                            <i class="fas fa-phone"></i>
+
+                            Call Station
+
+                        </a>
+
+                        {% endif %}
+
+
+
+                        <!-- =================================================
+                             OFFICIAL WEBSITE
+                        ================================================= -->
+
+                        {% if station.official_website %}
+
+                        <a
+                            href="{{ station.official_website }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="emergency-btn emergency-btn-secondary"
+                        >
+
+                            <i class="fas fa-globe"></i>
+
+                            Official Website
+
+                            <i
+                                class="fas fa-external-link-alt"
+                                style="font-size:0.72rem;"
+                            ></i>
+
+                        </a>
+
+                        {% endif %}
+
+
+
+                        <!-- =================================================
+                             OFFICIAL SOURCE
+                        ================================================= -->
+
+                        <div class="source-box">
+
+                            <span class="source-label">
+
+                                Official Information Source
+
+                            </span>
+
+
+                            <a
+                                href="https://fireservice.noakhali.gov.bd/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+
+                                Noakhali Fire Service &
+                                Civil Defence
+
+                                <i class="fas fa-external-link-alt ms-1"></i>
+
+                            </a>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 BACK BUTTON
+            ================================================= -->
+
+            <div class="back-wrapper">
+
+                <a
+                    href="{% url 'fire_station_list' %}"
+                    class="detail-btn detail-btn-secondary"
+                >
+
+                    <i class="fas fa-arrow-left"></i>
+
+                    Back to All Fire Stations
+
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}
+
+
+
+{% block extra_scripts %}
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const hero =
+            document.querySelector(".detail-hero");
+
+
+        {% if station.image %}
+
+        /*
+         * Check whether the uploaded station image
+         * loads correctly.
+         */
+
+        const image =
+            new Image();
+
+
+        image.src =
+            "{{ station.image.url }}";
+
+
+        image.onload =
+            function () {
+
+                /*
+                 * Keep original image sharp.
+                 */
+
+                hero.style.backgroundImage =
+                    "url('{{ station.image.url }}')";
+
+            };
+
+
+        image.onerror =
+            function () {
+
+                /*
+                 * Fallback if image cannot be loaded.
+                 */
+
+                hero.style.backgroundImage =
+                    "linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%)";
+
+            };
+
+        {% endif %}
+
+    }
+
+);
+
+</script>
+
+{% endblock %}

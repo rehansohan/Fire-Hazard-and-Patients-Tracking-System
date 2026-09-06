@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Access Restricted | FHAPTS
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+    .error-page-wrapper {
+        min-height: calc(100vh - 100px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 50px 20px;
+        background: #f8fafc;
+    }
+
+    .error-page {
+        width: 100%;
+        max-width: 650px;
+        text-align: center;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 20px;
+        padding: 55px 40px;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.06);
+    }
+
+    .error-icon {
+        width: 90px;
+        height: 90px;
+        margin: 0 auto 25px;
+        border-radius: 50%;
+        background: #fff7ed;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .error-icon i {
+        font-size: 42px;
+        color: #ea580c;
+    }
+
+    .error-code {
+        font-size: 52px;
+        font-weight: 800;
+        color: #111827;
+        line-height: 1;
+        margin-bottom: 12px;
+    }
+
+    .error-title {
+        font-size: 25px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 12px;
+    }
+
+    .error-description {
+        max-width: 500px;
+        margin: 0 auto 28px;
+        color: #6b7280;
+        font-size: 15px;
+        line-height: 1.7;
+    }
+
+    .error-note {
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 13px 16px;
+        margin-bottom: 28px;
+        color: #6b7280;
+        font-size: 13px;
+    }
+
+    .error-actions {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .error-btn {
+        min-height: 44px;
+        padding: 0 20px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+
+    .btn-dashboard {
+        background: #4f46e5;
+        color: #ffffff;
+    }
+
+    .btn-dashboard:hover {
+        background: #4338ca;
+        color: #ffffff;
+        transform: translateY(-1px);
+    }
+
+    .btn-back {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+    .btn-back:hover {
+        background: #e5e7eb;
+        color: #111827;
+    }
+
+    @media (max-width: 576px) {
+
+        .error-page {
+            padding: 40px 22px;
+        }
+
+        .error-code {
+            font-size: 44px;
+        }
+
+        .error-title {
+            font-size: 21px;
+        }
+
+        .error-description {
+            font-size: 14px;
+        }
+
+        .error-actions {
+            flex-direction: column;
+        }
+
+        .error-btn {
+            width: 100%;
+        }
+    }
+
+</style>
+
+
+<div class="error-page-wrapper">
+
+    <div class="error-page">
+
+        <!-- Icon -->
+
+        <div class="error-icon">
+
+            <i class="bi bi-shield-lock"></i>
+
+        </div>
+
+
+        <!-- Error Code -->
+
+        <div class="error-code">
+            403
+        </div>
+
+
+        <!-- Title -->
+
+        <h1 class="error-title">
+            Access Restricted
+        </h1>
+
+
+        <!-- Description -->
+
+        <p class="error-description">
+            You don't have permission to access this page.
+            Your current account does not have the required
+            privileges to view this resource.
+        </p>
+
+
+        <!-- Note -->
+
+        <div class="error-note">
+
+            <i class="bi bi-info-circle me-1"></i>
+
+            If you believe you should have access,
+            please contact your administrator.
+
+        </div>
+
+
+        <!-- Buttons -->
+
+        <div class="error-actions">
+
+            <a
+                href="{% url 'home' %}"
+                class="error-btn btn-dashboard"
+            >
+
+                <i class="bi bi-speedometer2"></i>
+
+                Go to Dashboard
+
+            </a>
+
+
+            <a
+                href="javascript:history.back()"
+                class="error-btn btn-back"
+            >
+
+                <i class="bi bi-arrow-left"></i>
+
+                Go Back
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

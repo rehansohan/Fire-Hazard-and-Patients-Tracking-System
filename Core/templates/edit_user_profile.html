@@ -1,587 +1,962 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block extra_head %}
-<style>
-    body {
-        background: linear-gradient(180deg, #f4f8ff 0%, #f8fafc 100%);
-    }
-
-    .profile-edit-shell {
-        padding: 32px 0 60px;
-    }
-
-    .profile-edit-wrap {
-        max-width: 1200px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: 320px minmax(0, 1fr);
-        gap: 26px;
-    }
-
-    .profile-summary,
-    .profile-form-panel {
-        background: rgba(255, 255, 255, 0.76);
-        border: 1px solid rgba(148, 163, 184, 0.18);
-        border-radius: 26px;
-        box-shadow: 0 16px 38px rgba(15, 23, 42, 0.06);
-    }
-
-    .profile-summary {
-        padding: 28px 22px;
-        text-align: center;
-    }
-
-    .avatar-panel {
-        margin-bottom: 18px;
-    }
-
-    .avatar-frame {
-        width: 160px;
-        height: 160px;
-        margin: 0 auto;
-        border-radius: 50%;
-        overflow: hidden;
-        border: 5px solid rgba(148, 163, 184, 0.2);
-        background: linear-gradient(135deg, #e2e8f0, #f8fafc);
-        box-shadow: 0 18px 32px rgba(37, 99, 235, 0.12);
-    }
-
-    .avatar-frame img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .avatar-placeholder {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 4rem;
-        color: #64748b;
-        background: linear-gradient(135deg, #e2e8f0, #f8fafc);
-    }
-
-    .summary-name {
-        margin: 0 0 8px;
-        font-size: 1.7rem;
-        font-weight: 700;
-        color: #0f172a;
-    }
-
-    .summary-role {
-        margin-bottom: 18px;
-        font-weight: 600;
-        color: #475569;
-    }
-
-    .summary-meta {
-        width: 100%;
-        display: grid;
-        gap: 12px;
-    }
-
-    .meta-box {
-        padding: 12px 14px;
-        text-align: left;
-        border-radius: 16px;
-        border: 1px solid rgba(148, 163, 184, 0.18);
-        background: linear-gradient(180deg, #f8fbff 0%, #eef6ff 100%);
-    }
-
-    .meta-label {
-        display: block;
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: #64748b;
-    }
-
-    .meta-value {
-        display: block;
-        margin-top: 6px;
-        font-size: 1rem;
-        font-weight: 700;
-        color: #0f172a;
-    }
-
-    .profile-form-panel {
-        padding: 28px 28px 30px;
-    }
-
-    .section-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 22px;
-        flex-wrap: wrap;
-    }
-
-    .section-header h3 {
-        margin: 0;
-        font-size: clamp(1.8rem, 2vw, 2.2rem);
-        font-weight: 800;
-        letter-spacing: -0.05em;
-        color: #0f172a;
-    }
-
-    .header-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 9px 14px;
-        border-radius: 999px;
-        background: rgba(37, 99, 235, 0.08);
-        color: #1d4ed8;
-        border: 1px solid rgba(37, 99, 235, 0.15);
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-    }
-
-    .field-row {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 18px;
-    }
-
-    .form-block {
-        margin-bottom: 18px;
-    }
-
-    .form-label {
-        display: block;
-        margin-bottom: 8px;
-        color: #334155;
-        font-weight: 700;
-        font-size: 0.82rem;
-    }
-
-    .form-control,
-    textarea,
-    input[type="file"] {
-        width: 100%;
-        border-radius: 14px;
-        border: 1px solid #dfe7f1;
-        background: #f8fafc;
-        padding: 12px 14px;
-        min-height: 48px;
-        color: #0f172a;
-        transition: all 0.2s ease;
-    }
-
-    .form-control:focus,
-    textarea:focus,
-    input[type="file"]:focus {
-        border-color: #93c5fd;
-        background: #fff;
-        box-shadow: none;
-        outline: none;
-    }
-
-    textarea.form-control {
-        min-height: 120px;
-        resize: vertical;
-    }
-
-    .form-error {
-        margin-top: 8px;
-        color: #dc2626;
-        font-size: 0.82rem;
-    }
-
-    .action-row {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-        gap: 12px;
-        margin-top: 24px;
-    }
-
-    .btn-primary {
-        border: none;
-        border-radius: 12px;
-        padding: 12px 20px;
-        font-weight: 700;
-        background: linear-gradient(135deg, #2563eb, #1d4ed8);
-        box-shadow: 0 12px 22px rgba(37, 99, 235, 0.2);
-    }
-
-    .btn-primary:hover {
-        background: linear-gradient(135deg, #1d4ed8, #1e40af);
-    }
-
-    .btn-secondary {
-        border-radius: 12px;
-        padding: 12px 20px;
-        font-weight: 700;
-        border: none;
-        background: #e2e8f0;
-        color: #0f172a;
-    }
-
-/* =========================================
-   TABLET
-   ========================================= */
-
-@media (max-width: 991.98px) {
-
-    .profile-edit-shell {
-        padding: 25px 15px 45px;
-    }
-
-    .profile-edit-wrap {
-        grid-template-columns: 1fr;
-        gap: 18px;
-    }
-
-    .profile-summary {
-        padding: 25px 20px;
-    }
-
-    .profile-form-panel {
-        padding: 25px 22px;
-    }
-
-}
-
-
-/* =========================================
-   MOBILE
-   ========================================= */
-
-@media (max-width: 767.98px) {
-
-    .profile-edit-shell {
-        padding: 18px 8px 35px;
-    }
-
-    .profile-edit-wrap {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    /* Cards */
-    .profile-summary,
-    .profile-form-panel {
-        border-radius: 18px;
-        padding: 18px !important;
-    }
-
-
-    /* =====================================
-       PROFILE SUMMARY
-       ===================================== */
-
-    .avatar-panel {
-        margin-bottom: 14px;
-    }
-
-    .avatar-frame {
-        width: 115px;
-        height: 115px;
-        border-width: 4px;
-    }
-
-    .avatar-placeholder {
-        font-size: 3rem;
-    }
-
-    .summary-name {
-        font-size: 1.25rem;
-        line-height: 1.35;
-        word-break: break-word;
-        margin-bottom: 5px;
-    }
-
-    .summary-role {
-        font-size: 0.78rem;
-        margin-bottom: 15px;
-    }
-
-    .summary-meta {
-        gap: 8px;
-    }
-
-    .meta-box {
-        padding: 10px 12px;
-        border-radius: 12px;
-    }
-
-    .meta-label {
-        font-size: 0.6rem;
-    }
-
-    .meta-value {
-        margin-top: 4px;
-        font-size: 0.82rem;
-        word-break: break-word;
-        overflow-wrap: anywhere;
-    }
-
-
-    /* =====================================
-       FORM HEADER
-       ===================================== */
-
-    .section-header {
-        align-items: flex-start;
-        margin-bottom: 18px;
-        gap: 9px;
-    }
-
-    .section-header h3 {
-        font-size: 1.45rem;
-        letter-spacing: -0.03em;
-    }
-
-    .header-pill {
-        padding: 6px 9px;
-        font-size: 0.6rem;
-    }
-
-
-    /* =====================================
-       FORM
-       ===================================== */
-
-    .field-row {
-        grid-template-columns: 1fr;
-        gap: 0;
-    }
-
-    .form-block {
-        margin-bottom: 15px;
-    }
-
-    .form-label {
-        font-size: 0.74rem;
-        margin-bottom: 6px;
-    }
-
-    .form-control,
-    textarea,
-    input[type="file"] {
-        min-height: 44px;
-        padding: 10px 11px;
-        border-radius: 10px;
-        font-size: 0.8rem;
-    }
-
-    textarea.form-control {
-        min-height: 105px;
-    }
-
-    /* File upload */
-    input[type="file"] {
-        font-size: 0.72rem;
-        padding: 9px;
-    }
-
-    /* Error */
-    .form-error {
-        font-size: 0.7rem;
-        line-height: 1.45;
-    }
-
-
-    /* =====================================
-       BUTTONS
-       ===================================== */
-
-    .action-row {
-        flex-direction: column;
-        gap: 9px;
-        margin-top: 18px;
-    }
-
-    .action-row > * {
-        flex: none;
-        width: 100%;
-    }
-
-    .action-row .btn {
-        width: 100%;
-        min-height: 44px;
-        padding: 10px 15px;
-        font-size: 0.78rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 9px;
-    }
-
-}
-
-
-/* =========================================
-   EXTRA SMALL ANDROID
-   ========================================= */
-
-@media (max-width: 375px) {
-
-    .profile-edit-shell {
-        padding: 12px 5px 25px;
-    }
-
-    .profile-summary,
-    .profile-form-panel {
-        padding: 14px !important;
-        border-radius: 15px;
-    }
-
-    .avatar-frame {
-        width: 95px;
-        height: 95px;
-    }
-
-    .avatar-placeholder {
-        font-size: 2.5rem;
-    }
-
-    .summary-name {
-        font-size: 1.08rem;
-    }
-
-    .summary-role {
-        font-size: 0.7rem;
-    }
-
-    .meta-box {
-        padding: 9px 10px;
-    }
-
-    .meta-label {
-        font-size: 0.55rem;
-    }
-
-    .meta-value {
-        font-size: 0.75rem;
-    }
-
-    .section-header h3 {
-        font-size: 1.25rem;
-    }
-
-    .header-pill {
-        font-size: 0.55rem;
-        padding: 5px 7px;
-    }
-
-    .form-label {
-        font-size: 0.68rem;
-    }
-
-    .form-control,
-    textarea,
-    input[type="file"] {
-        font-size: 0.75rem;
-    }
-
-    textarea.form-control {
-        min-height: 90px;
-    }
-
-    .action-row .btn {
-        min-height: 42px;
-        font-size: 0.72rem;
-    }
-}
-</style>
+{% block title %}
+    Edit Profile | FHAPTS
 {% endblock %}
 
 {% block content %}
-<div class="container profile-edit-shell">
-    <div class="profile-edit-wrap">
-        <aside class="profile-summary">
-            <div class="avatar-panel">
-                {% if request.user.profile.profile_image %}
-                    <div class="avatar-frame">
-                        <img src="{{ request.user.profile.profile_image.url }}" alt="Profile image">
-                    </div>
-                {% else %}
-                    <div class="avatar-frame">
-                        <div class="avatar-placeholder"><i class="bi bi-person-fill"></i></div>
-                    </div>
-                {% endif %}
-            </div>
 
-            <h3 class="summary-name">{{ request.user.get_full_name|default:request.user.username }}</h3>
-            <div class="summary-role">Volunteer Profile</div>
+<style>
 
-            <div class="summary-meta">
-                <div class="meta-box">
-                    <span class="meta-label">Username</span>
-                    <span class="meta-value">{{ request.user.username }}</span>
-                </div>
-                <div class="meta-box">
-                    <span class="meta-label">Email</span>
-                    <span class="meta-value">{{ request.user.email }}</span>
-                </div>
-                <div class="meta-box">
-                    <span class="meta-label">Joined</span>
-                    <span class="meta-value">{{ request.user.date_joined|date:'M d, Y' }}</span>
-                </div>
-            </div>
-        </aside>
+    /* =========================================================
+       EDIT PROFILE PAGE
+    ========================================================= */
 
-        <section class="profile-form-panel">
-            <div class="section-header">
-                <h3>Edit Profile</h3>
-                <span class="header-pill"><i class="bi bi-person-gear"></i> Account</span>
-            </div>
+    .edit-profile-page {
+        min-height: calc(100vh - 80px);
+        padding: 40px 0 60px;
+        background: #f8fafc;
+    }
 
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
+    /* =========================================================
+       PAGE HEADER
+    ========================================================= */
 
-                {% if form.non_field_errors %}
-                    <div class="alert alert-danger mb-4">
-                        {{ form.non_field_errors }}
-                    </div>
-                {% endif %}
+    .profile-page-header {
+        margin-bottom: 30px;
+    }
 
-                <div class="form-block">
-                    <label class="form-label">Profile Image</label>
-                    {{ form.profile_image }}
-                    {% if form.profile_image.errors %}
-                        <div class="form-error">{{ form.profile_image.errors }}</div>
+    .profile-page-header h2 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 6px;
+    }
+
+    .profile-page-header p {
+        color: #6b7280;
+        margin: 0;
+        font-size: 15px;
+    }
+
+    /* =========================================================
+       MAIN WRAPPER
+    ========================================================= */
+
+    .profile-edit-wrapper {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 25px;
+        align-items: start;
+    }
+
+    /* =========================================================
+       PROFILE SUMMARY
+    ========================================================= */
+
+    .profile-summary-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 18px;
+        padding: 30px 25px;
+        text-align: center;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04);
+    }
+
+    .profile-image-wrapper {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 18px;
+        position: relative;
+    }
+
+    .profile-image-wrapper img {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid #ffffff;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+    }
+
+    .default-profile-icon {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: #eef2ff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        border: 4px solid #ffffff;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+    }
+
+    .default-profile-icon i {
+        font-size: 55px;
+        color: #4f46e5;
+    }
+
+    .profile-summary-card h4 {
+        font-size: 20px;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 5px;
+    }
+
+    .profile-username {
+        color: #6b7280;
+        font-size: 14px;
+        margin-bottom: 18px;
+    }
+
+    .profile-info-divider {
+        height: 1px;
+        background: #e5e7eb;
+        margin: 20px 0;
+    }
+
+    .profile-member-info {
+        text-align: left;
+    }
+
+    .profile-member-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 15px;
+    }
+
+    .profile-member-row:last-child {
+        margin-bottom: 0;
+    }
+
+    .profile-member-icon {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+        border-radius: 10px;
+        background: #f3f4f6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .profile-member-icon i {
+        font-size: 17px;
+        color: #4f46e5;
+    }
+
+    .profile-member-text small {
+        display: block;
+        color: #9ca3af;
+        font-size: 11px;
+        margin-bottom: 2px;
+    }
+
+    .profile-member-text span {
+        display: block;
+        color: #374151;
+        font-size: 13px;
+        word-break: break-word;
+    }
+
+    /* =========================================================
+       FORM CARD
+    ========================================================= */
+
+    .profile-form-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 18px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04);
+        overflow: hidden;
+    }
+
+    .profile-form-header {
+        padding: 25px 30px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .profile-form-header h4 {
+        margin: 0 0 5px;
+        font-size: 20px;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .profile-form-header p {
+        margin: 0;
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .profile-form-body {
+        padding: 30px;
+    }
+
+    /* =========================================================
+       FORM FIELDS
+    ========================================================= */
+
+    .form-section-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #374151;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .form-section-title i {
+        color: #4f46e5;
+        font-size: 17px;
+    }
+
+    .form-group-custom {
+        margin-bottom: 22px;
+    }
+
+    .form-group-custom label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 8px;
+    }
+
+    .form-group-custom label .required {
+        color: #dc2626;
+        margin-left: 2px;
+    }
+
+    .form-control-custom {
+        width: 100%;
+        height: 46px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        padding: 0 14px;
+        font-size: 14px;
+        color: #111827;
+        background: #ffffff;
+        outline: none;
+        transition: all 0.2s ease;
+    }
+
+    .form-control-custom:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.10);
+    }
+
+    textarea.form-control-custom {
+        height: auto;
+        min-height: 100px;
+        padding: 12px 14px;
+        resize: vertical;
+    }
+
+    .form-control-custom::placeholder {
+        color: #9ca3af;
+    }
+
+    .form-control-custom[type="file"] {
+        padding: 10px 12px;
+        height: auto;
+        cursor: pointer;
+    }
+
+    select.form-control-custom {
+        cursor: pointer;
+    }
+
+    /* =========================================================
+       PROFILE IMAGE UPLOAD
+    ========================================================= */
+
+    .image-upload-box {
+        border: 1.5px dashed #cbd5e1;
+        border-radius: 12px;
+        padding: 20px;
+        background: #f8fafc;
+    }
+
+    .image-upload-box small {
+        display: block;
+        margin-top: 8px;
+        color: #9ca3af;
+        font-size: 12px;
+    }
+
+    /* =========================================================
+       TWO COLUMN FIELDS
+    ========================================================= */
+
+    .form-row-custom {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    /* =========================================================
+       HELP TEXT
+    ========================================================= */
+
+    .help-text {
+        margin-top: 6px;
+        font-size: 12px;
+        color: #9ca3af;
+    }
+
+    /* =========================================================
+       ERROR MESSAGE
+    ========================================================= */
+
+    .field-errors {
+        margin-top: 6px;
+        color: #dc2626;
+        font-size: 12px;
+    }
+
+    .form-errors {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: 10px;
+        padding: 13px 15px;
+        margin-bottom: 25px;
+        color: #991b1b;
+        font-size: 13px;
+    }
+
+    /* =========================================================
+       FORM ACTIONS
+    ========================================================= */
+
+    .profile-form-actions {
+        margin-top: 10px;
+        padding-top: 25px;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+    }
+
+    .btn-profile {
+        min-height: 44px;
+        padding: 0 22px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-cancel {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+    .btn-cancel:hover {
+        background: #e5e7eb;
+        color: #111827;
+    }
+
+    .btn-save {
+        background: #4f46e5;
+        color: #ffffff;
+    }
+
+    .btn-save:hover {
+        background: #4338ca;
+        color: #ffffff;
+        transform: translateY(-1px);
+    }
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+
+    @media (max-width: 991px) {
+
+        .profile-edit-wrapper {
+            grid-template-columns: 1fr;
+        }
+
+        .profile-summary-card {
+            max-width: 100%;
+        }
+
+        .profile-member-info {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+    }
+
+    @media (max-width: 767px) {
+
+        .edit-profile-page {
+            padding: 25px 0 40px;
+        }
+
+        .profile-page-header h2 {
+            font-size: 24px;
+        }
+
+        .profile-form-header,
+        .profile-form-body {
+            padding: 22px;
+        }
+
+        .form-row-custom {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+
+        .profile-form-actions {
+            flex-direction: column-reverse;
+        }
+
+        .btn-profile {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 480px) {
+
+        .profile-summary-card {
+            padding: 25px 18px;
+        }
+
+        .profile-form-header,
+        .profile-form-body {
+            padding: 18px;
+        }
+    }
+
+</style>
+
+
+<section class="edit-profile-page">
+
+    <div class="container">
+
+        <!-- =====================================================
+             PAGE HEADER
+        ====================================================== -->
+
+        <div class="profile-page-header">
+
+            <h2>
+                Edit Profile
+            </h2>
+
+            <p>
+                Update your personal information and profile details.
+            </p>
+
+        </div>
+
+
+        <!-- =====================================================
+             MAIN PROFILE AREA
+        ====================================================== -->
+
+        <div class="profile-edit-wrapper">
+
+
+            <!-- =================================================
+                 LEFT PROFILE SUMMARY
+            ================================================== -->
+
+            <div class="profile-summary-card">
+
+                <!-- Profile Image -->
+
+                <div class="profile-image-wrapper">
+
+                    {% if request.user.profile.profile_image %}
+
+                        <img
+                            src="{{ request.user.profile.profile_image.url }}"
+                            alt="Profile Image"
+                        >
+
+                    {% else %}
+
+                        <div class="default-profile-icon">
+                            <i class="bi bi-person"></i>
+                        </div>
+
                     {% endif %}
+
                 </div>
 
-                <div class="field-row">
-                    <div class="form-block">
-                        <label class="form-label">Phone Number</label>
-                        {{ form.phone }}
-                        {% if form.phone.errors %}
-                            <div class="form-error">{{ form.phone.errors }}</div>
+
+                <!-- User Name -->
+
+                <h4>
+                    {% if request.user.get_full_name %}
+                        {{ request.user.get_full_name }}
+                    {% else %}
+                        {{ request.user.username }}
+                    {% endif %}
+                </h4>
+
+
+                <!-- Username -->
+
+                <div class="profile-username">
+                    @{{ request.user.username }}
+                </div>
+
+
+                <div class="profile-info-divider"></div>
+
+
+                <!-- Profile Information -->
+
+                <div class="profile-member-info">
+
+                    <!-- Email -->
+
+                    <div class="profile-member-row">
+
+                        <div class="profile-member-icon">
+                            <i class="bi bi-envelope"></i>
+                        </div>
+
+                        <div class="profile-member-text">
+
+                            <small>
+                                Email
+                            </small>
+
+                            <span>
+                                {{ request.user.email|default:"Not provided" }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Phone -->
+
+                    <div class="profile-member-row">
+
+                        <div class="profile-member-icon">
+                            <i class="bi bi-telephone"></i>
+                        </div>
+
+                        <div class="profile-member-text">
+
+                            <small>
+                                Phone
+                            </small>
+
+                            <span>
+                                {{ request.user.profile.phone|default:"Not provided" }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Member Since -->
+
+                    <div class="profile-member-row">
+
+                        <div class="profile-member-icon">
+                            <i class="bi bi-calendar3"></i>
+                        </div>
+
+                        <div class="profile-member-text">
+
+                            <small>
+                                Member Since
+                            </small>
+
+                            <span>
+                                {{ request.user.date_joined|date:"d F Y" }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 RIGHT EDIT FORM
+            ================================================== -->
+
+            <div class="profile-form-card">
+
+
+                <!-- Form Header -->
+
+                <div class="profile-form-header">
+
+                    <h4>
+                        Personal Information
+                    </h4>
+
+                    <p>
+                        Keep your profile information up to date.
+                    </p>
+
+                </div>
+
+
+                <!-- Form Body -->
+
+                <div class="profile-form-body">
+
+                    <form
+                        method="POST"
+                        enctype="multipart/form-data"
+                    >
+
+                        {% csrf_token %}
+
+
+                        <!-- =====================================
+                             FORM ERRORS
+                        ====================================== -->
+
+                        {% if form.non_field_errors %}
+
+                            <div class="form-errors">
+
+                                {% for error in form.non_field_errors %}
+
+                                    <div>
+                                        {{ error }}
+                                    </div>
+
+                                {% endfor %}
+
+                            </div>
+
                         {% endif %}
-                    </div>
 
-                    <div class="form-block">
-                        <label class="form-label">Email</label>
-                        <input class="form-control" value="{{ request.user.email }}" readonly>
-                    </div>
+
+                        <!-- =====================================
+                             PROFILE IMAGE
+                        ====================================== -->
+
+                        <div class="form-section-title">
+
+                            <i class="bi bi-image"></i>
+
+                            <span>
+                                Profile Photo
+                            </span>
+
+                        </div>
+
+
+                        <div class="form-group-custom">
+
+                            <label for="{{ form.profile_image.id_for_label }}">
+                                Profile Image
+                            </label>
+
+                            <div class="image-upload-box">
+
+                                {{ form.profile_image }}
+
+                                <small>
+                                    Recommended: JPG, JPEG or PNG image.
+                                </small>
+
+                            </div>
+
+
+                            {% if form.profile_image.errors %}
+
+                                <div class="field-errors">
+
+                                    {% for error in form.profile_image.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- =====================================
+                             BASIC INFORMATION
+                        ====================================== -->
+
+                        <div class="form-section-title mt-4">
+
+                            <i class="bi bi-person"></i>
+
+                            <span>
+                                Basic Information
+                            </span>
+
+                        </div>
+
+
+                        <!-- First + Last Name -->
+
+                        <div class="form-row-custom">
+
+                            <!-- First Name -->
+
+                            <div class="form-group-custom">
+
+                                <label for="{{ form.first_name.id_for_label }}">
+                                    First Name
+                                </label>
+
+                                {{ form.first_name }}
+
+                                {% if form.first_name.errors %}
+
+                                    <div class="field-errors">
+
+                                        {% for error in form.first_name.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- Last Name -->
+
+                            <div class="form-group-custom">
+
+                                <label for="{{ form.last_name.id_for_label }}">
+                                    Last Name
+                                </label>
+
+                                {{ form.last_name }}
+
+                                {% if form.last_name.errors %}
+
+                                    <div class="field-errors">
+
+                                        {% for error in form.last_name.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Email -->
+
+                        <div class="form-group-custom">
+
+                            <label for="{{ form.email.id_for_label }}">
+
+                                Email Address
+
+                                <span class="required">
+                                    *
+                                </span>
+
+                            </label>
+
+                            {{ form.email }}
+
+                            {% if form.email.errors %}
+
+                                <div class="field-errors">
+
+                                    {% for error in form.email.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Phone -->
+
+                        <div class="form-group-custom">
+
+                            <label for="{{ form.phone.id_for_label }}">
+                                Phone Number
+                            </label>
+
+                            {{ form.phone }}
+
+                            {% if form.phone.errors %}
+
+                                <div class="field-errors">
+
+                                    {% for error in form.phone.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- =====================================
+                             ADDITIONAL INFORMATION
+                        ====================================== -->
+
+                        <div class="form-section-title mt-4">
+
+                            <i class="bi bi-person-vcard"></i>
+
+                            <span>
+                                Additional Information
+                            </span>
+
+                        </div>
+
+
+                        <!-- Date of Birth + Gender -->
+
+                        <div class="form-row-custom">
+
+                            <!-- Date of Birth -->
+
+                            <div class="form-group-custom">
+
+                                <label for="{{ form.date_of_birth.id_for_label }}">
+                                    Date of Birth
+                                </label>
+
+                                {{ form.date_of_birth }}
+
+                                {% if form.date_of_birth.errors %}
+
+                                    <div class="field-errors">
+
+                                        {% for error in form.date_of_birth.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- Gender -->
+
+                            <div class="form-group-custom">
+
+                                <label for="{{ form.gender.id_for_label }}">
+                                    Gender
+                                </label>
+
+                                {{ form.gender }}
+
+                                {% if form.gender.errors %}
+
+                                    <div class="field-errors">
+
+                                        {% for error in form.gender.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Address -->
+
+                        <div class="form-group-custom">
+
+                            <label for="{{ form.address.id_for_label }}">
+                                Address
+                            </label>
+
+                            {{ form.address }}
+
+                            {% if form.address.errors %}
+
+                                <div class="field-errors">
+
+                                    {% for error in form.address.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- =====================================
+                             ACTION BUTTONS
+                        ====================================== -->
+
+                        <div class="profile-form-actions">
+
+                            <a
+                                href="{% url 'profile' %}"
+                                class="btn-profile btn-cancel"
+                            >
+                                <i class="bi bi-x-lg"></i>
+                                Cancel
+                            </a>
+
+
+                            <button
+                                type="submit"
+                                class="btn-profile btn-save"
+                            >
+                                <i class="bi bi-check2"></i>
+                                Save Changes
+                            </button>
+
+                        </div>
+
+
+                    </form>
+
                 </div>
 
-                <div class="form-block">
-                    <label class="form-label">Address</label>
-                    {{ form.address }}
-                    {% if form.address.errors %}
-                        <div class="form-error">{{ form.address.errors }}</div>
-                    {% endif %}
-                </div>
+            </div>
 
-                <div class="action-row">
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                    <a href="{% url 'profile' %}" class="btn btn-secondary">Cancel</a>
-                </div>
-            </form>
-        </section>
+        </div>
+
     </div>
-</div>
+
+</section>
+
 {% endblock %}

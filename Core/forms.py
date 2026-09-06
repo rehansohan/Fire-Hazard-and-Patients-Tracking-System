@@ -288,29 +288,79 @@ class TransferPatientForm(forms.Form):
 from django import forms
 from .models import Profile
 
+
 class ProfileForm(forms.ModelForm):
 
+    first_name = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Enter First Name"
+            }
+        )
+    )
+
+    last_name = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Enter Last Name"
+            }
+        )
+    )
+
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Enter Email Address"
+            }
+        )
+    )
+
     class Meta:
+
         model = Profile
 
         fields = [
-            "profile_image",
+            "first_name",
+            "last_name",
+            "email",
             "phone",
+            "date_of_birth",
+            "gender",
             "address",
+            "profile_image",
         ]
 
         widgets = {
-
-            "profile_image": forms.ClearableFileInput(
-                attrs={
-                    "class": "form-control"
-                }
-            ),
 
             "phone": forms.TextInput(
                 attrs={
                     "class": "form-control",
                     "placeholder": "Enter Phone Number"
+                }
+            ),
+
+            "date_of_birth": forms.DateInput(
+                attrs={
+                    "class": "form-control",
+                    "type": "date"
+                }
+            ),
+
+            "gender": forms.Select(
+                choices=[
+                    ("", "Select Gender"),
+                    ("Male", "Male"),
+                    ("Female", "Female"),
+                    ("Other", "Other"),
+                ],
+                attrs={
+                    "class": "form-control"
                 }
             ),
 
@@ -321,7 +371,45 @@ class ProfileForm(forms.ModelForm):
                     "placeholder": "Enter Address"
                 }
             ),
+
+            "profile_image": forms.ClearableFileInput(
+                attrs={
+                    "class": "form-control"
+                }
+            ),
         }
+
+    def __init__(self, *args, **kwargs):
+
+        user = kwargs.pop("user", None)
+
+        super().__init__(*args, **kwargs)
+
+        self.user = user
+
+        if user:
+
+            self.fields["first_name"].initial = user.first_name
+            self.fields["last_name"].initial = user.last_name
+            self.fields["email"].initial = user.email
+
+    def save(self, commit=True):
+
+        profile = super().save(commit=False)
+
+        if self.user:
+
+            self.user.first_name = self.cleaned_data["first_name"]
+            self.user.last_name = self.cleaned_data["last_name"]
+            self.user.email = self.cleaned_data["email"]
+
+            if commit:
+                self.user.save()
+
+        if commit:
+            profile.save()
+
+        return profile
         
 
 

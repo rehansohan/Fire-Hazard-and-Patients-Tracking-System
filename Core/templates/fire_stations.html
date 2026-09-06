@@ -1,0 +1,979 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+    Fire Stations | FHPTS
+{% endblock %}
+
+
+{% block extra_head %}
+
+<style>
+
+    .fire-station-page {
+        background: #f8fafc;
+        min-height: 100vh;
+    }
+
+
+    /* ===================================================== */
+    /* HERO */
+    /* ===================================================== */
+
+    .station-hero {
+        background:
+            linear-gradient(
+                135deg,
+                rgba(127, 29, 29, 0.96),
+                rgba(220, 38, 38, 0.92)
+            );
+
+        color: white;
+
+        padding: 80px 0;
+
+        position: relative;
+
+        overflow: hidden;
+    }
+
+
+    .station-hero::before {
+        content: "";
+
+        position: absolute;
+
+        width: 350px;
+        height: 350px;
+
+        border-radius: 50%;
+
+        background: rgba(255,255,255,0.06);
+
+        top: -150px;
+        right: -80px;
+    }
+
+
+    .station-hero::after {
+        content: "";
+
+        position: absolute;
+
+        width: 250px;
+        height: 250px;
+
+        border-radius: 50%;
+
+        background: rgba(255,255,255,0.05);
+
+        bottom: -130px;
+        left: -70px;
+    }
+
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+
+    .hero-icon {
+        width: 90px;
+        height: 90px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: rgba(255,255,255,0.15);
+
+        border: 1px solid rgba(255,255,255,0.25);
+
+        border-radius: 22px;
+
+        font-size: 2.7rem;
+
+        margin: 0 auto 25px;
+    }
+
+
+    /* ===================================================== */
+    /* SEARCH */
+    /* ===================================================== */
+
+    .search-wrapper {
+        margin-top: -35px;
+
+        position: relative;
+
+        z-index: 5;
+    }
+
+
+    .search-box {
+        background: white;
+
+        border-radius: 16px;
+
+        padding: 20px;
+
+        box-shadow:
+            0 15px 40px rgba(15,23,42,0.12);
+    }
+
+
+    .search-input {
+        border: 1px solid #e2e8f0;
+
+        border-radius: 10px;
+
+        padding: 14px 18px;
+
+        font-size: 1rem;
+    }
+
+
+    .search-input:focus {
+        border-color: #dc2626;
+
+        box-shadow:
+            0 0 0 0.2rem rgba(220,38,38,0.12);
+    }
+
+
+    /* ===================================================== */
+    /* STATS */
+    /* ===================================================== */
+
+    .station-count {
+        color: #64748b;
+
+        font-size: 1rem;
+    }
+
+
+    .station-count strong {
+        color: #dc2626;
+
+        font-size: 1.15rem;
+    }
+
+
+    /* ===================================================== */
+    /* STATION CARD */
+    /* ===================================================== */
+
+    .station-card {
+        background: white;
+
+        border: 1px solid #e2e8f0;
+
+        border-radius: 18px;
+
+        height: 100%;
+
+        overflow: hidden;
+
+        transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease,
+            border-color 0.3s ease;
+    }
+
+
+    .station-card:hover {
+        transform: translateY(-7px);
+
+        border-color: #fecaca;
+
+        box-shadow:
+            0 18px 45px rgba(15,23,42,0.12);
+    }
+
+
+    .station-card-top {
+        padding: 25px;
+
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+
+    .station-icon {
+        width: 58px;
+        height: 58px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 15px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #dc2626,
+                #991b1b
+            );
+
+        color: white;
+
+        font-size: 1.5rem;
+
+        flex-shrink: 0;
+    }
+
+
+    .station-name {
+        font-size: 1.2rem;
+
+        font-weight: 700;
+
+        color: #0f172a;
+
+        margin-bottom: 5px;
+    }
+
+
+    .station-location {
+        color: #64748b;
+
+        font-size: 0.9rem;
+    }
+
+
+    .station-info {
+        padding: 22px 25px;
+    }
+
+
+    .info-item {
+        display: flex;
+
+        align-items: flex-start;
+
+        gap: 12px;
+
+        margin-bottom: 15px;
+    }
+
+
+    .info-item:last-child {
+        margin-bottom: 0;
+    }
+
+
+    .info-icon {
+        width: 34px;
+        height: 34px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        background: #fef2f2;
+
+        color: #dc2626;
+
+        border-radius: 9px;
+
+        flex-shrink: 0;
+    }
+
+
+    .info-content small {
+        display: block;
+
+        color: #94a3b8;
+
+        font-size: 0.75rem;
+
+        margin-bottom: 2px;
+    }
+
+
+    .info-content span,
+    .info-content a {
+        color: #334155;
+
+        font-size: 0.9rem;
+
+        text-decoration: none;
+
+        word-break: break-word;
+    }
+
+
+    .info-content a:hover {
+        color: #dc2626;
+    }
+
+
+    /* ===================================================== */
+    /* BUTTONS */
+    /* ===================================================== */
+
+    .station-actions {
+        padding: 0 25px 25px;
+    }
+
+
+    .btn-call {
+        background: #dc2626;
+
+        color: white;
+
+        border: none;
+
+        border-radius: 9px;
+
+        padding: 10px 15px;
+
+        font-weight: 600;
+
+        text-decoration: none;
+
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 7px;
+
+        transition: 0.25s ease;
+    }
+
+
+    .btn-call:hover {
+        background: #b91c1c;
+
+        color: white;
+
+        transform: translateY(-2px);
+    }
+
+
+    .btn-map {
+        background: #f8fafc;
+
+        color: #334155;
+
+        border: 1px solid #e2e8f0;
+
+        border-radius: 9px;
+
+        padding: 10px 15px;
+
+        font-weight: 600;
+
+        text-decoration: none;
+
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 7px;
+
+        transition: 0.25s ease;
+    }
+
+
+    .btn-map:hover {
+        background: #f1f5f9;
+
+        color: #dc2626;
+
+        border-color: #fecaca;
+    }
+
+
+    /* ===================================================== */
+    /* EMPTY STATE */
+    /* ===================================================== */
+
+    .empty-state {
+        background: white;
+
+        border-radius: 18px;
+
+        padding: 60px 20px;
+
+        text-align: center;
+
+        border: 1px solid #e2e8f0;
+    }
+
+
+    .empty-state i {
+        font-size: 3rem;
+
+        color: #cbd5e1;
+
+        margin-bottom: 15px;
+    }
+
+
+    /* ===================================================== */
+    /* SOURCE */
+    /* ===================================================== */
+
+    .source-section {
+        background: white;
+
+        border-top: 1px solid #e2e8f0;
+
+        padding: 35px 0;
+    }
+
+
+    .official-source {
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+        color: #dc2626;
+
+        font-weight: 600;
+
+        text-decoration: none;
+    }
+
+
+    .official-source:hover {
+        color: #991b1b;
+    }
+
+
+    /* ===================================================== */
+    /* MOBILE */
+    /* ===================================================== */
+
+    @media (max-width: 576px) {
+
+        .station-hero {
+            padding: 60px 0;
+        }
+
+
+        .station-hero h1 {
+            font-size: 2rem;
+        }
+
+
+        .station-hero p {
+            font-size: 0.95rem;
+        }
+
+
+        .station-actions .btn {
+            width: 100%;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="fire-station-page">
+
+
+    <!-- ================================================= -->
+    <!-- HERO -->
+    <!-- ================================================= -->
+
+    <section class="station-hero">
+
+        <div class="container">
+
+            <div class="hero-content text-center">
+
+                <div class="hero-icon">
+
+                    <i class="fas fa-fire-extinguisher"></i>
+
+                </div>
+
+
+                <h1 class="display-5 fw-bold mb-3">
+
+                    Fire Service Stations
+
+                </h1>
+
+
+                <p class="lead mb-0">
+
+                    Fire Service & Civil Defence stations
+                    serving Noakhali District
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================================================= -->
+    <!-- SEARCH -->
+    <!-- ================================================= -->
+
+    <section class="search-wrapper">
+
+        <div class="container">
+
+            <div class="search-box">
+
+                <div class="row align-items-center g-3">
+
+
+                    <div class="col-lg-9">
+
+                        <div class="input-group">
+
+                            <span class="input-group-text bg-white border-end-0">
+
+                                <i class="fas fa-search text-muted"></i>
+
+                            </span>
+
+
+                            <input
+                                type="text"
+                                id="stationSearch"
+                                class="form-control search-input border-start-0"
+                                placeholder="Search by station name or upazila..."
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-lg-3">
+
+                        <div class="station-count text-center">
+
+                            <strong>
+                                {{ stations|length }}
+                            </strong>
+
+                            Active Stations
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================================================= -->
+    <!-- STATIONS -->
+    <!-- ================================================= -->
+
+    <section class="py-5">
+
+        <div class="container">
+
+
+            <div
+                class="row g-4"
+                id="stationContainer"
+            >
+
+                {% for station in stations %}
+
+                <div
+                    class="col-xl-4 col-md-6 station-item"
+                    data-search="
+                        {{ station.name|lower }}
+                        {{ station.upazila|lower }}
+                        {{ station.district|lower }}
+                    "
+                >
+
+                    <div class="station-card">
+
+
+                        <!-- CARD HEADER -->
+
+                        <div class="station-card-top">
+
+                            <div class="d-flex align-items-center gap-3">
+
+
+                 
+
+
+                                <div>
+
+                                    <div class="station-name">
+
+                                        {{ station.name }}
+
+                                    </div>
+
+
+                                    <div class="station-location">
+
+                                        <i class="fas fa-map-marker-alt me-1"></i>
+
+                                        {{ station.upazila|default:"Noakhali" }},
+                                        {{ station.district }}
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- CARD INFO -->
+
+                        <div class="station-info">
+
+
+                            {% if station.address %}
+
+                            <div class="info-item">
+
+                                <div class="info-icon">
+
+                                    <i class="fas fa-location-dot"></i>
+
+                                </div>
+
+
+                                <div class="info-content">
+
+                                    <small>
+                                        Address
+                                    </small>
+
+                                    <span>
+                                        {{ station.address }}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                            {% endif %}
+
+
+
+                            {% if station.phone %}
+
+                            <div class="info-item">
+
+                                <div class="info-icon">
+
+                                    <i class="fas fa-phone"></i>
+
+                                </div>
+
+
+                                <div class="info-content">
+
+                                    <small>
+                                        Emergency Contact
+                                    </small>
+
+                                    <a
+                                        href="tel:{{ station.phone }}"
+                                    >
+                                        {{ station.phone }}
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                            {% endif %}
+
+
+
+                            {% if station.official_website %}
+
+                            <div class="info-item">
+
+                                <div class="info-icon">
+
+                                    <i class="fas fa-globe"></i>
+
+                                </div>
+
+
+                                <div class="info-content">
+
+                                    <small>
+                                        Official Website
+                                    </small>
+
+                                    <a
+                                        href="{{ station.official_website }}"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        Visit Government Portal
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                            {% endif %}
+
+
+                        </div>
+
+
+
+                        <!-- ACTIONS -->
+
+                    <div class="station-actions">
+
+                    <div class="row g-2">
+
+                        <div class="col-12">
+
+                            <a
+                                href="{% url 'fire_station_detail' station.pk %}"
+                                class="btn-call w-100"
+                            >
+
+                                <i class="fas fa-info-circle"></i>
+
+                                View Details
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+</div>
+
+
+                    </div>
+
+                </div>
+
+                {% empty %}
+
+                <div class="col-12">
+
+                    <div class="empty-state">
+
+                        <i class="fas fa-fire-extinguisher"></i>
+
+                        <h4>
+
+                            No Fire Stations Found
+
+                        </h4>
+
+                        <p class="text-muted mb-0">
+
+                            No active fire stations are currently
+                            available for Noakhali.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+
+
+            <!-- NO SEARCH RESULT -->
+
+            <div
+                id="noSearchResult"
+                class="empty-state mt-4 d-none"
+            >
+
+                <i class="fas fa-search"></i>
+
+                <h4>
+                    No matching station found
+                </h4>
+
+                <p class="text-muted mb-0">
+                    Try searching with another station name
+                    or upazila.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================================================= -->
+    <!-- OFFICIAL SOURCE -->
+    <!-- ================================================= -->
+
+    <section class="source-section">
+
+        <div class="container text-center">
+
+            <p class="text-muted mb-2">
+
+                Station information is based on the
+                official Noakhali Fire Service & Civil Defence portal.
+
+            </p>
+
+
+            <a
+                href="https://fireservice.noakhali.gov.bd/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="official-source"
+            >
+
+                <i class="fas fa-building-shield"></i>
+
+                Official Noakhali Fire Service Portal
+
+                <i class="fas fa-external-link-alt small"></i>
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+</div>
+
+{% endblock %}
+
+
+
+{% block extra_scripts %}
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const searchInput =
+            document.getElementById(
+                "stationSearch"
+            );
+
+        const stationItems =
+            document.querySelectorAll(
+                ".station-item"
+            );
+
+        const noResult =
+            document.getElementById(
+                "noSearchResult"
+            );
+
+
+        if (!searchInput) {
+            return;
+        }
+
+
+        searchInput.addEventListener(
+            "input",
+            function () {
+
+                const query =
+                    this.value
+                        .toLowerCase()
+                        .trim();
+
+                let visibleCount = 0;
+
+
+                stationItems.forEach(
+                    function (item) {
+
+                        const text =
+                            item.dataset.search
+                                .toLowerCase();
+
+
+                        if (
+                            text.includes(query)
+                        ) {
+
+                            item.style.display =
+                                "";
+
+                            visibleCount++;
+
+                        } else {
+
+                            item.style.display =
+                                "none";
+
+                        }
+
+                    }
+                );
+
+
+                if (visibleCount === 0) {
+
+                    noResult.classList.remove(
+                        "d-none"
+                    );
+
+                } else {
+
+                    noResult.classList.add(
+                        "d-none"
+                    );
+
+                }
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+{% endblock %}

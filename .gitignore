@@ -3,3 +3,5 @@ db.sqlite3
 __pycache__
 venv
 staticfiles
+old_data.json
+old_data_clean.json

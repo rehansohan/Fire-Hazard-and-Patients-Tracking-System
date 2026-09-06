@@ -4,7 +4,7 @@ import os
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, HttpResponseForbidden
 from .forms import HazardReportForm,HospitalForm,PatientForm,MissingComplaintForm,RegisterForm,PatientTransferForm,ProfileForm,EmergencyReportForm,InitialAdminForm
-from.models import HazardReport,Hospital,Patient,MissingComplaint,Profile,PatientTransfer
+from.models import HazardReport,Hospital,Patient,MissingComplaint,Profile,PatientTransfer,FireStation
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from collections import defaultdict
@@ -879,24 +879,43 @@ def notifications(request):
     
 @login_required
 def edit_profile(request):
-    profile = request.user.profile
-    if request.method =='POST':
+
+    profile, created = Profile.objects.get_or_create(
+        user=request.user
+    )
+
+    if request.method == "POST":
+
         form = ProfileForm(
             request.POST,
             request.FILES,
-            instance=profile
+            instance=profile,
+            user=request.user
         )
+
         if form.is_valid():
+
             form.save()
-            return redirect('profile')
+
+            messages.success(
+                request,
+                "Your profile has been updated successfully."
+            )
+
+            return redirect("profile")
+
     else:
-        form = ProfileForm(instance=profile)
-    
+
+        form = ProfileForm(
+            instance=profile,
+            user=request.user
+        )
+
     return render(
         request,
-        'edit_user_profile.html',
+        "edit_user_profile.html",
         {
-            'form':form
+            "form": form
         }
     )
     
@@ -1526,4 +1545,146 @@ def hazard_patients(request, id):
         request,
         'hazard_patients.html',
         context
-    )        
+    )  
+    
+    
+def forgot_password(request):
+    
+    if request.method == "POST":
+
+        identifier = request.POST.get("identifier", "").strip()
+
+        User = get_user_model()
+
+        user = User.objects.filter(username__iexact=identifier).first()
+
+        if user is None:
+            user = User.objects.filter(email__iexact=identifier).first()
+
+        if user is None:
+            messages.error(
+                request,
+                "No account was found with this username or email."
+            )
+            return render(
+                request,
+                "forgot_password.html"
+            )
+
+        request.session["password_reset_user_id"] = user.pk
+
+        return redirect("reset_password")
+
+    return render(
+        request,
+        "forgot_password.html"
+    ) 
+    
+def reset_password(request):
+    
+    user_id = request.session.get("password_reset_user_id")
+
+    if not user_id:
+        return redirect("forgot_password")
+
+    User = get_user_model()
+
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        request.session.pop("password_reset_user_id", None)
+        return redirect("forgot_password")
+
+    if request.method == "POST":
+
+        new_password = request.POST.get("new_password", "")
+        confirm_password = request.POST.get("confirm_password", "")
+
+        if not new_password:
+            messages.error(
+                request,
+                "Please enter a new password."
+            )
+
+        elif len(new_password) < 8:
+            messages.error(
+                request,
+                "Password must be at least 8 characters long."
+            )
+
+        elif new_password != confirm_password:
+            messages.error(
+                request,
+                "Passwords do not match."
+            )
+
+        else:
+            user.set_password(new_password)
+            user.save()
+
+            request.session.pop("password_reset_user_id", None)
+
+            messages.success(
+                request,
+                "Your password has been reset successfully."
+            )
+
+            return redirect("login")
+
+    return render(
+        request,
+        "reset_password.html",
+        {
+            "user": user
+        }
+    ) 
+    
+    
+def fire_station_list(request):
+    
+    stations = FireStation.objects.filter(
+        district="Noakhali",
+        is_active=True
+    ).order_by("name")
+
+    return render(
+        request,
+        "fire_stations.html",
+        {
+            "stations": stations,
+        }
+    ) 
+    
+    
+def fire_station_detail(request, pk):
+    
+    station = get_object_or_404(
+        FireStation,
+        pk=pk,
+        district="Noakhali",
+        is_active=True
+    )
+
+    return render(
+        request,
+        "fire_station_detail.html",
+        {
+            "station": station,
+        }
+    )
+    
+def hospitals(request):
+    hospitals = Hospital.objects.all().order_by("name")
+
+    return render(
+        request,
+        "home_hospital.html",
+        {
+            "hospitals": hospitals
+        }
+    )
+    
+    
+     
+    
+      

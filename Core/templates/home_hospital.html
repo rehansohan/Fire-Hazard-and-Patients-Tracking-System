@@ -1,0 +1,420 @@
+{% extends "index.html" %}
+
+{% block title %}
+Hospitals | FHAPTS
+{% endblock %}
+
+{% block content %}
+
+<style>
+    .hospital-page {
+        background: #f8fafc;
+        min-height: 100vh;
+        padding: 50px 0 70px;
+    }
+
+    .hospital-header {
+        text-align: center;
+        margin-bottom: 45px;
+    }
+
+    .hospital-header .badge {
+        display: inline-block;
+        background: #fee2e2;
+        color: #b91c1c;
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 14px;
+    }
+
+    .hospital-header h1 {
+        font-size: 38px;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 10px;
+    }
+
+    .hospital-header p {
+        color: #64748b;
+        max-width: 650px;
+        margin: auto;
+        font-size: 16px;
+    }
+
+    .hospital-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        overflow: hidden;
+        height: 100%;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
+    }
+
+    .hospital-card:hover {
+        transform: translateY(-7px);
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+    }
+
+    .hospital-image {
+        height: 220px;
+        position: relative;
+        overflow: hidden;
+        background: #e2e8f0;
+    }
+
+    .hospital-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .hospital-card:hover .hospital-image img {
+        transform: scale(1.05);
+    }
+
+    .hospital-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #fee2e2, #fecaca);
+        color: #b91c1c;
+        font-size: 55px;
+    }
+
+    .hospital-content {
+        padding: 24px;
+    }
+
+    .hospital-content h3 {
+        color: #0f172a;
+        font-size: 21px;
+        font-weight: 750;
+        margin-bottom: 14px;
+    }
+
+    .hospital-location {
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+        color: #64748b;
+        font-size: 14px;
+        margin-bottom: 18px;
+    }
+
+    .hospital-location i {
+        color: #dc2626;
+        margin-top: 3px;
+    }
+
+    .hospital-stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .stat-box {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 12px;
+        text-align: center;
+    }
+
+    .stat-box i {
+        color: #dc2626;
+        font-size: 15px;
+        margin-bottom: 5px;
+    }
+
+    .stat-box strong {
+        display: block;
+        color: #0f172a;
+        font-size: 16px;
+    }
+
+    .stat-box span {
+        color: #64748b;
+        font-size: 11px;
+    }
+
+    .hospital-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-details {
+        flex: 1;
+        background: #dc2626;
+        color: white;
+        text-decoration: none;
+        padding: 12px 15px;
+        border-radius: 10px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 14px;
+        transition: 0.25s;
+    }
+
+    .btn-details:hover {
+        background: #b91c1c;
+        color: white;
+    }
+
+    .btn-map {
+        width: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f1f5f9;
+        color: #334155;
+        border-radius: 10px;
+        text-decoration: none;
+        transition: 0.25s;
+    }
+
+    .btn-map:hover {
+        background: #e2e8f0;
+        color: #dc2626;
+    }
+
+    .empty-hospitals {
+        text-align: center;
+        background: white;
+        border: 1px dashed #cbd5e1;
+        border-radius: 20px;
+        padding: 60px 20px;
+    }
+
+    .empty-hospitals i {
+        font-size: 50px;
+        color: #cbd5e1;
+        margin-bottom: 20px;
+    }
+
+    .empty-hospitals h3 {
+        color: #334155;
+        font-weight: 700;
+    }
+
+    .empty-hospitals p {
+        color: #64748b;
+    }
+
+    @media (max-width: 576px) {
+        .hospital-header h1 {
+            font-size: 30px;
+        }
+
+        .hospital-page {
+            padding: 35px 0 50px;
+        }
+
+        .hospital-image {
+            height: 200px;
+        }
+    }
+</style>
+
+<section class="hospital-page">
+
+    <div class="container">
+
+        <!-- Header -->
+        <div class="hospital-header">
+
+            <span class="badge">
+                <i class="fas fa-hospital me-1"></i>
+                Healthcare Network
+            </span>
+
+            <h1>Hospitals in Noakhali</h1>
+
+            <p>
+                Explore hospitals available in Noakhali and access
+                important healthcare information, emergency contacts,
+                facilities and location details.
+            </p>
+
+        </div>
+
+
+        {% if hospitals %}
+
+        <div class="row g-4">
+
+            {% for hospital in hospitals %}
+
+            <div class="col-lg-4 col-md-6">
+
+                <div class="hospital-card">
+
+                    <!-- Hospital Image -->
+                    <div class="hospital-image">
+
+                        {% if hospital.image %}
+
+                            <img
+                                src="{{ hospital.image.url }}"
+                                alt="{{ hospital.name }}"
+                            >
+
+                        {% else %}
+
+                            <div class="hospital-placeholder">
+                                <i class="fas fa-hospital"></i>
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Hospital Information -->
+                    <div class="hospital-content">
+
+                        <h3>
+                            {{ hospital.name }}
+                        </h3>
+
+
+                        <div class="hospital-location">
+
+                            <i class="fas fa-location-dot"></i>
+
+                            <span>
+                                {{ hospital.location }}
+                            </span>
+
+                        </div>
+
+
+                        <!-- Statistics -->
+                        <div class="hospital-stats">
+
+                            <div class="stat-box">
+
+                                <i class="fas fa-bed"></i>
+
+                                <strong>
+                                    {{ hospital.capacity }}
+                                </strong>
+
+                                <span>
+                                    Capacity
+                                </span>
+
+                            </div>
+
+
+                            <div class="stat-box">
+
+                                <i class="fas fa-user-doctor"></i>
+
+                                <strong>
+                                    {{ hospital.total_doctors }}
+                                </strong>
+
+                                <span>
+                                    Doctors
+                                </span>
+
+                            </div>
+
+
+                            <div class="stat-box">
+
+                                <i class="fas fa-user-nurse"></i>
+
+                                <strong>
+                                    {{ hospital.total_nurses }}
+                                </strong>
+
+                                <span>
+                                    Nurses
+                                </span>
+
+                            </div>
+
+
+                            <div class="stat-box">
+
+                                <i class="fas fa-ambulance"></i>
+
+                                <strong>
+                                    {{ hospital.ambulances }}
+                                </strong>
+
+                                <span>
+                                    Ambulances
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Buttons -->
+                        <div class="hospital-actions">
+
+                            <a
+                                href="{% url 'hospital_detail' hospital.pk %}"
+                                class="btn-details"
+                            >
+                                <i class="fas fa-circle-info me-1"></i>
+                                View Details
+                            </a>
+
+
+                            {% if hospital.latitude and hospital.longitude %}
+
+                            <a
+                                href="https://www.google.com/maps/search/?api=1&query={{ hospital.latitude }},{{ hospital.longitude }}"
+                                target="_blank"
+                                class="btn-map"
+                                title="View on Map"
+                            >
+                                <i class="fas fa-location-arrow"></i>
+                            </a>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <!-- Empty State -->
+        <div class="empty-hospitals">
+
+            <i class="fas fa-hospital"></i>
+
+            <h3>No Hospitals Available</h3>
+
+            <p>
+                Hospital information has not been added yet.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}

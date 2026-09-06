@@ -670,18 +670,14 @@
                 {% endif %}
             </div>
 
-            <h3 class="profile-name">{{ request.user.get_full_name|default:request.user.username }}</h3>
-            <div class="profile-role">Volunteer Member</div>
+          
 
             <div class="mini-stats">
                 <div class="mini-stat">
                     <span class="mini-stat-label">Username</span>
                     <span class="mini-stat-value">{{ request.user.username }}</span>
                 </div>
-                <div class="mini-stat">
-                    <span class="mini-stat-label">Volunteer ID</span>
-                    <span class="mini-stat-value">{{ request.user.volunteer_id }}</span>
-                </div>
+          
             </div>
         </aside>
 

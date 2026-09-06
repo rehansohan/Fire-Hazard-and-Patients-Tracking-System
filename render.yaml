@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: fhafts
+    runtime: python
+    buildCommand: bash build.sh
+    startCommand: gunicorn hazard_management.wsgi:application
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        sync: false
+      - key: DJANGO_SUPERUSER_USERNAME
+        sync: false
+      - key: DJANGO_SUPERUSER_EMAIL
+        sync: false
+      - key: DJANGO_SUPERUSER_PASSWORD
+        sync: false
+      - key: ADMIN_SETUP_KEY
+        sync: false

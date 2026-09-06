@@ -1,551 +1,927 @@
 {% extends 'base.html' %}
 
-{% block title %}Hospitals | Hazard Management System{% endblock %}
+{% block title %}
+Hospitals | Hazard Management System
+{% endblock %}
+
 
 {% block extra_head %}
+
 <style>
-    body {
-        background: linear-gradient(180deg, #eef6ff 0%, #f8fafc 100%);
-    }
 
-    .hospital-directory-shell {
-        padding: 28px 0 48px;
-    }
+/* =========================================================
+   HOSPITAL PAGE
+   ========================================================= */
 
-    .directory-hero {
-        background: linear-gradient(135deg, #0f172a 0%, #123b68 42%, #1d4ed8 100%);
-        border-radius: 28px;
-        padding: 30px 28px;
-        color: #fff;
-        box-shadow: 0 20px 50px rgba(15, 23, 42, 0.17);
-        position: relative;
-        overflow: hidden;
-        margin-bottom: 24px;
-    }
-
-    .directory-hero::after {
-        content: "";
-        position: absolute;
-        right: -40px;
-        bottom: -60px;
-        width: 220px;
-        height: 220px;
-        border-radius: 50%;
-        background: rgba(255,255,255,0.08);
-    }
-
-    .director-meta {
-        position: relative;
-        z-index: 1;
-        display: flex;
-        align-items: end;
-        justify-content: space-between;
-        gap: 18px;
-        flex-wrap: wrap;
-    }
-
-    .eyebrow {
-        display: inline-flex;
-        align-items: center;
-        padding: 7px 12px;
-        border-radius: 999px;
-        background: rgba(255,255,255,0.12);
-        border: 1px solid rgba(255,255,255,0.16);
-        color: rgba(255,255,255,0.9);
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-    }
-
-    .page-title {
-        position: relative;
-        z-index: 1;
-        margin: 18px 0 10px;
-        font-weight: 800;
-        letter-spacing: -0.05em;
-        font-size: clamp(2.2rem, 4vw, 3rem);
-    }
-
-    .page-subtitle {
-        position: relative;
-        z-index: 1;
-        color: rgba(255,255,255,0.82);
-        margin: 0;
-        font-size: 1.02rem;
-    }
-
-    .hero-stat-wrap {
-        position: relative;
-        z-index: 1;
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        flex-wrap: wrap;
-    }
-
-    .stat-mini {
-        min-width: 150px;
-        background: rgba(255,255,255,0.08);
-        border: 1px solid rgba(255,255,255,0.12);
-        border-radius: 18px;
-        padding: 12px 16px;
-    }
-
-    .stat-mini .label {
-        display: block;
-        font-size: 0.72rem;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        color: rgba(255,255,255,0.7);
-    }
-
-    .stat-mini .value {
-        display: block;
-        margin-top: 6px;
-        font-size: 1.8rem;
-        font-weight: 800;
-        letter-spacing: -0.04em;
-    }
-
-    .primary-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 12px 18px;
-        border-radius: 14px;
-        background: #ffffff;
-        color: #0f172a;
-        font-weight: 700;
-        text-decoration: none;
-        transition: transform 0.2s ease;
-    }
-
-    .primary-btn:hover {
-        transform: translateY(-1px);
-        color: #0f172a;
-        text-decoration: none;
-    }
-
-    .directory-table-card {
-        background: rgba(255,255,255,0.9);
-        border: 1px solid rgba(148,163,184,0.18);
-        border-radius: 24px;
-        box-shadow: 0 14px 32px rgba(15, 23, 42, 0.05);
-        overflow: hidden;
-    }
-
-    .table-wrap {
-        overflow: auto;
-    }
-
-    .directory-table {
-        margin-bottom: 0;
-    }
-
-    .directory-table thead th {
-        background: #f8fafc;
-        color: #475569;
-        font-size: 0.74rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        padding: 14px 16px;
-        border-bottom: 1px solid rgba(148, 163, 184, 0.2);
-    }
-
-    .directory-table tbody td {
-        padding: 18px 16px;
-        vertical-align: middle;
-        color: #1f2937;
-        border-bottom: 1px solid rgba(148, 163, 184, 0.12);
-    }
-
-    .directory-table tbody tr:hover {
-        background: rgba(239,246,255,0.55);
-    }
-
-    .hospital-name {
-        font-weight: 800;
-        color: #0f172a;
-    }
-
-    .muted-text {
-        color: #64748b;
-    }
-
-    .capacity-pill {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 80px;
-        padding: 8px 12px;
-        border-radius: 999px;
-        background: #e0f2fe;
-        color: #0f766e;
-        font-weight: 700;
-    }
-
-    .dashboard-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 9px 14px;
-        border-radius: 10px;
-        background: linear-gradient(135deg, #2563eb, #1d4ed8);
-        color: #fff;
-        font-size: 0.86rem;
-        font-weight: 700;
-        text-decoration: none;
-        box-shadow: 0 8px 18px rgba(37,99,235,0.22);
-    }
-
-    .dashboard-btn:hover {
-        color: #fff;
-        text-decoration: none;
-        box-shadow: 0 10px 20px rgba(37,99,235,0.28);
-    }
-
-    .empty-state {
-        padding: 48px 20px;
-        text-align: center;
-        color: #64748b;
-        font-weight: 500;
-    }
-
-    /* =========================================
-   HOSPITAL DIRECTORY - RESPONSIVE
-   ========================================= */
-
-@media (max-width: 991.98px) {
-
-    .hospital-directory-shell {
-        padding: 22px 0 40px;
-    }
-
-    .directory-hero {
-        padding: 25px 22px;
-        border-radius: 22px;
-    }
-
-    .director-meta {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .hero-stat-wrap {
-        width: 100%;
-        justify-content: flex-start;
-    }
-
-    .stat-mini {
-        min-width: 135px;
-    }
-
-    .directory-table-card {
-        border-radius: 20px;
-    }
+.hospital-page {
+    background: #f8fafc;
+    min-height: calc(100vh - 80px);
+    padding: 42px 0 70px;
 }
 
 
-/* =========================================
-   MOBILE / ANDROID
-   ========================================= */
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
 
-@media (max-width: 767.98px) {
+.hospital-header {
+    margin-bottom: 30px;
+}
 
-    /* Page */
-    .hospital-directory-shell {
-        padding: 15px 7px 30px;
+.hospital-header h1 {
+    color: #0f172a;
+    font-size: 32px;
+    font-weight: 800;
+    margin: 0 0 7px;
+    letter-spacing: -0.7px;
+}
+
+.hospital-header p {
+    color: #64748b;
+    font-size: 14px;
+    margin: 0;
+}
+
+.header-line {
+    width: 55px;
+    height: 4px;
+    background: #dc2626;
+    border-radius: 10px;
+    margin-top: 14px;
+}
+
+
+/* =========================================================
+   HOSPITAL LIST
+   ========================================================= */
+
+.hospital-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+
+/* =========================================================
+   HOSPITAL ITEM
+   ========================================================= */
+
+.hospital-item {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    overflow: hidden;
+
+    display: grid;
+    grid-template-columns: 230px minmax(0, 1fr) 245px;
+
+    min-height: 190px;
+
+    box-shadow: 0 5px 18px rgba(15, 23, 42, 0.045);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+}
+
+.hospital-item:hover {
+    transform: translateY(-3px);
+
+    border-color: #fecaca;
+
+    box-shadow:
+        0 15px 35px rgba(15, 23, 42, 0.09);
+}
+
+
+/* =========================================================
+   IMAGE
+   ========================================================= */
+
+.hospital-image {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 190px;
+    overflow: hidden;
+    background: #fee2e2;
+}
+
+.hospital-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    display: block;
+
+    transition: transform 0.4s ease;
+}
+
+.hospital-item:hover .hospital-image img {
+    transform: scale(1.05);
+}
+
+
+/* Image overlay */
+
+.hospital-image::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(127, 29, 29, 0.05),
+            rgba(15, 23, 42, 0.20)
+        );
+}
+
+
+/* No image */
+
+.hospital-no-image {
+    width: 100%;
+    height: 100%;
+    min-height: 190px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fee2e2,
+            #fef2f2
+        );
+
+    color: #dc2626;
+
+    font-size: 52px;
+}
+
+
+/* =========================================================
+   HOSPITAL BADGE
+   ========================================================= */
+
+.hospital-badge {
+    position: absolute;
+
+    top: 14px;
+    left: 14px;
+
+    z-index: 2;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 6px 10px;
+
+    background: rgba(255, 255, 255, 0.96);
+
+    border-radius: 7px;
+
+    color: #b91c1c;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    box-shadow:
+        0 4px 12px rgba(15, 23, 42, 0.12);
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+.hospital-main {
+    padding: 25px 28px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    min-width: 0;
+}
+
+
+/* Hospital name */
+
+.hospital-name {
+    color: #0f172a;
+
+    font-size: 21px;
+    font-weight: 800;
+
+    line-height: 1.3;
+
+    margin: 0 0 9px;
+}
+
+
+/* Location */
+
+.hospital-location {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 7px;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+
+    margin-bottom: 13px;
+}
+
+.hospital-location i {
+    color: #dc2626;
+
+    font-size: 12px;
+
+    margin-top: 2px;
+
+    flex-shrink: 0;
+}
+
+
+/* Phone */
+
+.hospital-phone {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 7px;
+
+    color: #475569;
+
+    font-size: 12px;
+
+    margin-bottom: 13px;
+}
+
+.hospital-phone i {
+    color: #dc2626;
+}
+
+
+/* Description */
+
+.hospital-description {
+    color: #64748b;
+
+    font-size: 12px;
+
+    line-height: 1.65;
+
+    margin: 0;
+
+    max-width: 650px;
+}
+
+
+/* =========================================================
+   RIGHT INFORMATION PANEL
+   ========================================================= */
+
+.hospital-side {
+    padding: 24px 22px;
+
+    border-left: 1px solid #eef2f7;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    background: #fcfcfd;
+}
+
+
+/* =========================================================
+   STATS
+   ========================================================= */
+
+.hospital-info {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 8px;
+
+    margin-bottom: 14px;
+}
+
+.info-item {
+    padding: 9px 7px;
+
+    background: #ffffff;
+
+    border: 1px solid #eef2f7;
+
+    border-radius: 8px;
+
+    text-align: center;
+}
+
+.info-item i {
+    display: block;
+
+    color: #dc2626;
+
+    font-size: 13px;
+
+    margin-bottom: 3px;
+}
+
+.info-item strong {
+    display: block;
+
+    color: #1e293b;
+
+    font-size: 14px;
+
+    font-weight: 800;
+}
+
+.info-item span {
+    display: block;
+
+    color: #94a3b8;
+
+    font-size: 8px;
+
+    margin-top: 2px;
+}
+
+.hospital-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+
+/* =========================================================
+   BUTTON
+   ========================================================= */
+
+.hospital-button {
+    width: 100%;
+
+    min-height: 40px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #dc2626,
+            #b91c1c
+        );
+
+    color: #ffffff;
+
+    border-radius: 8px;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    box-shadow:
+        0 5px 13px rgba(185, 28, 28, 0.16);
+
+    transition: 0.2s ease;
+}
+
+.hospital-button:hover {
+    background:
+        linear-gradient(
+            135deg,
+            #b91c1c,
+            #991b1b
+        );
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.empty-hospitals {
+    background: #ffffff;
+
+    border: 1px dashed #cbd5e1;
+
+    border-radius: 16px;
+
+    padding: 65px 25px;
+
+    text-align: center;
+}
+
+.empty-hospitals i {
+    display: block;
+
+    color: #dc2626;
+
+    font-size: 48px;
+
+    margin-bottom: 15px;
+}
+
+.empty-hospitals h3 {
+    color: #334155;
+
+    font-size: 20px;
+
+    font-weight: 700;
+
+    margin-bottom: 7px;
+}
+
+.empty-hospitals p {
+    color: #64748b;
+
+    font-size: 13px;
+
+    margin: 0;
+}
+
+
+/* =========================================================
+   LARGE TABLET
+   ========================================================= */
+
+@media (max-width: 1050px) {
+
+    .hospital-item {
+        grid-template-columns: 200px minmax(0, 1fr) 210px;
     }
 
+    .hospital-main {
+        padding: 22px;
+    }
 
-    /* ===============================
-       HERO
-       =============================== */
-
-    .directory-hero {
+    .hospital-side {
         padding: 20px 16px;
-        border-radius: 18px;
-        margin-bottom: 15px;
     }
 
-    .eyebrow {
-        padding: 6px 9px;
-        font-size: 8px;
-        letter-spacing: 0.1em;
-    }
-
-    .page-title {
-        font-size: 1.8rem;
-        margin: 13px 0 7px;
-    }
-
-    .page-subtitle {
-        font-size: 0.78rem;
-        line-height: 1.55;
-    }
-
-
-    /* ===============================
-       STAT + ADD BUTTON
-       =============================== */
-
-    .hero-stat-wrap {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 9px;
-        margin-top: 5px;
-    }
-
-    .stat-mini {
-        width: 100%;
-        min-width: 0;
-        padding: 10px 13px;
-        border-radius: 13px;
-    }
-
-    .stat-mini .label {
-        font-size: 0.58rem;
-    }
-
-    .stat-mini .value {
-        margin-top: 4px;
-        font-size: 1.35rem;
-    }
-
-    .primary-btn {
-        width: 100%;
-        min-height: 42px;
-        padding: 10px 14px;
-        border-radius: 11px;
-        font-size: 0.76rem;
-    }
-
-
-    /* ===============================
-       TABLE CARD
-       =============================== */
-
-    .directory-table-card {
-        border-radius: 17px;
-    }
-
-    /*
-       Horizontal scrolling for table
-       */
-    .table-wrap {
-        width: 100%;
-        overflow-x: auto;
-        overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .directory-table {
-        min-width: 700px;
-        margin-bottom: 0;
-    }
-
-
-    /* ===============================
-       TABLE HEADER
-       =============================== */
-
-    .directory-table thead th {
-        padding: 11px 10px;
-        font-size: 0.58rem;
-        white-space: nowrap;
-    }
-
-
-    /* ===============================
-       TABLE BODY
-       =============================== */
-
-    .directory-table tbody td {
-        padding: 12px 10px;
-        font-size: 0.7rem;
-        white-space: nowrap;
-    }
-
-    .hospital-name {
-        font-size: 0.72rem;
-    }
-
-    .muted-text {
-        font-size: 0.68rem;
-    }
-
-
-    /* ===============================
-       CAPACITY
-       =============================== */
-
-    .capacity-pill {
-        min-width: 65px;
-        padding: 6px 9px;
-        font-size: 0.62rem;
-    }
-
-
-    /* ===============================
-       BUTTONS
-       =============================== */
-
-    .dashboard-btn {
-        padding: 7px 10px;
-        border-radius: 8px;
-        font-size: 0.65rem;
-        white-space: nowrap;
-    }
-
-
-    /* ===============================
-       EMPTY STATE
-       =============================== */
-
-    .empty-state {
-        padding: 35px 15px;
-        font-size: 0.75rem;
-    }
 }
 
 
-/* =========================================
-   EXTRA SMALL ANDROID
-   ========================================= */
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    .hospital-item {
+        grid-template-columns: 190px minmax(0, 1fr);
+    }
+
+    .hospital-side {
+        grid-column: 2;
+
+        border-left: none;
+        border-top: 1px solid #eef2f7;
+
+        padding: 15px 20px;
+
+        display: grid;
+        grid-template-columns: 1fr 170px;
+        align-items: center;
+
+        gap: 15px;
+    }
+
+    .hospital-info {
+        margin-bottom: 0;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 650px) {
+
+    .hospital-page {
+        padding: 25px 10px 45px;
+    }
+
+    .hospital-header {
+        margin-bottom: 22px;
+    }
+
+    .hospital-header h1 {
+        font-size: 26px;
+    }
+
+    .hospital-header p {
+        font-size: 12px;
+    }
+
+    .hospital-list {
+        gap: 14px;
+    }
+
+    .hospital-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .hospital-image {
+        height: 200px;
+        min-height: 200px;
+    }
+
+    .hospital-no-image {
+        min-height: 200px;
+    }
+
+    .hospital-main {
+        padding: 18px;
+    }
+
+    .hospital-name {
+        font-size: 18px;
+    }
+
+    .hospital-location {
+        font-size: 12px;
+    }
+
+    .hospital-description {
+        font-size: 11px;
+    }
+
+    .hospital-side {
+        display: flex;
+
+        padding: 15px 18px;
+
+        border-top: 1px solid #eef2f7;
+    }
+
+    .hospital-info {
+        margin-bottom: 12px;
+    }
+
+    .hospital-button {
+        min-height: 42px;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
 
 @media (max-width: 375px) {
 
-    .hospital-directory-shell {
-        padding: 12px 5px 25px;
+    .hospital-page {
+        padding: 20px 7px 35px;
     }
 
-    .directory-hero {
-        padding: 17px 13px;
-        border-radius: 15px;
+    .hospital-image {
+        height: 175px;
+        min-height: 175px;
     }
 
-    .page-title {
-        font-size: 1.5rem;
+    .hospital-no-image {
+        min-height: 175px;
     }
 
-    .page-subtitle {
-        font-size: 0.7rem;
-    }
-
-    .stat-mini {
-        padding: 9px 11px;
-    }
-
-    .stat-mini .label {
-        font-size: 0.52rem;
-    }
-
-    .stat-mini .value {
-        font-size: 1.2rem;
-    }
-
-    .primary-btn {
-        min-height: 40px;
-        font-size: 0.7rem;
-    }
-
-    .directory-table-card {
-        border-radius: 14px;
-    }
-
-    .directory-table {
-        min-width: 660px;
-    }
-
-    .directory-table thead th {
-        padding: 9px 8px;
-        font-size: 0.52rem;
-    }
-
-    .directory-table tbody td {
-        padding: 10px 8px;
-        font-size: 0.63rem;
+    .hospital-main {
+        padding: 15px;
     }
 
     .hospital-name {
-        font-size: 0.65rem;
+        font-size: 17px;
     }
 
-    .capacity-pill {
-        font-size: 0.56rem;
-        min-width: 58px;
-        padding: 5px 7px;
+    .hospital-side {
+        padding: 13px 15px;
     }
 
-    .dashboard-btn {
-        padding: 6px 8px;
-        font-size: 0.58rem;
-    }
 }
+
 </style>
+
 {% endblock %}
 
+
 {% block content %}
-<div class="container hospital-directory-shell">
-    <section class="directory-hero">
-        <div class="director-meta">
-            <div>
-                <span class="eyebrow">Facility directory</span>
-                <h1 class="page-title">Hospitals</h1>
-                <p class="page-subtitle">View registered facilities and their capacity at a glance.</p>
+
+<div class="hospital-page">
+
+    <div class="container">
+
+
+        <!-- =================================================
+             PAGE HEADER
+             ================================================= -->
+
+        <div class="hospital-header">
+
+            <h1>
+                Hospitals
+            </h1>
+
+            <p>
+                Healthcare facilities available in Noakhali District
+            </p>
+
+            <div class="header-line"></div>
+
+        </div>
+
+
+        <!-- =================================================
+             HOSPITAL LIST
+             ================================================= -->
+
+        {% if hospitals %}
+
+            <div class="hospital-list">
+
+
+                {% for hospital in hospitals %}
+
+                    <div class="hospital-item">
+
+
+                        <!-- =================================
+                             HOSPITAL IMAGE
+                             ================================= -->
+
+                        <div class="hospital-image">
+
+                            {% if hospital.image %}
+
+                                <img
+                                    src="{{ hospital.image.url }}"
+                                    alt="{{ hospital.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% else %}
+
+                                <div class="hospital-no-image">
+
+                                    <i class="bi bi-hospital-fill"></i>
+
+                                </div>
+
+                            {% endif %}
+
+
+                            <div class="hospital-badge">
+
+                                <i class="bi bi-hospital-fill"></i>
+
+                                Hospital
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =================================
+                             MAIN HOSPITAL INFORMATION
+                             ================================= -->
+
+                        <div class="hospital-main">
+
+
+                            <h2 class="hospital-name">
+
+                                {{ hospital.name }}
+
+                            </h2>
+
+
+                            <!-- Location -->
+
+                            <div class="hospital-location">
+
+                                <i class="bi bi-geo-alt-fill"></i>
+
+                                <span>
+                                    {{ hospital.location }}
+                                </span>
+
+                            </div>
+
+
+                            <!-- Phone -->
+
+                            {% if hospital.phone %}
+
+                                <div class="hospital-phone">
+
+                                    <i class="bi bi-telephone-fill"></i>
+
+                                    <span>
+                                        {{ hospital.phone }}
+                                    </span>
+
+                                </div>
+
+                            {% endif %}
+
+
+                            <!-- Description -->
+
+                            {% if hospital.description %}
+
+                                <p class="hospital-description">
+
+                                    {{ hospital.description|truncatechars:180 }}
+
+                                </p>
+
+                            {% endif %}
+
+
+                        </div>
+
+
+                        <!-- =================================
+                             HOSPITAL STATISTICS + BUTTON
+                             ================================= -->
+
+                        <div class="hospital-side">
+
+
+                            <div class="hospital-info">
+
+
+                                {% if hospital.capacity %}
+
+                                    <div class="info-item">
+
+                                        <i class="bi bi-person-fill"></i>
+
+                                        <strong>
+                                            {{ hospital.capacity }}
+                                        </strong>
+
+                                        <span>
+                                            Capacity
+                                        </span>
+
+                                    </div>
+
+                                {% endif %}
+
+
+                                {% if hospital.total_doctors %}
+
+                                    <div class="info-item">
+
+                                        <i class="bi bi-person-badge-fill"></i>
+
+                                        <strong>
+                                            {{ hospital.total_doctors }}
+                                        </strong>
+
+                                        <span>
+                                            Doctors
+                                        </span>
+
+                                    </div>
+
+                                {% endif %}
+
+
+                                {% if hospital.total_nurses %}
+
+                                    <div class="info-item">
+
+                                        <i class="bi bi-heart-pulse-fill"></i>
+
+                                        <strong>
+                                            {{ hospital.total_nurses }}
+                                        </strong>
+
+                                        <span>
+                                            Nurses
+                                        </span>
+
+                                    </div>
+
+                                {% endif %}
+
+
+                                {% if hospital.ambulances %}
+
+                                    <div class="info-item">
+
+                                        <i class="bi bi-truck-front-fill"></i>
+
+                                        <strong>
+                                            {{ hospital.ambulances }}
+                                        </strong>
+
+                                        <span>
+                                            Ambulances
+                                        </span>
+
+                                    </div>
+
+                                {% endif %}
+
+
+                            </div>
+
+
+                          <div class="hospital-buttons">
+
+                                <a 
+                                    href="{% url 'view_hospital' hospital.pk %}" 
+                                    class="hospital-button"
+                                >
+                                    <i class="bi bi-arrow-right-circle"></i>
+                                    View Hospital Details
+                                </a>
+
+                                {% if perms.Core.view_hospital_dashboard %}
+
+                                    <a 
+                                        href="{% url 'hospital_dashboard' hospital.pk %}" 
+                                        class="hospital-button"
+                                    >
+                                        <i class="bi bi-speedometer2"></i>
+                                        Dashboard
+                                    </a>
+
+                                {% endif %}
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+                {% endfor %}
+
+
             </div>
 
-            <div class="hero-stat-wrap">
-                <div class="stat-mini">
-                    <span class="label">Registered</span>
-                    <span class="value">{{ hospitals|length }}</span>
-                </div>
-                <a href="{% url 'add_hospital' %}" class="primary-btn">Add hospital</a>
-            </div>
-        </div>
-    </section>
 
-    <section class="directory-table-card">
-        <div class="table-wrap">
-            <table class="table directory-table align-middle">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Location</th>
-                        <th>Phone</th>
-                        <th>Capacity</th>
-                        <th>view</th>
-                        <th>Dashboard</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for h in hospitals %}
-                    <tr>
-                        <td class="hospital-name">{{ h.name }}</td>
-                        <td class="muted-text">{{ h.location }}</td>
-                        <td>{{ h.phone }}</td>
-                        <td><span class="capacity-pill">{{ h.capacity }} beds</span></td>
-                        <td>
-                            <a href="{% url 'view_hospital' h.id %}" class="dashboard-btn">View</a>
-                        </td>
-                        <td>
-                            <a href="{% url 'hospital_dashboard' h.id %}" class="dashboard-btn">View dashboard</a>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="5">
-                            <div class="empty-state">No hospitals found.</div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </section>
+        {% else %}
+
+
+            <!-- =================================================
+                 EMPTY STATE
+                 ================================================= -->
+
+            <div class="empty-hospitals">
+
+                <i class="bi bi-hospital"></i>
+
+                <h3>
+                    No Hospitals Available
+                </h3>
+
+                <p>
+                    Hospital information has not been added yet.
+                </p>
+
+            </div>
+
+
+        {% endif %}
+
+
+    </div>
+
 </div>
+
 {% endblock %}

@@ -58,6 +58,20 @@ class Hospital(models.Model):
     total_nurses = models.IntegerField(
         default=0
     )
+    latitude = models.FloatField(
+    null=True,
+    blank=True
+)
+
+    longitude = models.FloatField(
+        null=True,
+        blank=True
+    )
+
+    official_website = models.URLField(
+        blank=True,
+        default=""
+    )
     total_departments= models.IntegerField( default=0)
     ambulances=models.IntegerField(default=0)
     
@@ -480,17 +494,33 @@ class MissingComplaint(models.Model):
         return self.missing_person_name
     
 class Profile(models.Model):
+    
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE
     )
 
     phone = models.CharField(
-    max_length=20,
-    blank=True,
-    default=""
-)
-    address = models.TextField()
+        max_length=20,
+        blank=True,
+        default=""
+    )
+
+    date_of_birth = models.DateField(
+        null=True,
+        blank=True
+    )
+
+    gender = models.CharField(
+        max_length=20,
+        blank=True,
+        default=""
+    )
+
+    address = models.TextField(
+        blank=True,
+        default=""
+    )
 
     profile_image = models.ImageField(
         upload_to="profiles/",
@@ -682,3 +712,75 @@ class EmergencyReport(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True
     )
+    
+    
+class FireStation(models.Model):
+    
+    name = models.CharField(max_length=200)
+
+    district = models.CharField(
+        max_length=100,
+        default="Noakhali"
+    )
+    
+    image = models.ImageField(
+    upload_to="fire_stations/",
+    blank=True,
+    null=True
+)
+
+    upazila = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    address = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    phone = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    latitude = models.DecimalField(
+        max_digits=10,
+        decimal_places=7,
+        blank=True,
+        null=True
+    )
+
+    longitude = models.DecimalField(
+        max_digits=10,
+        decimal_places=7,
+        blank=True,
+        null=True
+    )
+
+    official_website = models.URLField(
+        blank=True,
+        null=True
+    )
+
+    google_maps_url = models.URLField(
+        blank=True,
+        null=True
+    )
+
+    is_active = models.BooleanField(
+        default=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    def __str__(self):
+        return self.name

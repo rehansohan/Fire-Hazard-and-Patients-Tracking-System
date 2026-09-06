@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from.import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     
@@ -91,4 +92,27 @@ path(
     views.reject_emergency,
     name='reject_emergency'
 ),
+path(
+    'forgot-password/',
+    views.forgot_password,
+    name='forgot_password'
+),
+
+path(
+    'reset-password/',
+    views.reset_password,
+    name='reset_password'
+),
+
+path(
+    "fire-stations/",
+    views.fire_station_list,
+    name="fire_station_list"
+),
+path(
+    "fire-stations/<int:pk>/",
+    views.fire_station_detail,
+    name="fire_station_detail"
+),
+
 ]
