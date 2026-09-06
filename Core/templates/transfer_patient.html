@@ -1,225 +1,458 @@
-<!--
-
 {% extends 'base.html' %}
 
-{% block title %}Transfer Patient{% endblock %}
-
-{% block content %}
-<div class="row justify-content-center mt-4">
-  <div class="col-md-8">
-    <div class="surface-card p-4">
-      <h3 class="mb-3">Transfer patient: {{ patient.name }}</h3>
-      <p class="text-muted">Current hospital: <strong>{{ patient.hospital }}</strong></p>
-      <form method="post">
-        {% csrf_token %}
-        {% if next_url %}
-        <input type="hidden" name="next" value="{{ next_url }}">
-        {% endif %}
-        <div class="mb-3">
-          {{ form.hospital.label_tag }}
-          {{ form.hospital }}
-          {{ form.hospital.errors }}
-        </div>
-        <div class="mb-3">
-          {{ form.note.label_tag }}
-          {{ form.note }}
-          {{ form.note.errors }}
-        </div>
-        <div class="d-flex gap-2">
-          <button class="btn btn-primary" type="submit">Transfer</button>
-          <a class="btn btn-outline-secondary" href="{% if next_url %}{{ next_url }}{% else %}{% url 'patient_list' %}{% endif %}">Cancel</a>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-{% endblock %}
--->
-
-{% extends 'base.html' %}
-
-{% block title %}Transfer Patient{% endblock %}
+{% block title %}Transfer Patient | FHAPTS{% endblock %}
 
 {% block extra_head %}
+
 <style>
 
-    /* =========================================
-       TRANSFER PATIENT PAGE
-       ========================================= */
+/* =========================================
+   TRANSFER PATIENT PAGE
+========================================= */
+
+.transfer-page {
+    padding: 32px 12px 50px;
+}
+
+
+/* =========================================
+   MAIN CARD
+========================================= */
+
+.transfer-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    box-shadow: 0 12px 35px rgba(127, 29, 29, 0.08);
+    overflow: hidden;
+}
+
+
+/* =========================================
+   CARD HEADER
+========================================= */
+
+.transfer-header {
+    padding: 28px 30px 24px;
+    border-bottom: 1px solid #f1f5f9;
+    background: linear-gradient(
+        135deg,
+        #fff7f7 0%,
+        #ffffff 100%
+    );
+}
+
+.transfer-eyebrow {
+    display: inline-block;
+    color: #dc2626;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    margin-bottom: 7px;
+}
+
+.transfer-title {
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 0;
+}
+
+.transfer-subtitle {
+    color: #6b7280;
+    font-size: 0.88rem;
+    margin-top: 7px;
+    margin-bottom: 0;
+    line-height: 1.6;
+}
+
+
+/* =========================================
+   PATIENT INFO
+========================================= */
+
+.patient-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 30px;
+    background: #ffffff;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.patient-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    background: #fee2e2;
+    color: #dc2626;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+}
+
+.patient-info-label {
+    color: #6b7280;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+}
+
+.patient-name {
+    color: #111827;
+    font-size: 0.98rem;
+    font-weight: 800;
+    margin-top: 2px;
+}
+
+.current-hospital {
+    margin-left: auto;
+    text-align: right;
+}
+
+.current-hospital-label {
+    display: block;
+    color: #6b7280;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.current-hospital-name {
+    display: block;
+    color: #b91c1c;
+    font-size: 0.88rem;
+    font-weight: 800;
+    margin-top: 2px;
+}
+
+
+/* =========================================
+   FORM AREA
+========================================= */
+
+.transfer-form {
+    padding: 30px;
+}
+
+.transfer-card .form-label {
+    color: #374151;
+    font-size: 0.84rem;
+    font-weight: 700;
+    margin-bottom: 7px;
+}
+
+.transfer-card .form-control,
+.transfer-card select,
+.transfer-card textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    padding: 11px 13px;
+    background: #ffffff;
+    color: #111827;
+    font-size: 0.86rem;
+    min-height: 45px;
+    transition: all 0.2s ease;
+}
+
+.transfer-card textarea {
+    min-height: 115px;
+    resize: vertical;
+}
+
+.transfer-card .form-control:focus,
+.transfer-card select:focus,
+.transfer-card textarea:focus {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.10);
+    outline: none;
+    background: #ffffff;
+}
+
+
+/* =========================================
+   TRANSFER DESTINATION
+========================================= */
+
+.field-section {
+    background: #fafafa;
+    border: 1px solid #f1f5f9;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.field-section-title {
+    color: #dc2626;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+
+/* =========================================
+   ERRORS
+========================================= */
+
+.transfer-error {
+    color: #dc2626;
+    font-size: 0.74rem;
+    margin-top: 6px;
+}
+
+.transfer-error ul {
+    margin: 0;
+    padding-left: 18px;
+}
+
+
+/* =========================================
+   ACTIONS
+========================================= */
+
+.transfer-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: 25px;
+    padding-top: 22px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.transfer-actions-right {
+    display: flex;
+    gap: 10px;
+}
+
+.transfer-actions .btn {
+    border-radius: 10px;
+    padding: 10px 19px;
+    font-size: 0.84rem;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.transfer-actions .btn-primary {
+    background: #dc2626 !important;
+    border-color: #dc2626 !important;
+}
+
+.transfer-actions .btn-primary:hover {
+    background: #b91c1c !important;
+    border-color: #b91c1c !important;
+    transform: translateY(-1px);
+}
+
+.transfer-actions .btn-outline-secondary {
+    border-color: #d1d5db;
+    color: #4b5563;
+}
+
+.transfer-actions .btn-outline-secondary:hover {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+
+/* =========================================
+   INFO NOTE
+========================================= */
+
+.transfer-note {
+    margin-top: 20px;
+    padding: 14px 16px;
+    border-radius: 11px;
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    color: #7c2d12;
+    font-size: 0.78rem;
+    line-height: 1.6;
+}
+
+.transfer-note i {
+    margin-right: 5px;
+}
+
+
+/* =========================================
+   TABLET / MOBILE
+========================================= */
+
+@media (max-width: 767.98px) {
 
     .transfer-page {
-        padding: 25px 12px 45px;
+        padding: 20px 9px 35px;
     }
 
-    .transfer-card {
-        background: #fff;
-        border-radius: 20px;
-        border: 1px solid rgba(148,163,184,0.18);
-        box-shadow: 0 14px 32px rgba(15,23,42,0.07);
-        padding: 28px;
+    .transfer-header {
+        padding: 22px 19px 20px;
     }
 
     .transfer-title {
-        font-size: 1.6rem;
-        font-weight: 800;
-        color: #0f172a;
-        margin-bottom: 10px;
+        font-size: 1.4rem;
     }
 
-    .current-hospital {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 12px 14px;
-        margin-bottom: 22px;
-        font-size: 0.9rem;
+    .transfer-subtitle {
+        font-size: 0.78rem;
+    }
+
+    .patient-info {
+        padding: 15px 19px;
+        gap: 10px;
+    }
+
+    .patient-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .patient-info-label {
+        font-size: 0.65rem;
+    }
+
+    .patient-name {
+        font-size: 0.85rem;
+    }
+
+    .current-hospital-label {
+        font-size: 0.62rem;
+    }
+
+    .current-hospital-name {
+        font-size: 0.78rem;
+    }
+
+    .transfer-form {
+        padding: 20px 17px;
+    }
+
+    .field-section {
+        padding: 16px;
     }
 
     .transfer-card .form-label {
-        font-weight: 700;
-        color: #334155;
-        font-size: 0.84rem;
+        font-size: 0.76rem;
     }
 
     .transfer-card .form-control,
     .transfer-card select,
     .transfer-card textarea {
-        width: 100%;
-        border: 1px solid #dbe3ec;
-        border-radius: 11px;
-        padding: 11px 13px;
-        background: #f8fafc;
-        font-size: 0.86rem;
-        min-height: 45px;
+        font-size: 0.78rem;
+        min-height: 43px;
+        padding: 10px 11px;
     }
 
     .transfer-card textarea {
-        min-height: 110px;
-        resize: vertical;
-    }
-
-    .transfer-card .form-control:focus,
-    .transfer-card select:focus,
-    .transfer-card textarea:focus {
-        border-color: #60a5fa;
-        background: #fff;
-        box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
-        outline: none;
+        min-height: 100px;
     }
 
     .transfer-actions {
-        display: flex;
-        gap: 10px;
-        margin-top: 22px;
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .transfer-actions-right {
+        flex-direction: column;
     }
 
     .transfer-actions .btn {
-        border-radius: 10px;
-        padding: 10px 18px;
-        font-weight: 700;
+        width: 100%;
+        min-height: 43px;
+        font-size: 0.77rem;
     }
 
-    .transfer-error {
-        color: #dc2626;
-        font-size: 0.75rem;
-        margin-top: 5px;
+    .transfer-note {
+        font-size: 0.72rem;
+    }
+}
+
+
+/* =========================================
+   EXTRA SMALL PHONES
+========================================= */
+
+@media (max-width: 375px) {
+
+    .transfer-page {
+        padding: 14px 5px 28px;
     }
 
-
-    /* =========================================
-       TABLET
-       ========================================= */
-
-    @media (max-width: 767.98px) {
-
-        .transfer-page {
-            padding: 18px 9px 35px;
-        }
-
-        .transfer-card {
-            padding: 20px 17px;
-            border-radius: 17px;
-        }
-
-        .transfer-title {
-            font-size: 1.35rem;
-        }
-
-        .current-hospital {
-            font-size: 0.78rem;
-            padding: 10px 12px;
-        }
-
-        .transfer-card .form-label {
-            font-size: 0.76rem;
-        }
-
-        .transfer-card .form-control,
-        .transfer-card select,
-        .transfer-card textarea {
-            font-size: 0.78rem;
-            padding: 10px 11px;
-        }
-
-        .transfer-actions {
-            flex-direction: column;
-        }
-
-        .transfer-actions .btn {
-            width: 100%;
-            min-height: 43px;
-            font-size: 0.76rem;
-        }
+    .transfer-card {
+        border-radius: 15px;
     }
 
-
-    /* =========================================
-       EXTRA SMALL ANDROID
-       ========================================= */
-
-    @media (max-width: 375px) {
-
-        .transfer-page {
-            padding: 12px 5px 28px;
-        }
-
-        .transfer-card {
-            padding: 16px 13px;
-            border-radius: 14px;
-        }
-
-        .transfer-title {
-            font-size: 1.15rem;
-        }
-
-        .current-hospital {
-            font-size: 0.7rem;
-            padding: 9px 10px;
-        }
-
-        .transfer-card .form-label {
-            font-size: 0.68rem;
-        }
-
-        .transfer-card .form-control,
-        .transfer-card select,
-        .transfer-card textarea {
-            font-size: 0.7rem;
-            min-height: 42px;
-        }
-
-        .transfer-card textarea {
-            min-height: 95px;
-        }
-
-        .transfer-actions .btn {
-            min-height: 41px;
-            font-size: 0.7rem;
-        }
+    .transfer-header {
+        padding: 18px 14px;
     }
+
+    .transfer-title {
+        font-size: 1.2rem;
+    }
+
+    .transfer-subtitle {
+        font-size: 0.7rem;
+    }
+
+    .patient-info {
+        padding: 13px 14px;
+    }
+
+    .patient-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 9px;
+    }
+
+    .patient-name {
+        font-size: 0.76rem;
+    }
+
+    .current-hospital-name {
+        font-size: 0.7rem;
+    }
+
+    .transfer-form {
+        padding: 15px 13px;
+    }
+
+    .field-section {
+        padding: 13px;
+    }
+
+    .transfer-card .form-label {
+        font-size: 0.68rem;
+    }
+
+    .transfer-card .form-control,
+    .transfer-card select,
+    .transfer-card textarea {
+        font-size: 0.7rem;
+        min-height: 41px;
+    }
+
+    .transfer-card textarea {
+        min-height: 90px;
+    }
+
+    .transfer-actions .btn {
+        min-height: 41px;
+        font-size: 0.7rem;
+    }
+}
 
 </style>
+
 {% endblock %}
+
 
 {% block content %}
 
@@ -227,70 +460,196 @@
 
     <div class="row justify-content-center">
 
-        <div class="col-md-8">
+        <div class="col-12 col-lg-8 col-xl-7">
 
-            <div class="surface-card transfer-card">
+            <div class="transfer-card">
 
-                <h3 class="transfer-title">
-                    Transfer patient: {{ patient.name }}
-                </h3>
 
-                <div class="current-hospital">
-                    <span class="text-muted">Current hospital:</span>
-                    <strong>{{ patient.hospital }}</strong>
+                <!-- =========================================
+                     HEADER
+                ========================================= -->
+
+                <div class="transfer-header">
+
+                    <span class="transfer-eyebrow">
+                        Patient Management
+                    </span>
+
+                    <h1 class="transfer-title">
+                        Transfer Patient
+                    </h1>
+
+                    <p class="transfer-subtitle">
+                        Transfer the patient to another hospital and keep
+                        the patient record updated across the system.
+                    </p>
+
                 </div>
 
-                <form method="post">
 
-                    {% csrf_token %}
+                <!-- =========================================
+                     PATIENT INFORMATION
+                ========================================= -->
 
-                    {% if next_url %}
-                        <input type="hidden" name="next" value="{{ next_url }}">
-                    {% endif %}
+                <div class="patient-info">
 
-                    <div class="mb-3">
+                    <div class="patient-icon">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
 
-                        {{ form.hospital.label_tag }}
 
-                        {{ form.hospital }}
+                    <div>
 
-                        {% if form.hospital.errors %}
-                            <div class="transfer-error">
-                                {{ form.hospital.errors }}
-                            </div>
+                        <div class="patient-info-label">
+                            Patient
+                        </div>
+
+                        <div class="patient-name">
+                            {{ patient.name }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="current-hospital">
+
+                        <span class="current-hospital-label">
+                            Current Hospital
+                        </span>
+
+                        <span class="current-hospital-name">
+                            {{ patient.hospital }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     FORM
+                ========================================= -->
+
+                <div class="transfer-form">
+
+                    <form method="post">
+
+                        {% csrf_token %}
+
+
+                        {% if next_url %}
+
+                            <input
+                                type="hidden"
+                                name="next"
+                                value="{{ next_url }}"
+                            >
+
                         {% endif %}
 
-                    </div>
 
-                    <div class="mb-3">
+                        <!-- Destination -->
 
-                        {{ form.note.label_tag }}
+                        <div class="field-section">
 
-                        {{ form.note }}
-
-                        {% if form.note.errors %}
-                            <div class="transfer-error">
-                                {{ form.note.errors }}
+                            <div class="field-section-title">
+                                Transfer Details
                             </div>
-                        {% endif %}
 
-                    </div>
 
-                    <div class="transfer-actions">
+                            <div class="mb-3">
 
-                        <button class="btn btn-primary" type="submit">
-                            <i class="bi bi-arrow-left-right me-1"></i>
-                            Transfer
-                        </button>
+                                {{ form.hospital.label_tag }}
 
-                        <a class="btn btn-outline-secondary"
-                           href="{% if next_url %}{{ next_url }}{% else %}{% url 'patient_list' %}{% endif %}">
-                            Cancel
-                        </a>
+                                {{ form.hospital }}
 
-                    </div>
 
-                </form>
+                                {% if form.hospital.errors %}
+
+                                    <div class="transfer-error">
+
+                                        {{ form.hospital.errors }}
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="mb-0">
+
+                                {{ form.note.label_tag }}
+
+                                {{ form.note }}
+
+
+                                {% if form.note.errors %}
+
+                                    <div class="transfer-error">
+
+                                        {{ form.note.errors }}
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Information -->
+
+                        <div class="transfer-note">
+
+                            <i class="bi bi-info-circle-fill"></i>
+
+                            Please verify the destination hospital carefully
+                            before confirming the transfer.
+
+                        </div>
+
+
+                        <!-- =========================================
+                             ACTION BUTTONS
+                        ========================================= -->
+
+                        <div class="transfer-actions">
+
+                            <a
+                                class="btn btn-outline-secondary"
+                                href="{% if next_url %}{{ next_url }}{% else %}{% url 'patient_list' %}{% endif %}"
+                            >
+
+                                <i class="bi bi-arrow-left me-1"></i>
+
+                                Cancel
+
+                            </a>
+
+
+                            <div class="transfer-actions-right">
+
+                                <button
+                                    class="btn btn-primary"
+                                    type="submit"
+                                >
+
+                                    <i class="bi bi-arrow-left-right me-1"></i>
+
+                                    Transfer Patient
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                    </form>
+
+                </div>
 
             </div>
 

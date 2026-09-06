@@ -25,7 +25,7 @@ class HazardReportForm(forms.ModelForm):
                 'class':'form-select'
             }),
             'latitude':forms.HiddenInput(),
-            'longityde':forms.HiddenInput(),
+            'longitude':forms.HiddenInput(),
         }
         
 class HospitalForm(forms.ModelForm):

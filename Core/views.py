@@ -66,24 +66,39 @@ def Hazard_details(request):
 
 def Hospital_details(request):
     return render(request,'hospital.html')
+
+
+
 @login_required
 @permission_required("Core.add_hazardreport", raise_exception=True)
 def Hazard_report(request):
 
-     
     if request.method == 'POST':
-         form = HazardReportForm(request.POST)
-         if form.is_valid():
-             hazard = form.save(commit=False)
-             hazard.user = request.user
-             hazard.save()
-             return redirect('home')
-         
-    else:
-        form= HazardReportForm()
-        
-    return render(request,'hazard_report.html',{'form':form})
+        form = HazardReportForm(request.POST)
 
+        if form.is_valid():
+            hazard = form.save(commit=False)
+            hazard.user = request.user
+            hazard.save()
+
+            # Automatically link this hazard to ALL hospitals
+            from .models import Hospital
+            all_hospitals = Hospital.objects.all()
+            hazard.hospitals.set(all_hospitals)
+
+            return redirect('home')
+
+    else:
+        form = HazardReportForm()
+
+    return render(
+        request,
+        'hazard_report.html',
+        {'form': form}
+    )
+    
+    
+    
 def active_hazards(request):
     hazards = HazardReport.objects.filter(status='active')
     print("COUNT:", hazards.count())  
