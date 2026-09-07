@@ -336,7 +336,9 @@ def add_patient(request, hospital_id, hazard_id):
 
     if request.method == 'POST':
 
-        form = PatientForm(request.POST)
+        form = PatientForm( 
+            request.POST,
+            request.FILES)
 
         if form.is_valid():
 
