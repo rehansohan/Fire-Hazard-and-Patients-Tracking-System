@@ -114,5 +114,7 @@ path(
     views.fire_station_detail,
     name="fire_station_detail"
 ),
+path('toggle-donation-availability/',views.toggle_donation_availability,name="toggle_donation_availability"),
+path('donars/',views.donor_list,name="donor_list"),
 
 ]

@@ -1,0 +1,477 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Blood Donors | FHAPTS
+{% endblock %}
+
+
+{% block content %}
+
+<style>
+
+    /* ================================
+       PAGE
+    ================================= */
+
+    .donor-page {
+        padding: 35px 0 60px;
+    }
+
+
+    /* ================================
+       HEADER
+    ================================= */
+
+    .donor-header {
+        margin-bottom: 30px;
+    }
+
+    .donor-header h2 {
+        font-size: 30px;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+
+    .donor-header p {
+        font-size: 15px;
+        margin-bottom: 0;
+    }
+
+
+    /* ================================
+       DONOR CARD
+    ================================= */
+
+    .donor-card {
+        background: #ffffff;
+        border: 1px solid #e6e8ec;
+        border-radius: 16px;
+        height: 100%;
+        overflow: hidden;
+        transition: all 0.25s ease;
+    }
+
+    .donor-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+    }
+
+    .donor-card-body {
+        padding: 24px;
+    }
+
+
+    /* ================================
+       DONOR PROFILE
+    ================================= */
+
+    .donor-profile {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+
+    /* ================================
+       DONOR IMAGE
+    ================================= */
+
+    .donor-image {
+        width: 72px;
+        height: 72px;
+        min-width: 72px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #eeeeee;
+        background: #f8f9fa;
+    }
+
+
+    /* ================================
+       PLACEHOLDER
+    ================================= */
+
+    .donor-placeholder {
+        width: 72px;
+        height: 72px;
+        min-width: 72px;
+        border-radius: 50%;
+        background: #f5f6f8;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: 30px;
+    }
+
+
+    /* ================================
+       NAME
+    ================================= */
+
+    .donor-name {
+        font-size: 18px;
+        font-weight: 700;
+        color: #212529;
+        margin-bottom: 8px;
+        line-height: 1.3;
+    }
+
+
+    /* ================================
+       AVAILABLE STATUS
+    ================================= */
+
+    .available-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+
+        background: #e9f8ef;
+        color: #198754;
+
+        padding: 6px 11px;
+        border-radius: 20px;
+
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .available-dot {
+        width: 8px;
+        height: 8px;
+        background: #22c55e;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+
+    /* ================================
+       DIVIDER
+    ================================= */
+
+    .donor-divider {
+        border: 0;
+        border-top: 1px solid #eeeeee;
+        margin: 22px 0;
+    }
+
+
+    /* ================================
+       INFORMATION
+    ================================= */
+
+    .donor-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 14px;
+
+        font-size: 14px;
+    }
+
+    .donor-info:last-child {
+        margin-bottom: 0;
+    }
+
+    .donor-info-label {
+        color: #6c757d;
+        font-weight: 500;
+        min-width: 100px;
+    }
+
+
+    /* ================================
+       BLOOD GROUP
+    ================================= */
+
+    .blood-group {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        min-width: 48px;
+
+        padding: 6px 10px;
+
+        border-radius: 7px;
+
+        background: #fff1f1;
+        color: #dc3545;
+
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+
+    /* ================================
+       PHONE
+    ================================= */
+
+    .donor-phone {
+        color: #212529;
+        font-weight: 500;
+    }
+
+
+    /* ================================
+       NO DONOR
+    ================================= */
+
+    .no-donor {
+        background: #f8f9fa;
+        border: 1px solid #e6e8ec;
+        border-radius: 14px;
+
+        padding: 45px 20px;
+
+        text-align: center;
+    }
+
+    .no-donor-icon {
+        font-size: 38px;
+        margin-bottom: 12px;
+    }
+
+
+    /* ================================
+       MOBILE
+    ================================= */
+
+    @media (max-width: 576px) {
+
+        .donor-page {
+            padding: 25px 0 45px;
+        }
+
+        .donor-header h2 {
+            font-size: 26px;
+        }
+
+        .donor-card-body {
+            padding: 20px;
+        }
+
+        .donor-name {
+            font-size: 17px;
+        }
+
+        .donor-image,
+        .donor-placeholder {
+            width: 64px;
+            height: 64px;
+            min-width: 64px;
+        }
+
+        .donor-info-label {
+            min-width: 90px;
+        }
+
+    }
+
+</style>
+
+
+<div class="container donor-page">
+
+
+    <!-- ==========================================
+         HEADER
+    =========================================== -->
+
+    <div class="donor-header">
+
+        <h2>
+            Blood Donors
+        </h2>
+
+        <p class="text-muted">
+            View currently available blood donors
+        </p>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         DONOR LIST
+    =========================================== -->
+
+    <div class="row g-4">
+
+        {% for donor in donors %}
+
+        <div class="col-12 col-md-6 col-lg-4">
+
+            <div class="donor-card">
+
+                <div class="donor-card-body">
+
+
+                    <!-- ==================================
+                         DONOR PROFILE
+                    =================================== -->
+
+                    <div class="donor-profile">
+
+
+                        <!-- DONOR IMAGE -->
+
+                        {% if donor.profile_image %}
+
+                            <img
+                                src="{{ donor.profile_image.url }}"
+                                alt="{{ donor.username }}"
+                                class="donor-image"
+                            >
+
+                        {% else %}
+
+                            <div class="donor-placeholder">
+                                👤
+                            </div>
+
+                        {% endif %}
+
+
+
+                        <!-- NAME + STATUS -->
+
+                        <div>
+
+                            <div class="donor-name">
+
+                                {% if donor.get_full_name %}
+
+                                    {{ donor.get_full_name }}
+
+                                {% else %}
+
+                                    {{ donor.username }}
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <span class="available-badge">
+
+                                <span class="available-dot"></span>
+
+                                Available
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ==================================
+                         DIVIDER
+                    =================================== -->
+
+                    <hr class="donor-divider">
+
+
+
+                    <!-- ==================================
+                         BLOOD GROUP
+                    =================================== -->
+
+                    <div class="donor-info">
+
+                        <span class="donor-info-label">
+                            Blood Group:
+                        </span>
+
+
+                        {% if donor.blood_group %}
+
+                            <span class="blood-group">
+                                {{ donor.blood_group }}
+                            </span>
+
+                        {% else %}
+
+                            <span class="text-muted">
+                                Not provided
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <!-- ==================================
+                         PHONE
+                    =================================== -->
+
+                    <div class="donor-info">
+
+                        <span class="donor-info-label">
+                            Phone:
+                        </span>
+
+
+                        {% if donor.phone %}
+
+                            <span class="donor-phone">
+                                {{ donor.phone }}
+                            </span>
+
+                        {% else %}
+
+                            <span class="text-muted">
+                                Not provided
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {% empty %}
+
+
+        <!-- ==========================================
+             NO AVAILABLE DONOR
+        =========================================== -->
+
+        <div class="col-12">
+
+            <div class="no-donor">
+
+                <div class="no-donor-icon">
+                    🩸
+                </div>
+
+                <h5 class="fw-bold mb-2">
+                    No Available Donors
+                </h5>
+
+                <p class="text-muted mb-0">
+                    There are currently no blood donors available for donation.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -242,6 +242,7 @@
         background: #ffffff;
         outline: none;
         transition: all 0.2s ease;
+        box-sizing: border-box;
     }
 
     .form-control-custom:focus {
@@ -286,6 +287,39 @@
         margin-top: 8px;
         color: #9ca3af;
         font-size: 12px;
+    }
+
+    /* =========================================================
+       BLOOD GROUP
+    ========================================================= */
+
+    .blood-group-box {
+        position: relative;
+    }
+
+    .blood-group-box select {
+        width: 100%;
+        height: 46px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        padding: 0 14px;
+        font-size: 14px;
+        color: #111827;
+        background: #ffffff;
+        outline: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .blood-group-box select:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.10);
+    }
+
+    .blood-group-help {
+        margin-top: 6px;
+        font-size: 12px;
+        color: #9ca3af;
     }
 
     /* =========================================================
@@ -569,6 +603,29 @@
                     </div>
 
 
+                    <!-- Blood Group Summary -->
+
+                    <div class="profile-member-row">
+
+                        <div class="profile-member-icon">
+                            <i class="bi bi-droplet-fill"></i>
+                        </div>
+
+                        <div class="profile-member-text">
+
+                            <small>
+                                Blood Group
+                            </small>
+
+                            <span>
+                                {{ request.user.blood_group|default:"Not provided" }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
                     <!-- Member Since -->
 
                     <div class="profile-member-row">
@@ -634,11 +691,19 @@
                              FORM ERRORS
                         ====================================== -->
 
-                        {% if form.non_field_errors %}
+                        {% if form.non_field_errors or donor_form.non_field_errors %}
 
                             <div class="form-errors">
 
                                 {% for error in form.non_field_errors %}
+
+                                    <div>
+                                        {{ error }}
+                                    </div>
+
+                                {% endfor %}
+
+                                {% for error in donor_form.non_field_errors %}
 
                                     <div>
                                         {{ error }}
@@ -893,6 +958,29 @@
 
                             </div>
 
+                        </div>
+
+
+                       <div class="form-group-custom">
+                            <label for="{{ donor_form.blood_group.id_for_label }}">
+                                Blood Group
+                            </label>
+
+                            <div class="blood-group-box">
+                                {{ donor_form.blood_group }}
+                            </div>
+
+                            <div class="blood-group-help">
+                                Select your blood group so hospitals can identify you when blood donation is needed.
+                            </div>
+
+                            {% if donor_form.blood_group.errors %}
+                                <div class="field-errors">
+                                    {% for error in donor_form.blood_group.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
                         </div>
 
 

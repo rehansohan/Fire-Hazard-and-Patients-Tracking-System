@@ -3,7 +3,7 @@ import os
 
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, HttpResponseForbidden
-from .forms import HazardReportForm,HospitalForm,PatientForm,MissingComplaintForm,RegisterForm,PatientTransferForm,ProfileForm,EmergencyReportForm,InitialAdminForm
+from .forms import HazardReportForm,HospitalForm,PatientForm,MissingComplaintForm,RegisterForm,PatientTransferForm,ProfileForm,EmergencyReportForm,InitialAdminForm,DonorProfileForm
 from.models import HazardReport,Hospital,Patient,MissingComplaint,Profile,PatientTransfer,FireStation
 from django.contrib.auth import get_user_model
 from django.db.models import Q
@@ -734,44 +734,65 @@ from .forms import ProfileForm
 @login_required
 def user_profile(request):
 
-    profile, created = Profile.objects.get_or_create(user=request.user)
+    profile, created = Profile.objects.get_or_create(
+        user=request.user
+    )
 
     if request.method == "POST":
+
         form = ProfileForm(
             request.POST,
             request.FILES,
             instance=profile
         )
 
-        if form.is_valid():
+        donor_form = DonorProfileForm(
+            request.POST,
+            instance=request.user
+        )
+
+        if form.is_valid() and donor_form.is_valid():
             form.save()
+            donor_form.save()
+
             return redirect("profile")
 
     else:
-        form = ProfileForm(instance=profile)
-        
+
+        form = ProfileForm(
+            instance=profile
+        )
+
+        donor_form = DonorProfileForm(
+            instance=request.user
+        )
+
     notifications = request.user.notifications.select_related(
         'patient'
-        
     ).order_by('-created_at')
+
     unread_count = notifications.filter(
         is_read=False
     ).count()
-    
+
     notifications.filter(
         is_read=False
     ).update(
         is_read=True
     )
-    
 
-    return render(request, "user_profile.html", {
-        "form": form,
-        "profile": profile,
-        'user':request.user,
-        'notifications':notifications,
-        'unread_count': unread_count,
-    })
+    return render(
+        request,
+        "user_profile.html",
+        {
+            "form": form,
+            "donor_form": donor_form,
+            "profile": profile,
+            "user": request.user,
+            "notifications": notifications,
+            "unread_count": unread_count,
+        }
+    )
     
     
     
@@ -907,10 +928,15 @@ def edit_profile(request):
             instance=profile,
             user=request.user
         )
+        donor_form = DonorProfileForm(
+            request.POST,
+            instance=request.user
+        )
 
-        if form.is_valid():
+        if form.is_valid() and donor_form.is_valid():
 
             form.save()
+            donor_form.save()
 
             messages.success(
                 request,
@@ -925,12 +951,16 @@ def edit_profile(request):
             instance=profile,
             user=request.user
         )
+        donor_form = DonorProfileForm(
+            instance=request.user
+        )
 
     return render(
         request,
         "edit_user_profile.html",
         {
-            "form": form
+            "form": form,
+            "donor_form": donor_form
         }
     )
     
@@ -1699,6 +1729,29 @@ def hospitals(request):
         }
     )
     
+
+@login_required
+def toggle_donation_availability(request):
+    if request.method == "POST":
+        request.user.is_available_for_donation = not request.user.is_available_for_donation
+        request.user.save(update_fields=["is_available_for_donation"])
+
+    return redirect("profile")
+
+
+@login_required
+def donor_list(request):
+    donors = User.objects.filter(
+         is_available_for_donation=True
+    ).order_by('username')
+    
+    return render(
+        request,
+        "donor_list.html",
+        {
+            'donors':donors
+        }
+    )
     
      
     

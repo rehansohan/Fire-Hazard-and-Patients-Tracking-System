@@ -334,6 +334,7 @@ class ProfileForm(forms.ModelForm):
             "gender",
             "address",
             "profile_image",
+        
         ]
 
         widgets = {
@@ -344,6 +345,9 @@ class ProfileForm(forms.ModelForm):
                     "placeholder": "Enter Phone Number"
                 }
             ),
+            'blood_group': forms.Select(attrs={
+                    'class': 'form-select'
+                }),
 
             "date_of_birth": forms.DateInput(
                 attrs={
@@ -410,6 +414,21 @@ class ProfileForm(forms.ModelForm):
             profile.save()
 
         return profile
+    
+
+class DonorProfileForm(forms.ModelForm):
+    
+    class Meta:
+        model = User
+        fields = [
+            'blood_group',
+        ]
+
+        widgets = {
+            'blood_group': forms.Select(attrs={
+                'class': 'form-select'
+            }),
+        }
         
 
 

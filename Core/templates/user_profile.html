@@ -712,6 +712,71 @@
                     <strong>Gender</strong>
                     <span>{{ request.user.profile.gender|default:'Not provided' }}</span>
                 </div>
+               <div class="info-item">
+                    <strong>Blood Group</strong>
+
+                    <span>
+                        {{ request.user.blood_group|default:"Not provided" }}
+                    </span>
+                </div>
+
+
+
+                <div class="card border-0 shadow-sm mt-4">
+    <div class="card-body">
+
+        <h5 class="fw-bold mb-2">
+            Blood Donation
+        </h5>
+
+        <p class="text-muted">
+            Let hospitals know if you are available to donate blood.
+        </p>
+
+        {% if request.user.is_available_for_donation %}
+
+            <div class="d-flex align-items-center justify-content-between">
+
+                <span class="badge bg-success px-3 py-2 fs-6">
+                    🟢 Available
+                </span>
+
+                <form method="POST"
+                      action="{% url 'toggle_donation_availability' %}">
+                    {% csrf_token %}
+
+                    <button type="submit"
+                            class="btn btn-outline-danger">
+                        Set Unavailable
+                    </button>
+                </form>
+
+            </div>
+
+        {% else %}
+
+            <div class="d-flex align-items-center justify-content-between">
+
+                <span class="badge bg-secondary px-3 py-2 fs-6">
+                    ⚪ Unavailable
+                </span>
+
+                <form method="POST"
+                      action="{% url 'toggle_donation_availability' %}">
+                    {% csrf_token %}
+
+                    <button type="submit"
+                            class="btn btn-success">
+                        Set Available
+                    </button>
+                </form>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+</div>
                 <div class="info-item" style="grid-column: 1 / -1;">
                     <strong>Address</strong>
                     <span>{{ request.user.profile.address|default:'No address added yet.' }}</span>

@@ -16,11 +16,29 @@ class User(AbstractUser):
         ('Male','male'),
         ('Female','female')
     )
+    BLOOD_GROUP_CHOICES = (
+    ('A+', 'A+'),
+    ('A-', 'A-'),
+    ('B+', 'B+'),
+    ('B-', 'B-'),
+    ('AB+', 'AB+'),
+    ('AB-', 'AB-'),
+    ('O+', 'O+'),
+    ('O-', 'O-'),
+)
     phone = models.CharField(
     max_length=20,
     blank=True,
     default=""
 )
+    blood_group = models.CharField(
+    max_length=3,
+    choices=BLOOD_GROUP_CHOICES,
+    null=True,
+    blank=True
+)
+    
+    is_available_for_donation = models.BooleanField(default = False)
     date_of_birth = models.DateField(null=True,blank=True)
     gender=models.CharField(max_length=100,choices=GENDER_CHOICES)
     volunteer_id = models.CharField(max_length=50,unique=True,null=True,blank=True)
