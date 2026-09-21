@@ -1,7 +1,30 @@
+# Django
 db.sqlite3
+*.log
+
+# Environment / Secrets
 .env
-__pycache__
-venv
-staticfiles
+.env.*
+
+# Virtual Environment
+venv/
+.venv/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+
+# Django generated files
+staticfiles/
+
+# Old / temporary data
 old_data.json
 old_data_clean.json
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
