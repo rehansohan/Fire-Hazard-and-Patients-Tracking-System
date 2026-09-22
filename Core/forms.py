@@ -246,6 +246,16 @@ class RegisterForm(UserCreationForm):
             self.fields['address'].widget.attrs.update({'rows': 3})
 
 
+class UserRoleForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['role', 'hospitals']
+        widgets = {
+            'role': forms.Select(attrs={'class': 'form-control'}),
+            'hospitals': forms.SelectMultiple(attrs={'class': 'form-control'}),
+        }
+
+
 class InitialAdminForm(forms.Form):
     username = forms.CharField(max_length=150)
     email = forms.EmailField(required=False)

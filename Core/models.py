@@ -5,6 +5,19 @@ import re
 
 # Create your models here.
 class User(AbstractUser):
+
+    ROLE_CHOICES = (
+        ('admin', 'Administrator'),
+        ('hospital_staff', 'Hospital Staff'),
+        ('volunteer', 'Volunteer'),
+        ('user', 'General User'),
+    )
+
+    role = models.CharField(
+        max_length=30,
+        choices=ROLE_CHOICES,
+        default='user',
+    )
     
     hospitals = models.ManyToManyField(
         'Hospital',

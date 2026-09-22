@@ -31,12 +31,17 @@ from django.core.files.base import ContentFile
 User = get_user_model()
 
 def is_admin(user):
-    return user.is_authenticated and user.category == 'admin'
+    return user.is_authenticated and (
+        user.is_superuser or user.role == 'admin'
+    )
 
 def home(request):
     return render(request,'home.html')
 
 def admin_dashboard(request):
+    if not is_admin(request.user):
+        return HttpResponseForbidden('<h1>403 Forbidden</h1><p>Only admins can access this page.</p>')
+
     hazards_count = HazardReport.objects.count()
     active_count = HazardReport.objects.filter(status='active').count()
     resolved_count = HazardReport.objects.filter(status='resolved').count()
@@ -57,6 +62,35 @@ def admin_dashboard(request):
         'recent_hazards': recent_hazards,
         'recent_complaints': recent_complaints,
     })
+
+
+@login_required
+def manage_user_roles(request):
+    if not is_admin(request.user):
+        return HttpResponseForbidden('<h1>403 Forbidden</h1><p>Only admins can manage user roles.</p>')
+
+    users = User.objects.prefetch_related('hospitals').order_by('username')
+    forms_by_user = {}
+
+    if request.method == 'POST':
+        user = get_object_or_404(User, pk=request.POST.get('user_id'))
+        form = UserRoleForm(request.POST, instance=user)
+        if form.is_valid():
+            updated_user = form.save(commit=False)
+            updated_user.is_staff = updated_user.role in {'admin', 'hospital_staff'}
+            updated_user.is_superuser = updated_user.role == 'admin'
+            updated_user.save()
+            form.save_m2m()
+            from django.contrib import messages
+            messages.success(request, f'Role updated for {updated_user.username}.')
+            return redirect('manage_user_roles')
+        forms_by_user[user.pk] = form
+
+    for user in users:
+        forms_by_user.setdefault(user.pk, UserRoleForm(instance=user))
+
+    user_forms = [(user, forms_by_user[user.pk]) for user in users]
+    return render(request, 'manage_user_roles.html', {'user_forms': user_forms})
 
 def Active_hazard(request):
     return render(request,'active_hazard.html')
@@ -684,6 +718,7 @@ def create_initial_admin(request):
                 user.gender = 'Male'
 
             user.set_password(form.cleaned_data['password'])
+            user.role = 'admin'
             user.is_staff = True
             user.is_superuser = True
             user.is_active = True

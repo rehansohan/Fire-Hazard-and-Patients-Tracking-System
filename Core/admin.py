@@ -96,6 +96,7 @@ class CustomUserAdmin(UserAdmin):
             "Additional Information",
             {
                 "fields": (
+                    "role",
                     "phone",
                     "date_of_birth",
                     "gender",
@@ -119,6 +120,7 @@ class CustomUserAdmin(UserAdmin):
             "Additional Information",
             {
                 "fields": (
+                    "role",
                     "phone",
                     "date_of_birth",
                     "gender",
