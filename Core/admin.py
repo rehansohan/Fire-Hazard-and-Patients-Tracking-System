@@ -62,10 +62,6 @@ class HospitalAdmin(admin.ModelAdmin):
             {
                 "fields": (
                     "capacity",
-                    "total_doctors",
-                    "total_nurses",
-                    "total_departments",
-                    "ambulances",
                     "established_year",
                 )
             },
