@@ -83,12 +83,7 @@ class Hospital(models.Model):
         null=True,
         blank= True
     )
-    total_doctors = models.IntegerField(
-        default=0
-    )
-    total_nurses = models.IntegerField(
-        default=0
-    )
+    
     latitude = models.FloatField(
     null=True,
     blank=True
@@ -103,8 +98,7 @@ class Hospital(models.Model):
         blank=True,
         default=""
     )
-    total_departments= models.IntegerField( default=0)
-    ambulances=models.IntegerField(default=0)
+    
     
     class Meta:
         permissions = [

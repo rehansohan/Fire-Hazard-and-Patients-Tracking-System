@@ -20,10 +20,6 @@ class HospitalAdmin(admin.ModelAdmin):
         "location",
         "phone",
         "capacity",
-        "total_doctors",
-        "total_nurses",
-        "total_departments",
-        "ambulances",
         "established_year",
     )
 

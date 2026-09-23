@@ -31,7 +31,7 @@ class HazardReportForm(forms.ModelForm):
 class HospitalForm(forms.ModelForm):
     class Meta:
         model= Hospital
-        fields = ['name','location','phone','capacity','image','description','emergency_phone','established_year','total_doctors','total_nurses','total_departments','ambulances']
+        fields = ['name','location','phone','capacity','image','description','emergency_phone','established_year']
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -63,26 +63,6 @@ class HospitalForm(forms.ModelForm):
                 'placeholder': 'emergency_phone'
             }),
             
-            
-              'total_doctors': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Total Doctors'
-            }),
-
-            'total_nurses': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Total Nurses'
-            }),
-
-            'total_departments': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Total Departments'
-            }),
-
-            'ambulances': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Number of Ambulances'
-            }),
             
         }
         
