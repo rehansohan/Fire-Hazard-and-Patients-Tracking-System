@@ -744,6 +744,18 @@
 
             </li>
 
+            <li>
+
+                <a href="{% url 'fire_station_list' %}">
+
+                    <i class="bi bi-fire"></i>
+
+                    Fire Stations
+
+                </a>
+
+            </li>
+
         </ul>
 
 
@@ -866,7 +878,7 @@
                 </span>
 
                 <span class="stat-value">
-                    {{ active_hazards|default:"0" }}
+                    {{ active_count|default:"0" }}
                 </span>
 
                 <span class="stat-description">
@@ -883,7 +895,7 @@
                 </span>
 
                 <span class="stat-value">
-                    {{ hospitals|default:"0" }}
+                    {{ hospitals_count|default:"0" }}
                 </span>
 
                 <span class="stat-description">
@@ -900,7 +912,7 @@
                 </span>
 
                 <span class="stat-value">
-                    {{ patients|default:"0" }}
+                    {{ patients_count|default:"0" }}
                 </span>
 
                 <span class="stat-description">
@@ -917,7 +929,7 @@
                 </span>
 
                 <span class="stat-value">
-                    {{ complaints|default:"0" }}
+                    {{ missing_count|default:"0" }}
                 </span>
 
                 <span class="stat-description">
@@ -1049,6 +1061,72 @@
                 </a>
 
 
+                <a
+                    href="{% url 'emergency_admin' %}"
+                    class="action-item"
+                >
+
+                    <div class="action-left">
+
+                        <div class="action-icon">
+
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+
+                        </div>
+
+                        <div>
+
+                            <span class="action-title">
+                                Emergency Reports
+                            </span>
+
+                            <span class="action-description">
+                                Review and verify emergency submissions.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <i class="bi bi-chevron-right action-arrow"></i>
+
+                </a>
+
+
+                <a
+                    href="{% url 'fire_station_list' %}"
+                    class="action-item"
+                >
+
+                    <div class="action-left">
+
+                        <div class="action-icon">
+
+                            <i class="bi bi-fire"></i>
+
+                        </div>
+
+                        <div>
+
+                            <span class="action-title">
+                                Fire Stations
+                            </span>
+
+                            <span class="action-description">
+                                View registered fire stations and contacts.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <i class="bi bi-chevron-right action-arrow"></i>
+
+                </a>
+
+
             </div>
 
         </section>
@@ -1102,6 +1180,39 @@
 
 
                     <i class="bi bi-chevron-right action-arrow"></i>
+
+                </a>
+
+
+                <a
+                    href="{% url 'admin:index' %}"
+                    class="action-item"
+                >
+
+                    <div class="action-left">
+
+                        <div class="action-icon">
+
+                            <i class="bi bi-speedometer2"></i>
+
+                        </div>
+
+                        <div>
+
+                            <span class="action-title">
+                                Django Admin Panel
+                            </span>
+
+                            <span class="action-description">
+                                Open the full Django administration site.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <i class="bi bi-box-arrow-up-right action-arrow"></i>
 
                 </a>
 

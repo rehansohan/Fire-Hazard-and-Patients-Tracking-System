@@ -1,5 +1,6 @@
 import hmac
 import os
+import logging
 
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse, HttpResponseForbidden
@@ -29,6 +30,7 @@ import base64
 from django.core.files.base import ContentFile
 
 User = get_user_model()
+logger = logging.getLogger(__name__)
 
 def is_admin(user):
     return user.is_authenticated and (
@@ -36,7 +38,20 @@ def is_admin(user):
     )
 
 def home(request):
-    return render(request,'home.html')
+    active_hazards = HazardReport.objects.filter(
+        status='active'
+    ).order_by('-created_at')
+    hospital_count = Hospital.objects.count()
+    fire_station_count = FireStation.objects.filter(
+        district='Noakhali',
+        is_active=True,
+    ).count()
+
+    return render(request, 'home.html', {
+        'active_hazards': active_hazards,
+        'hospital_count': hospital_count,
+        'fire_station_count': fire_station_count,
+    })
 
 def admin_dashboard(request):
     if not is_admin(request.user):
@@ -69,21 +84,27 @@ def manage_user_roles(request):
     if not is_admin(request.user):
         return HttpResponseForbidden('<h1>403 Forbidden</h1><p>Only admins can manage user roles.</p>')
 
-    users = User.objects.prefetch_related('hospitals').order_by('username')
+    users = User.objects.prefetch_related('hospitals').order_by('role', 'username')
     forms_by_user = {}
 
     if request.method == 'POST':
         user = get_object_or_404(User, pk=request.POST.get('user_id'))
         form = UserRoleForm(request.POST, instance=user)
         if form.is_valid():
-            updated_user = form.save(commit=False)
-            updated_user.is_staff = updated_user.role in {'admin', 'hospital_staff'}
-            updated_user.is_superuser = updated_user.role == 'admin'
-            updated_user.save()
-            form.save_m2m()
-            from django.contrib import messages
-            messages.success(request, f'Role updated for {updated_user.username}.')
-            return redirect('manage_user_roles')
+            requested_role = form.cleaned_data['role']
+            if user.pk == request.user.pk and requested_role != 'admin':
+                from django.contrib import messages
+                messages.error(request, 'You cannot remove your own administrator role.')
+                forms_by_user[user.pk] = form
+            else:
+                updated_user = form.save(commit=False)
+                updated_user.is_staff = updated_user.role in {'admin', 'hospital_staff'}
+                updated_user.is_superuser = updated_user.role == 'admin'
+                updated_user.save()
+                form.save_m2m()
+                from django.contrib import messages
+                messages.success(request, f'Role updated for {updated_user.username}.')
+                return redirect('manage_user_roles')
         forms_by_user[user.pk] = form
 
     for user in users:
@@ -658,21 +679,36 @@ def register(request):
 
         if form.is_valid():
 
-            user = form.save()
+            try:
+                user = form.save()
 
-            group, created = Group.objects.get_or_create(
-                name="General User"
-            )
+                group, created = Group.objects.get_or_create(
+                    name="General User"
+                )
 
-            user.groups.add(group)
+                user.groups.add(group)
 
-            Profile.objects.create(
-                user=user,
-                phone=form.cleaned_data["phone"],
-                address=form.cleaned_data["address"]
-            )
+                Profile.objects.create(
+                    user=user,
+                    phone=form.cleaned_data["phone"],
+                    address=form.cleaned_data["address"]
+                )
 
-            return redirect("home")
+                return redirect("home")
+            except Exception:
+                logger.exception("Unexpected error while registering a user")
+                return render(
+                    request,
+                    "error.html",
+                    {
+                        "status_code": 500,
+                        "error_title": "Registration unavailable",
+                        "error_message": "We could not create your account right now. Please try again.",
+                        "back_url": "register",
+                        "back_label": "Return to registration",
+                    },
+                    status=500,
+                )
 
         else:
             print(form.errors)
@@ -735,9 +771,14 @@ def create_initial_admin(request):
     return render(request, 'create_initial_admin.html', {'form': form})
     
 def user_login(request):
-    if request.method =='POST':
-        email = request.POST['email']
-        password = request.POST['password']
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip()
+        password = request.POST.get('password', '')
+
+        if not email or not password:
+            return render(request, 'user_login.html', {
+                'login_error': 'Enter both your email address and password.',
+            }, status=400)
         
         try:
             user_obj = User.objects.get(email=email)
@@ -750,16 +791,65 @@ def user_login(request):
                 login(request,user)
                 return redirect('home')
             
-            else:
-                return HttpResponse("Invalid Password")
+            return render(request, 'user_login.html', {
+                'login_error': 'The password is incorrect. Please try again.',
+            }, status=401)
         except User.DoesNotExist:
-            return HttpResponse("Email does not exit")
+            return render(request, 'user_login.html', {
+                'login_error': 'No account was found with that email address.',
+            }, status=401)
+        except Exception:
+            logger.exception("Unexpected error while logging in")
+            return render(request, 'error.html', {
+                'status_code': 500,
+                'error_title': 'Login unavailable',
+                'error_message': 'We could not complete your sign-in right now. Please try again.',
+                'back_url': 'login',
+                'back_label': 'Return to sign in',
+            }, status=500)
     
     return render(request,'user_login.html')
 
 def user_logout(request):
     logout(request)
     return redirect('home')
+
+
+def custom_error_page(request, exception=None, status_code=500, error_title='Something went wrong', error_message='Please try again later.'):
+    return render(request, 'error.html', {
+        'status_code': status_code,
+        'error_title': error_title,
+        'error_message': error_message,
+    }, status=status_code)
+
+
+def page_not_found(request, exception):
+    return custom_error_page(
+        request,
+        exception,
+        status_code=404,
+        error_title='Page not found',
+        error_message='The page you requested does not exist or may have moved.',
+    )
+
+
+def permission_denied(request, exception):
+    return custom_error_page(
+        request,
+        exception,
+        status_code=403,
+        error_title='Access denied',
+        error_message='You do not have permission to view this page.',
+    )
+
+
+def server_error(request):
+    return custom_error_page(
+        request,
+        status_code=500,
+        error_title='Server error',
+        error_message='Something went wrong on our side. Please try again shortly.',
+    )
 
 
 from django.contrib.auth.decorators import login_required

@@ -2,709 +2,1197 @@
 
 {% load static %}
 
+
 {% block title %}
+
     FHPTS - Fire Hazard & Patient Tracking System
+
 {% endblock %}
+
 
 
 {% block extra_head %}
 
 <style>
 
-    /* ========================================================= */
-    /* HOME PAGE */
-    /* ========================================================= */
+/* =========================================================
+   GLOBAL
+========================================================= */
 
-    :root {
-        --bd-red: #dc3545;
-        --bd-dark-red: #c82333;
-        --bd-green: #006a4e;
-        --bd-gold: #f42a41;
-        --govt-blue: #1e3a8a;
-        --govt-gray: #f8f9fa;
+:root {
+    --bd-red: #dc3545;
+    --bd-dark-red: #c82333;
+    --bd-green: #006a4e;
+    --bd-gold: #f42a41;
+    --govt-blue: #1e3a8a;
+    --govt-gray: #f8f9fa;
+}
+
+body {
+    background-color: #f5f5f5;
+}
+
+
+/* =========================================================
+   HERO SECTION
+========================================================= */
+
+.hero-section {
+
+    background-image:
+        linear-gradient(
+            rgba(0, 0, 0, 0.48),
+            rgba(0, 0, 0, 0.48)
+        ),
+        url('https://www.palcon.com.my/wp-content/uploads/2022/06/Fire-Hazard-Awareness-in-Malaysia-Why-Is-It-Important-scaled.jpg');
+
+    background-size: cover;
+
+    background-position: center center;
+
+    background-repeat: no-repeat;
+
+    background-attachment: fixed;
+
+    min-height: 85vh;
+
+    display: flex;
+
+    align-items: center;
+
+    color: white;
+
+    position: relative;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-badge {
+
+    background: rgba(255,255,255,0.2);
+
+    backdrop-filter: blur(10px);
+
+    border: 2px solid rgba(255,255,255,0.3);
+
+    padding: 0.5rem 1.5rem;
+
+    border-radius: 50px;
+
+    display: inline-block;
+
+    margin-bottom: 1rem;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   ACTIVE HAZARDS CARD
+========================================================= */
+
+.active-hazard-panel {
+
+    background: rgba(255,255,255,0.97);
+
+    backdrop-filter: blur(10px);
+
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,0.25);
+
+    border-left:
+        5px solid var(--bd-red);
+
+    color: #212529;
+
+    width: 100%;
+}
+
+
+/* =========================================================
+   ACTIVE HAZARD HEADER
+========================================================= */
+
+.active-hazard-header {
+
+    background:
+        linear-gradient(
+            135deg,
+            #dc3545,
+            #b02a37
+        );
+
+    color: white;
+
+    padding: 14px 18px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    font-size: 0.85rem;
+
+    font-weight: 800;
+
+    letter-spacing: 0.6px;
+}
+
+
+/* =========================================================
+   LIVE INDICATOR
+========================================================= */
+
+.hazard-live {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    font-size: 0.7rem;
+
+    font-weight: 700;
+}
+
+.hazard-live-dot {
+
+    width: 8px;
+
+    height: 8px;
+
+    background: #ffffff;
+
+    border-radius: 50%;
+
+    display: inline-block;
+
+    animation:
+        hazardPulse 1.2s infinite;
+}
+
+@keyframes hazardPulse {
+
+    0%,
+    100% {
+
+        opacity: 1;
+
+        transform: scale(1);
+
+        box-shadow:
+            0 0 0 0 rgba(255,255,255,0.5);
     }
 
+    50% {
 
-    body {
-        background-color: #f5f5f5;
+        opacity: 0.35;
+
+        transform: scale(1.5);
+
+        box-shadow:
+            0 0 0 5px rgba(255,255,255,0);
     }
 
+}
 
-    /* ========================================================= */
-    /* HERO SECTION */
-    /* ========================================================= */
+
+/* =========================================================
+   ACTIVE HAZARD COUNT
+========================================================= */
+
+.hazard-count-box {
+
+    background: #ffffff;
+
+    text-align: center;
+
+    padding: 18px 15px 16px;
+
+    border-bottom:
+        1px solid #eeeeee;
+}
+
+.hazard-count-number {
+
+    color: var(--bd-red);
+
+    font-size: 2.8rem;
+
+    font-weight: 800;
+
+    line-height: 1;
+
+    display: block;
+}
+
+.hazard-count-label {
+
+    margin-top: 6px;
+
+    color: #6c757d;
+
+    font-size: 0.72rem;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+}
+
+
+/* =========================================================
+   HAZARD SCROLL WINDOW
+========================================================= */
+
+.hazard-scroll-window {
+
+    height: 235px;
+
+    overflow: hidden;
+
+    position: relative;
+
+    background: #ffffff;
+}
+
+
+/* TOP FADE */
+
+.hazard-scroll-window::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    left: 0;
+
+    right: 0;
+
+    height: 30px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(255,255,255,1),
+            rgba(255,255,255,0)
+        );
+
+    z-index: 5;
+
+    pointer-events: none;
+}
+
+
+/* BOTTOM FADE */
+
+.hazard-scroll-window::after {
+
+    content: "";
+
+    position: absolute;
+
+    bottom: 0;
+
+    left: 0;
+
+    right: 0;
+
+    height: 30px;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(255,255,255,1),
+            rgba(255,255,255,0)
+        );
+
+    z-index: 5;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   HAZARD TRACK
+========================================================= */
+
+.hazard-track {
+
+    display: flex;
+
+    flex-direction: column;
+
+    animation:
+        hazardVerticalScroll
+        10s
+        linear
+        infinite;
+}
+
+.hazard-track:hover {
+
+    animation-play-state:
+        paused;
+}
+
+
+/*
+   Move the duplicated list upward.
+   This creates continuous scrolling.
+*/
+
+@keyframes hazardVerticalScroll {
+
+    0% {
+
+        transform:
+            translateY(0);
+    }
+
+    100% {
+
+        transform:
+            translateY(-50%);
+    }
+
+}
+
+
+/* =========================================================
+   HAZARD ITEM
+========================================================= */
+
+.hazard-item {
+
+    min-height: 82px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 12px 16px;
+
+    border-bottom:
+        1px solid #eeeeee;
+
+    background: #ffffff;
+
+    transition:
+        background 0.25s ease;
+}
+
+.hazard-item:hover {
+
+    background: #fff7f7;
+}
+
+
+/* =========================================================
+   HAZARD ICON
+========================================================= */
+
+.hazard-icon {
+
+    width: 42px;
+
+    height: 42px;
+
+    min-width: 42px;
+
+    border-radius: 50%;
+
+    background: #fff0f1;
+
+    color: #dc3545;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 16px;
+}
+
+
+/* =========================================================
+   HAZARD INFORMATION
+========================================================= */
+
+.hazard-info {
+
+    min-width: 0;
+
+    flex: 1;
+}
+
+.hazard-title {
+
+    color: #212529;
+
+    font-weight: 700;
+
+    font-size: 0.88rem;
+
+    line-height: 1.3;
+
+    margin-bottom: 5px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+.hazard-meta {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+
+    color: #6c757d;
+
+    font-size: 0.68rem;
+}
+
+
+/* =========================================================
+   SEVERITY
+========================================================= */
+
+.hazard-severity {
+
+    padding: 3px 8px;
+
+    border-radius: 20px;
+
+    background: #fff0f1;
+
+    color: #dc3545;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    font-size: 0.62rem;
+}
+
+
+/* =========================================================
+   LOCATION
+========================================================= */
+
+.hazard-location {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 3px;
+}
+
+.hazard-location i {
+
+    color: #dc3545;
+}
+
+.hazard-map-link {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 3px;
+
+    color: #b4232f;
+
+    font-weight: 700;
+
+    text-decoration: none;
+}
+
+.hazard-map-link:hover {
+
+    color: #7f1722;
+
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   NO ACTIVE HAZARD
+========================================================= */
+
+.no-active-hazard {
+
+    height: 235px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: #198754;
+
+    text-align: center;
+}
+
+.no-active-hazard i {
+
+    font-size: 38px;
+
+    margin-bottom: 10px;
+}
+
+.no-active-hazard span {
+
+    font-size: 0.9rem;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   VIEW ALL HAZARDS
+========================================================= */
+
+.view-active-hazards {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    padding: 11px;
+
+    background: #f8f9fa;
+
+    border-top:
+        1px solid #eeeeee;
+
+    color: var(--bd-red);
+
+    text-decoration: none;
+
+    font-size: 0.76rem;
+
+    font-weight: 800;
+
+    transition:
+        all 0.25s ease;
+}
+
+.view-active-hazards:hover {
+
+    background: var(--bd-red);
+
+    color: white;
+}
+
+
+/* =========================================================
+   HERO BUTTONS
+========================================================= */
+
+.btn-govt {
+
+    background: white;
+
+    color: var(--bd-red);
+
+    font-weight: 700;
+
+    padding: 1rem 2.5rem;
+
+    border-radius: 5px;
+
+    border: 2px solid white;
+
+    font-size: 1.1rem;
+
+    text-transform: uppercase;
+
+    transition: all 0.3s ease;
+}
+
+.btn-govt:hover {
+
+    background: transparent;
+
+    color: white;
+
+    border-color: white;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 5px 15px rgba(0,0,0,0.2);
+}
+
+.btn-outline-govt {
+
+    color: white;
+
+    border: 2px solid white;
+
+    font-weight: 700;
+
+    padding: 1rem 2.5rem;
+
+    border-radius: 5px;
+
+    font-size: 1.1rem;
+
+    text-transform: uppercase;
+
+    transition: all 0.3s ease;
+}
+
+.btn-outline-govt:hover {
+
+    background: white;
+
+    color: var(--bd-red);
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   SCROLL INDICATOR
+========================================================= */
+
+.scroll-indicator {
+
+    position: absolute;
+
+    bottom: 30px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+
+        transform:
+            translateX(-50%)
+            translateY(0);
+    }
+
+    40% {
+
+        transform:
+            translateX(-50%)
+            translateY(-15px);
+    }
+
+    60% {
+
+        transform:
+            translateX(-50%)
+            translateY(-7px);
+    }
+
+}
+
+
+/* =========================================================
+   STATS SECTION
+========================================================= */
+
+.stats-section {
+
+    background:
+        linear-gradient(
+            to bottom,
+            #f8f9fa 0%,
+            #ffffff 100%
+        );
+
+    border-top:
+        4px solid var(--bd-red);
+
+    border-bottom:
+        4px solid var(--bd-red);
+}
+
+.stat-box {
+
+    text-align: center;
+
+    padding: 2rem;
+
+    transition: all 0.3s ease;
+}
+
+.stat-box:hover {
+
+    transform:
+        translateY(-5px);
+}
+
+.stat-number {
+
+    font-size: 3.5rem;
+
+    font-weight: 800;
+
+    color: var(--bd-red);
+
+    display: block;
+
+    text-shadow:
+        2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.stat-label {
+
+    font-size: 1.1rem;
+
+    color: #495057;
+
+    font-weight: 600;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+}
+
+
+/* =========================================================
+   EXPLORE SECTION
+========================================================= */
+
+.explore-section {
+
+    background: #ffffff;
+
+    padding: 5rem 0;
+}
+
+.explore-card {
+
+    background: white;
+
+    border: 2px solid #e9ecef;
+
+    border-radius: 18px;
+
+    padding: 2.5rem 2rem;
+
+    height: 100%;
+
+    text-align: center;
+
+    transition:
+        all 0.3s ease;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+.explore-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 5px;
+
+    background:
+        linear-gradient(
+            to right,
+            var(--bd-red),
+            var(--bd-dark-red)
+        );
+}
+
+.explore-card:hover {
+
+    transform:
+        translateY(-10px);
+
+    border-color:
+        var(--bd-red);
+
+    box-shadow:
+        0 15px 40px rgba(220,53,69,0.15);
+}
+
+.explore-icon {
+
+    width: 90px;
+
+    height: 90px;
+
+    margin:
+        0 auto 1.5rem;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--bd-red),
+            var(--bd-dark-red)
+        );
+
+    color: white;
+
+    font-size: 2.4rem;
+
+    box-shadow:
+        0 8px 20px rgba(220,53,69,0.25);
+
+    transition:
+        all 0.3s ease;
+}
+
+.explore-card:hover
+.explore-icon {
+
+    transform:
+        scale(1.1)
+        rotate(5deg);
+}
+
+.explore-card h4 {
+
+    font-weight: 700;
+
+    margin-bottom: 1rem;
+
+    color: #212529;
+}
+
+.explore-card p {
+
+    color: #6c757d;
+
+    line-height: 1.7;
+
+    min-height: 58px;
+}
+
+.explore-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: var(--bd-red);
+
+    border:
+        2px solid var(--bd-red);
+
+    padding:
+        0.7rem 1.4rem;
+
+    border-radius: 7px;
+
+    text-decoration: none;
+
+    font-weight: 700;
+
+    transition:
+        all 0.3s ease;
+}
+
+.explore-btn:hover {
+
+    background:
+        var(--bd-red);
+
+    color: white;
+
+    transform:
+        translateY(-2px);
+}
+
+
+/* =========================================================
+   ABOUT
+========================================================= */
+
+.about-section {
+
+    background-color:
+        #ffffff;
+}
+
+.section-title {
+
+    position: relative;
+
+    display: inline-block;
+
+    padding-bottom: 1rem;
+
+    margin-bottom: 2rem;
+}
+
+.section-title::after {
+
+    content: '';
+
+    position: absolute;
+
+    bottom: 0;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    width: 80px;
+
+    height: 4px;
+
+    background:
+        linear-gradient(
+            to right,
+            var(--bd-red),
+            var(--bd-dark-red)
+        );
+
+    border-radius: 2px;
+}
+
+
+/* =========================================================
+   CTA
+========================================================= */
+
+.cta-section {
+
+    background:
+        linear-gradient(
+            135deg,
+            #c82333 0%,
+            #dc3545 100%
+        );
+
+    color: white;
+
+    padding: 5rem 0;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+.cta-section::before {
+
+    content: '';
+
+    position: absolute;
+
+    top: 0;
+
+    left: 0;
+
+    right: 0;
+
+    bottom: 0;
+
+    background:
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.05" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path></svg>')
+        no-repeat top;
+
+    background-size:
+        cover;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
 
     .hero-section {
 
-        background-image:
-            linear-gradient(
-                rgba(0, 0, 0, 0.48),
-                rgba(0, 0, 0, 0.48)
-            ),
-            url('https://www.palcon.com.my/wp-content/uploads/2022/06/Fire-Hazard-Awareness-in-Malaysia-Why-Is-It-Important-scaled.jpg');
+        background-attachment:
+            scroll;
 
-        background-size: cover;
+        min-height:
+            auto;
 
-        background-position: center center;
-
-        background-repeat: no-repeat;
-
-        background-attachment: fixed;
-
-        min-height: 85vh;
-
-        display: flex;
-
-        align-items: center;
-
-        color: white;
-
-        position: relative;
+        padding:
+            70px 0;
     }
 
+    .hazard-scroll-window {
+
+        height: 210px;
+    }
+
+    .active-hazard-panel {
+
+        margin-top: 30px;
+    }
+
+}
+
+
+@media (max-width: 576px) {
 
     .hero-content {
 
-        position: relative;
-
-        z-index: 1;
+        text-align:
+            center;
     }
 
+    .hero-content h1 {
 
-    .hero-badge {
+        font-size:
+            2rem;
 
-        background: rgba(255,255,255,0.2);
-
-        backdrop-filter: blur(10px);
-
-        border: 2px solid rgba(255,255,255,0.3);
-
-        padding: 0.5rem 1.5rem;
-
-        border-radius: 50px;
-
-        display: inline-block;
-
-        margin-bottom: 1rem;
-
-        font-weight: 600;
+        line-height:
+            1.25;
     }
 
+    .hero-content .lead {
 
-    .emergency-card {
+        font-size:
+            1rem !important;
 
-        background: rgba(255,255,255,0.95);
-
-        backdrop-filter: blur(10px);
-
-        border-radius: 15px;
-
-        padding: 2rem;
-
-        box-shadow:
-            0 10px 30px rgba(0,0,0,0.2);
-
-        border-left:
-            5px solid var(--bd-red);
+        line-height:
+            1.6;
     }
 
+    .hero-content .btn {
 
-    .emergency-number {
+        width:
+            100%;
 
-        font-size: 3rem;
-
-        font-weight: 800;
-
-        color: var(--bd-red);
-
-        text-shadow:
-            2px 2px 4px rgba(0,0,0,0.1);
+        margin-bottom:
+            8px;
     }
-
-
-    /* ========================================================= */
-    /* HERO BUTTONS */
-    /* ========================================================= */
-
-    .btn-govt {
-
-        background: white;
-
-        color: var(--bd-red);
-
-        font-weight: 700;
-
-        padding: 1rem 2.5rem;
-
-        border-radius: 5px;
-
-        border: 2px solid white;
-
-        font-size: 1.1rem;
-
-        text-transform: uppercase;
-
-        transition: all 0.3s ease;
-    }
-
-
-    .btn-govt:hover {
-
-        background: transparent;
-
-        color: white;
-
-        border-color: white;
-
-        transform: translateY(-2px);
-
-        box-shadow:
-            0 5px 15px rgba(0,0,0,0.2);
-    }
-
-
-    .btn-outline-govt {
-
-        color: white;
-
-        border: 2px solid white;
-
-        font-weight: 700;
-
-        padding: 1rem 2.5rem;
-
-        border-radius: 5px;
-
-        font-size: 1.1rem;
-
-        text-transform: uppercase;
-
-        transition: all 0.3s ease;
-    }
-
-
-    .btn-outline-govt:hover {
-
-        background: white;
-
-        color: var(--bd-red);
-
-        transform: translateY(-2px);
-    }
-
-
-    /* ========================================================= */
-    /* SERVICE BADGE */
-    /* ========================================================= */
-
-    .service-badge {
-
-        background: var(--bd-red);
-
-        color: white;
-
-        padding: 0.5rem 1rem;
-
-        border-radius: 5px;
-
-        font-weight: 600;
-
-        display: inline-block;
-
-        margin-bottom: 1rem;
-    }
-
-
-    /* ========================================================= */
-    /* SCROLL INDICATOR */
-    /* ========================================================= */
-
-    .scroll-indicator {
-
-        position: absolute;
-
-        bottom: 30px;
-
-        left: 50%;
-
-        transform: translateX(-50%);
-
-        animation: bounce 2s infinite;
-    }
-
-
-    @keyframes bounce {
-
-        0%, 20%, 50%, 80%, 100% {
-
-            transform:
-                translateX(-50%)
-                translateY(0);
-        }
-
-        40% {
-
-            transform:
-                translateX(-50%)
-                translateY(-15px);
-        }
-
-        60% {
-
-            transform:
-                translateX(-50%)
-                translateY(-7px);
-        }
-    }
-
-
-    /* ========================================================= */
-    /* STATS SECTION */
-    /* ========================================================= */
-
-    .stats-section {
-
-        background:
-            linear-gradient(
-                to bottom,
-                #f8f9fa 0%,
-                #ffffff 100%
-            );
-
-        border-top:
-            4px solid var(--bd-red);
-
-        border-bottom:
-            4px solid var(--bd-red);
-    }
-
 
     .stat-box {
 
-        text-align: center;
-
-        padding: 2rem;
-
-        transition: all 0.3s ease;
+        padding:
+            1rem 0.5rem;
     }
-
-
-    .stat-box:hover {
-
-        transform: translateY(-5px);
-    }
-
 
     .stat-number {
 
-        font-size: 3.5rem;
-
-        font-weight: 800;
-
-        color: var(--bd-red);
-
-        display: block;
-
-        text-shadow:
-            2px 2px 4px rgba(0,0,0,0.1);
+        font-size:
+            2rem;
     }
-
 
     .stat-label {
 
-        font-size: 1.1rem;
-
-        color: #495057;
-
-        font-weight: 600;
-
-        text-transform: uppercase;
-
-        letter-spacing: 0.5px;
+        font-size:
+            0.75rem;
     }
-
-
-    /* ========================================================= */
-    /* EXPLORE SECTION */
-    /* ========================================================= */
-
-    .explore-section {
-
-        background: #ffffff;
-
-        padding: 5rem 0;
-    }
-
-
-    .explore-card {
-
-        background: white;
-
-        border: 2px solid #e9ecef;
-
-        border-radius: 18px;
-
-        padding: 2.5rem 2rem;
-
-        height: 100%;
-
-        text-align: center;
-
-        transition:
-            all 0.3s ease;
-
-        position: relative;
-
-        overflow: hidden;
-    }
-
-
-    .explore-card::before {
-
-        content: "";
-
-        position: absolute;
-
-        top: 0;
-
-        left: 0;
-
-        width: 100%;
-
-        height: 5px;
-
-        background:
-            linear-gradient(
-                to right,
-                var(--bd-red),
-                var(--bd-dark-red)
-            );
-    }
-
-
-    .explore-card:hover {
-
-        transform: translateY(-10px);
-
-        border-color: var(--bd-red);
-
-        box-shadow:
-            0 15px 40px rgba(220,53,69,0.15);
-    }
-
-
-    .explore-icon {
-
-        width: 90px;
-
-        height: 90px;
-
-        margin: 0 auto 1.5rem;
-
-        border-radius: 50%;
-
-        display: flex;
-
-        align-items: center;
-
-        justify-content: center;
-
-        background:
-            linear-gradient(
-                135deg,
-                var(--bd-red),
-                var(--bd-dark-red)
-            );
-
-        color: white;
-
-        font-size: 2.4rem;
-
-        box-shadow:
-            0 8px 20px rgba(220,53,69,0.25);
-
-        transition:
-            all 0.3s ease;
-    }
-
-
-    .explore-card:hover .explore-icon {
-
-        transform:
-            scale(1.1)
-            rotate(5deg);
-    }
-
-
-    .explore-card h4 {
-
-        font-weight: 700;
-
-        margin-bottom: 1rem;
-
-        color: #212529;
-    }
-
-
-    .explore-card p {
-
-        color: #6c757d;
-
-        line-height: 1.7;
-
-        min-height: 58px;
-    }
-
-
-    .explore-btn {
-
-        display: inline-flex;
-
-        align-items: center;
-
-        gap: 8px;
-
-        color: var(--bd-red);
-
-        border:
-            2px solid var(--bd-red);
-
-        padding:
-            0.7rem 1.4rem;
-
-        border-radius: 7px;
-
-        text-decoration: none;
-
-        font-weight: 700;
-
-        transition: all 0.3s ease;
-    }
-
-
-    .explore-btn:hover {
-
-        background: var(--bd-red);
-
-        color: white;
-
-        transform: translateY(-2px);
-    }
-
-
-    /* ========================================================= */
-    /* ABOUT SECTION */
-    /* ========================================================= */
-
-    .about-section {
-
-        background-color: #ffffff;
-    }
-
 
     .section-title {
 
-        position: relative;
-
-        display: inline-block;
-
-        padding-bottom: 1rem;
-
-        margin-bottom: 2rem;
+        font-size:
+            2rem;
     }
 
+    .explore-section {
 
-    .section-title::after {
-
-        content: '';
-
-        position: absolute;
-
-        bottom: 0;
-
-        left: 50%;
-
-        transform:
-            translateX(-50%);
-
-        width: 80px;
-
-        height: 4px;
-
-        background:
-            linear-gradient(
-                to right,
-                var(--bd-red),
-                var(--bd-dark-red)
-            );
-
-        border-radius: 2px;
+        padding:
+            3rem 0;
     }
 
+    .explore-card {
 
-    /* ========================================================= */
-    /* CTA SECTION */
-    /* ========================================================= */
+        padding:
+            2rem 1.3rem;
+    }
 
     .cta-section {
 
-        background:
-            linear-gradient(
-                135deg,
-                #c82333 0%,
-                #dc3545 100%
-            );
-
-        color: white;
-
-        padding: 5rem 0;
-
-        position: relative;
-
-        overflow: hidden;
+        padding:
+            3rem 1rem;
     }
 
+    .cta-section h2 {
 
-    .cta-section::before {
-
-        content: '';
-
-        position: absolute;
-
-        top: 0;
-
-        left: 0;
-
-        right: 0;
-
-        bottom: 0;
-
-        background:
-            url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.05" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path></svg>')
-            no-repeat top;
-
-        background-size: cover;
+        font-size:
+            2rem;
     }
 
+    .cta-section .lead {
 
-    /* ========================================================= */
-    /* MOBILE */
-    /* ========================================================= */
-
-    @media (max-width: 768px) {
-
-        .hero-section {
-
-            background-attachment: scroll;
-
-            min-height: auto;
-
-            padding: 70px 0;
-        }
-
+        font-size:
+            1rem;
     }
 
+    .hazard-title {
 
-    @media (max-width: 576px) {
-
-        .hero-content {
-
-            text-align: center;
-        }
-
-
-        .hero-content h1 {
-
-            font-size: 2rem;
-
-            line-height: 1.25;
-        }
-
-
-        .hero-content .lead {
-
-            font-size: 1rem !important;
-
-            line-height: 1.6;
-        }
-
-
-        .hero-content .btn {
-
-            width: 100%;
-
-            margin-bottom: 8px;
-        }
-
-
-        .emergency-card {
-
-            margin-top: 25px;
-
-            padding: 1.2rem;
-        }
-
-
-        .emergency-number {
-
-            font-size: 2.5rem;
-        }
-
-
-        .stat-box {
-
-            padding: 1rem 0.5rem;
-        }
-
-
-        .stat-number {
-
-            font-size: 2rem;
-        }
-
-
-        .stat-label {
-
-            font-size: 0.75rem;
-        }
-
-
-        .section-title {
-
-            font-size: 2rem;
-        }
-
-
-        .explore-section {
-
-            padding: 3rem 0;
-        }
-
-
-        .explore-card {
-
-            padding: 2rem 1.3rem;
-        }
-
-
-        .cta-section {
-
-            padding: 3rem 1rem;
-        }
-
-
-        .cta-section h2 {
-
-            font-size: 2rem;
-        }
-
-
-        .cta-section .lead {
-
-            font-size: 1rem;
-        }
-
+        font-size:
+            0.78rem;
     }
+
+    .hazard-meta {
+
+        font-size:
+            0.62rem;
+    }
+
+    .hazard-count-number {
+
+        font-size:
+            2.2rem;
+    }
+
+}
 
 </style>
 
@@ -729,10 +1217,11 @@
         <div class="row align-items-center hero-content">
 
 
+            <!-- ================================================= -->
             <!-- HERO LEFT -->
+            <!-- ================================================= -->
 
             <div class="col-lg-7">
-
 
                 <div class="hero-badge">
 
@@ -761,7 +1250,6 @@
 
                 <div class="d-flex gap-3 flex-wrap mb-4">
 
-
                     <a
                         href="{% url 'Hazard_report' %}"
                         class="btn btn-govt btn-lg"
@@ -785,7 +1273,6 @@
 
                     </a>
 
-
                 </div>
 
 
@@ -806,110 +1293,266 @@
 
                 </div>
 
-
             </div>
 
 
 
-            <!-- EMERGENCY CARD -->
+            <!-- ================================================= -->
+            <!-- ACTIVE HAZARDS ONLY -->
+            <!-- ================================================= -->
 
             <div class="col-lg-5">
 
-                <div class="emergency-card">
+                <div class="active-hazard-panel">
 
 
-                    <div class="text-center mb-3">
+                    <!-- HEADER -->
 
-                        <div class="service-badge">
+                    <div class="active-hazard-header">
 
-                            <i class="fas fa-phone-volume me-2"></i>
+                        <span>
 
-                            EMERGENCY HOTLINE
+                            <i class="fas fa-fire-flame-curved me-2"></i>
 
-                        </div>
+                            ACTIVE HAZARDS
 
-                    </div>
-
-
-                    <div class="text-center">
-
-                        <div class="emergency-number">
-
-                            999
-
-                        </div>
+                        </span>
 
 
-                        <p class="text-dark fw-bold mb-3">
+                        <span class="hazard-live">
 
-                            Fire Service & Civil Defence
+                            LIVE
 
-                        </p>
+                            <span class="hazard-live-dot"></span>
+
+                        </span>
 
                     </div>
 
 
-                    <hr>
+
+                    <!-- COUNT -->
+
+                    <div class="hazard-count-box">
+
+                        <span class="hazard-count-number">
+
+                            {{ active_hazards|length }}
+
+                        </span>
 
 
-                    <div class="row text-center">
+                        <span class="hazard-count-label">
 
+                            Active Hazard{{ active_hazards|length|pluralize }}
 
-                        <div class="col-6 mb-2">
-
-                            <i class="fas fa-phone text-danger fs-3"></i>
-
-                            <p class="mb-0 mt-2 fw-bold text-dark">
-
-                                Fire Emergency
-
-                            </p>
-
-                            <small class="text-muted">
-
-                                24/7 Available
-
-                            </small>
-
-                        </div>
-
-
-                        <div class="col-6 mb-2">
-
-                            <i class="fas fa-ambulance text-danger fs-3"></i>
-
-                            <p class="mb-0 mt-2 fw-bold text-dark">
-
-                                Ambulance
-
-                            </p>
-
-                            <small class="text-muted">
-
-                                Rapid Response
-
-                            </small>
-
-                        </div>
-
+                        </span>
 
                     </div>
 
 
-                    <div class="mt-3 text-center">
 
-                        <a
-                            href="tel:999"
-                            class="btn btn-danger btn-lg w-100"
-                        >
+                    {% if active_hazards %}
 
-                            <i class="fas fa-phone-alt me-2"></i>
 
-                            Call Now
+                        <!-- HAZARDS -->
 
-                        </a>
+                        <div class="hazard-scroll-window">
 
-                    </div>
+                            <div class="hazard-track">
+
+
+                                <!-- =================================
+                                     FIRST LIST
+                                ================================== -->
+
+                                {% for hazard in active_hazards %}
+
+                                    <div class="hazard-item">
+
+
+                                        <div class="hazard-icon">
+
+                                            <i class="fas fa-triangle-exclamation"></i>
+
+                                        </div>
+
+
+                                        <div class="hazard-info">
+
+                                            <div class="hazard-title">
+
+                                                {{ hazard.title }}
+
+                                            </div>
+
+
+                                            <div class="hazard-meta">
+
+
+                                                <span class="hazard-severity">
+
+                                                    {{ hazard.servity }}
+
+                                                </span>
+
+
+                                                <span class="hazard-location">
+
+                                                    <i class="fas fa-location-dot"></i>
+
+
+                                                    {% if hazard.latitude and hazard.longitude %}
+
+                                                        {{ hazard.latitude|floatformat:4 }},
+                                                        {{ hazard.longitude|floatformat:4 }}
+
+                                                        <a
+                                                            class="hazard-map-link"
+                                                            href="https://www.google.com/maps/search/?api=1&amp;query={{ hazard.latitude }},{{ hazard.longitude }}"
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            title="Open hazard location in Google Maps"
+                                                        >
+                                                            <i class="fas fa-map-location-dot"></i>
+                                                            View map
+                                                        </a>
+
+                                                    {% else %}
+
+                                                        Location unavailable
+
+                                                    {% endif %}
+
+                                                </span>
+
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                {% endfor %}
+
+
+
+                                <!-- =================================
+                                     DUPLICATE LIST
+                                     FOR CONTINUOUS SCROLLING
+                                ================================== -->
+
+                                {% for hazard in active_hazards %}
+
+                                    <div class="hazard-item">
+
+
+                                        <div class="hazard-icon">
+
+                                            <i class="fas fa-triangle-exclamation"></i>
+
+                                        </div>
+
+
+                                        <div class="hazard-info">
+
+                                            <div class="hazard-title">
+
+                                                {{ hazard.title }}
+
+                                            </div>
+
+
+                                            <div class="hazard-meta">
+
+
+                                                <span class="hazard-severity">
+
+                                                    {{ hazard.servity }}
+
+                                                </span>
+
+
+                                                <span class="hazard-location">
+
+                                                    <i class="fas fa-location-dot"></i>
+
+
+                                                    {% if hazard.latitude and hazard.longitude %}
+
+                                                        {{ hazard.latitude|floatformat:4 }},
+                                                        {{ hazard.longitude|floatformat:4 }}
+
+                                                        <a
+                                                            class="hazard-map-link"
+                                                            href="https://www.google.com/maps/search/?api=1&amp;query={{ hazard.latitude }},{{ hazard.longitude }}"
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            title="Open hazard location in Google Maps"
+                                                        >
+                                                            <i class="fas fa-map-location-dot"></i>
+                                                            View map
+                                                        </a>
+
+                                                    {% else %}
+
+                                                        Location unavailable
+
+                                                    {% endif %}
+
+                                                </span>
+
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                {% endfor %}
+
+
+                            </div>
+
+                        </div>
+
+
+                    {% else %}
+
+
+                        <!-- =================================
+                             NO ACTIVE HAZARDS
+                        ================================== -->
+
+                        <div class="no-active-hazard">
+
+                            <i class="fas fa-circle-check"></i>
+
+                            <span>
+
+                                No Active Hazards
+
+                            </span>
+
+                        </div>
+
+
+                    {% endif %}
+
+
+
+                    <!-- VIEW ALL -->
+
+                    <a
+                        href="{% url 'Active_hazard' %}"
+                        class="view-active-hazards"
+                    >
+
+                        View All Active Hazards
+
+                        <i class="fas fa-arrow-right"></i>
+
+                    </a>
 
 
                 </div>
@@ -921,6 +1564,8 @@
 
     </div>
 
+
+    <!-- SCROLL INDICATOR -->
 
     <div class="scroll-indicator">
 
@@ -942,6 +1587,8 @@
 
         <div class="row">
 
+
+            <!-- DISTRICT -->
 
             <div class="col-lg-3 col-md-6 col-6">
 
@@ -966,6 +1613,9 @@
             </div>
 
 
+
+            <!-- HOSPITALS -->
+
             <div class="col-lg-3 col-md-6 col-6">
 
                 <div class="stat-box">
@@ -974,7 +1624,7 @@
 
                         <i class="fas fa-hospital"></i>
 
-                        6
+                        {{ hospital_count }}
 
                     </span>
 
@@ -989,6 +1639,9 @@
             </div>
 
 
+
+            <!-- FIRE STATIONS -->
+
             <div class="col-lg-3 col-md-6 col-6">
 
                 <div class="stat-box">
@@ -997,7 +1650,7 @@
 
                         <i class="fas fa-fire-extinguisher"></i>
 
-                        5
+                        {{ fire_station_count }}
 
                     </span>
 
@@ -1012,20 +1665,18 @@
             </div>
 
 
+
+            <!-- ACTIVE HAZARD COUNT -->
+
             <div class="col-lg-3 col-md-6 col-6">
 
                 <div class="stat-box">
 
-                    <span
-                        class="stat-number"
-                        id="activeHazardsCount"
-                    >
+                    <span class="stat-number">
 
                         <i class="fas fa-exclamation-triangle"></i>
 
-                        <span class="count-value">
-                            0
-                        </span>
+                        {{ active_hazards|length }}
 
                     </span>
 
@@ -1049,7 +1700,7 @@
 
 
 <!-- ========================================================= -->
-<!-- EXPLORE FHPTS SECTION -->
+<!-- EXPLORE FHPTS -->
 <!-- ========================================================= -->
 
 <section class="explore-section">
@@ -1064,6 +1715,7 @@
                 Explore FHPTS
 
             </h2>
+
 
             <p class="lead text-muted">
 
@@ -1084,7 +1736,6 @@
             <div class="col-lg-4 col-md-6">
 
                 <div class="explore-card">
-
 
                     <div class="explore-icon">
 
@@ -1120,7 +1771,6 @@
 
                     </a>
 
-
                 </div>
 
             </div>
@@ -1132,7 +1782,6 @@
             <div class="col-lg-4 col-md-6">
 
                 <div class="explore-card">
-
 
                     <div class="explore-icon">
 
@@ -1168,52 +1817,55 @@
 
                     </a>
 
-
                 </div>
 
             </div>
 
-<div class="col-lg-4 col-md-6">
-
-    <div class="explore-card">
-
-        <div class="explore-icon">
-
-            <i class="fas fa-hand-holding-heart"></i>
-
-        </div>
 
 
-        <h4>
+            <!-- BLOOD DONORS -->
 
-            Blood Donors
+            <div class="col-lg-4 col-md-6">
 
-        </h4>
+                <div class="explore-card">
 
+                    <div class="explore-icon">
 
-        <p>
+                        <i class="fas fa-hand-holding-heart"></i>
 
-            Find currently available blood donors
-            and access their blood group and contact
-            information when blood is needed.
-
-        </p>
+                    </div>
 
 
-        <a
-            href="{% url 'donor_list' %}"
-            class="explore-btn"
-        >
+                    <h4>
 
-            View Blood Donors
+                        Blood Donors
 
-            <i class="fas fa-arrow-right"></i>
+                    </h4>
 
-        </a>
 
-    </div>
+                    <p>
 
-</div>
+                        Find currently available blood donors
+                        and access their blood group and contact
+                        information when blood is needed.
+
+                    </p>
+
+
+                    <a
+                        href="{% url 'donor_list' %}"
+                        class="explore-btn"
+                    >
+
+                        View Blood Donors
+
+                        <i class="fas fa-arrow-right"></i>
+
+                    </a>
+
+                </div>
+
+            </div>
 
 
 
@@ -1222,7 +1874,6 @@
             <div class="col-lg-4 col-md-6 mx-auto">
 
                 <div class="explore-card">
-
 
                     <div class="explore-icon">
 
@@ -1248,7 +1899,7 @@
 
 
                     <a
-                        href=""
+                        href="#about"
                         class="explore-btn"
                     >
 
@@ -1257,7 +1908,6 @@
                         <i class="fas fa-arrow-right"></i>
 
                     </a>
-
 
                 </div>
 
@@ -1292,6 +1942,7 @@
 
             </h2>
 
+
             <p class="lead text-muted">
 
                 Digital initiative for emergency response modernization
@@ -1299,6 +1950,7 @@
             </p>
 
         </div>
+
 
 
         <div class="row align-items-center">
@@ -1309,7 +1961,6 @@
             <div class="col-lg-6 mb-4 mb-lg-0">
 
                 <div class="card border-danger shadow-lg h-100">
-
 
                     <div class="card-header bg-danger text-white">
 
@@ -1398,7 +2049,6 @@
 
                 <div class="card border-0 shadow-lg">
 
-
                     <div class="card-header bg-white border-bottom">
 
                         <h4 class="mb-0 text-danger">
@@ -1425,6 +2075,7 @@
 
                             </h5>
 
+
                             <p class="mb-0 text-muted">
 
                                 Full system control, hospital registration,
@@ -1433,6 +2084,7 @@
                             </p>
 
                         </div>
+
 
 
                         <div class="mb-3 p-3 border-start border-primary border-4 bg-light">
@@ -1445,6 +2097,7 @@
 
                             </h5>
 
+
                             <p class="mb-0 text-muted">
 
                                 Patient management, staff coordination,
@@ -1453,6 +2106,7 @@
                             </p>
 
                         </div>
+
 
 
                         <div class="mb-3 p-3 border-start border-danger border-4 bg-light">
@@ -1465,6 +2119,7 @@
 
                             </h5>
 
+
                             <p class="mb-0 text-muted">
 
                                 Hazard monitoring, response coordination,
@@ -1473,6 +2128,7 @@
                             </p>
 
                         </div>
+
 
 
                         <div class="p-3 border-start border-success border-4 bg-light">
@@ -1484,6 +2140,7 @@
                                 Medical Staff
 
                             </h5>
+
 
                             <p class="mb-0 text-muted">
 
@@ -1511,7 +2168,7 @@
 
 
 <!-- ========================================================= -->
-<!-- CTA / CONTACT SECTION -->
+<!-- CTA -->
 <!-- ========================================================= -->
 
 <section
@@ -1545,15 +2202,14 @@
         </p>
 
 
+
         <div class="row justify-content-center mb-4">
 
             <div class="col-lg-8">
 
                 <div class="card bg-white text-dark shadow-lg">
 
-
                     <div class="card-body p-4">
-
 
                         <div class="row">
 
@@ -1583,6 +2239,7 @@
                                 </small>
 
                             </div>
+
 
 
                             <div class="col-md-6">
@@ -1657,7 +2314,6 @@
 
         <div class="mt-5">
 
-
             <p class="mb-2">
 
                 <strong>Mailing Address:</strong>
@@ -1687,14 +2343,12 @@
 
             </p>
 
-
         </div>
 
 
     </div>
 
 </section>
-
 
 
 {% endblock %}
@@ -1705,236 +2359,204 @@
 
 <script>
 
-    /* ========================================================= */
-    /* ACTIVE HAZARD COUNTER */
-    /* ========================================================= */
+/* =========================================================
+   SMOOTH SCROLL
+========================================================= */
 
-    document.addEventListener(
-        "DOMContentLoaded",
-        function () {
+document.querySelectorAll(
+    'a[href^="#"]'
+).forEach(
+    anchor => {
 
-            const activeCount =
-                document.querySelector(
-                    "#activeHazardsCount .count-value"
-                );
+        anchor.addEventListener(
+            "click",
+            function (e) {
 
-            if (activeCount) {
+                const href =
+                    this.getAttribute("href");
 
-                activeCount.textContent = "0";
+                if (
+                    href !== "#" &&
+                    href !== ""
+                ) {
 
-            }
+                    const target =
+                        document.querySelector(href);
 
-        }
-    );
+                    if (target) {
 
+                        e.preventDefault();
 
-    /* ========================================================= */
-    /* SMOOTH SCROLL */
-    /* ========================================================= */
+                        const offsetTop =
+                            target.offsetTop - 100;
 
-    document.querySelectorAll(
-        'a[href^="#"]'
-    ).forEach(
-        anchor => {
+                        window.scrollTo({
 
-            anchor.addEventListener(
-                "click",
-                function (e) {
+                            top: offsetTop,
 
-                    const href =
-                        this.getAttribute("href");
+                            behavior: "smooth"
 
-                    if (
-                        href !== "#" &&
-                        href !== ""
-                    ) {
-
-                        const target =
-                            document.querySelector(href);
-
-                        if (target) {
-
-                            e.preventDefault();
-
-                            const offsetTop =
-                                target.offsetTop - 100;
-
-                            window.scrollTo({
-
-                                top: offsetTop,
-
-                                behavior: "smooth"
-
-                            });
-
-                        }
+                        });
 
                     }
 
                 }
-            );
-
-        }
-    );
-
-
-    /* ========================================================= */
-    /* NAVBAR SHADOW */
-    /* ========================================================= */
-
-    window.addEventListener(
-        "scroll",
-        function () {
-
-            const navbar =
-                document.querySelector(
-                    ".custom-navbar"
-                );
-
-            if (!navbar) return;
-
-
-            if (window.scrollY > 50) {
-
-                navbar.style.boxShadow =
-                    "0 5px 20px rgba(0,0,0,0.20)";
-
-            } else {
-
-                navbar.style.boxShadow =
-                    "0 12px 35px rgba(2,6,23,0.18)";
 
             }
-
-        }
-    );
-
-
-    /* ========================================================= */
-    /* COUNTER ANIMATION */
-    /* ========================================================= */
-
-    function animateCounter(
-        element,
-        target,
-        duration
-    ) {
-
-        let current = 0;
-
-        const increment =
-            target / (duration / 16);
-
-
-        const timer =
-            setInterval(
-                function () {
-
-                    current += increment;
-
-
-                    if (current >= target) {
-
-                        element.textContent =
-                            target;
-
-                        clearInterval(timer);
-
-                    } else {
-
-                        element.textContent =
-                            Math.floor(current);
-
-                    }
-
-                },
-                16
-            );
-    }
-
-
-    /* ========================================================= */
-    /* CARD ANIMATION */
-    /* ========================================================= */
-
-    const observerOptions = {
-
-        threshold: 0.2,
-
-        rootMargin:
-            "0px 0px -80px 0px"
-
-    };
-
-
-    const observer =
-        new IntersectionObserver(
-            function (entries) {
-
-                entries.forEach(
-                    function (entry) {
-
-                        if (
-                            entry.isIntersecting
-                        ) {
-
-                            entry.target.style.opacity =
-                                "1";
-
-                            entry.target.style.transform =
-                                "translateY(0)";
-
-                        }
-
-                    }
-                );
-
-            },
-            observerOptions
         );
 
+    }
+);
 
-    document.querySelectorAll(
-        ".explore-card, .stat-box"
-    ).forEach(
-        function (el) {
 
-            el.style.opacity = "0";
+/* =========================================================
+   NAVBAR SHADOW
+========================================================= */
 
-            el.style.transform =
-                "translateY(30px)";
+window.addEventListener(
+    "scroll",
+    function () {
 
-            el.style.transition =
-                "all 0.6s ease";
+        const navbar =
+            document.querySelector(
+                ".custom-navbar"
+            );
 
-            observer.observe(el);
+        if (!navbar) return;
+
+        if (window.scrollY > 50) {
+
+            navbar.style.boxShadow =
+                "0 5px 20px rgba(0,0,0,0.20)";
+
+        } else {
+
+            navbar.style.boxShadow =
+                "0 12px 35px rgba(2,6,23,0.18)";
 
         }
-    );
+
+    }
+);
 
 
-    /* ========================================================= */
-    /* EMERGENCY CALL */
-    /* ========================================================= */
+/* =========================================================
+   CARD ANIMATION
+========================================================= */
 
-    document.querySelectorAll(
-        'a[href="tel:999"]'
-    ).forEach(
-        function (link) {
+const observerOptions = {
 
-            link.addEventListener(
-                "click",
-                function () {
+    threshold: 0.2,
 
-                    console.log(
-                        "Emergency call initiated to 999"
-                    );
+    rootMargin:
+        "0px 0px -80px 0px"
+
+};
+
+
+const observer =
+    new IntersectionObserver(
+
+        function (entries) {
+
+            entries.forEach(
+                function (entry) {
+
+                    if (
+                        entry.isIntersecting
+                    ) {
+
+                        entry.target.style.opacity =
+                            "1";
+
+                        entry.target.style.transform =
+                            "translateY(0)";
+
+                    }
 
                 }
             );
 
-        }
+        },
+
+        observerOptions
+
     );
+
+
+document.querySelectorAll(
+    ".explore-card, .stat-box"
+).forEach(
+    function (el) {
+
+        el.style.opacity = "0";
+
+        el.style.transform =
+            "translateY(30px)";
+
+        el.style.transition =
+            "all 0.6s ease";
+
+        observer.observe(el);
+
+    }
+);
+
+
+/* =========================================================
+   ACTIVE HAZARD SCROLL SPEED
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const track =
+            document.querySelector(
+                ".hazard-track"
+            );
+
+        const hazards =
+            document.querySelectorAll(
+                ".hazard-item"
+            );
+
+        if (!track) return;
+
+
+        /*
+         * If there are only 1-2 hazards,
+         * make the movement slower.
+         */
+
+        if (hazards.length <= 4) {
+
+            track.style.animationDuration =
+                "7s";
+
+        }
+
+        /*
+         * More hazards = slightly slower
+         * so the user can read them.
+         */
+
+        else if (hazards.length <= 8) {
+
+            track.style.animationDuration =
+                "12s";
+
+        }
+
+        else {
+
+            track.style.animationDuration =
+                "16s";
+
+        }
+
+    }
+);
 
 </script>
 

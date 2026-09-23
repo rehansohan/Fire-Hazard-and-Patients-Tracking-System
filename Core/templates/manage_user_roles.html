@@ -5,7 +5,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1>User Roles</h1>
-            <p class="text-muted mb-0">Assign a role and hospital access to each account.</p>
+            <p class="text-muted mb-0">Assign every account an officer role and hospital access.</p>
         </div>
         <a class="btn btn-outline-secondary" href="{% url 'admin_dashboard' %}">Back to dashboard</a>
     </div>
@@ -23,8 +23,8 @@
                     <th>User</th>
                     <th>Email</th>
                     <th>Role</th>
-                    <th>Hospital access</th>
-                    <th>Action</th>
+                    <th>Assigned hospital</th>
+                    <th>Update</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,7 +32,15 @@
                     <tr>
                         <td>{{ user.get_full_name|default:user.username }}</td>
                         <td>{{ user.email|default:"-" }}</td>
-                        <td colspan="3">
+                        <td>{{ user.get_role_display }}</td>
+                        <td>
+                            {% for hospital in user.hospitals.all %}
+                                <div>{{ hospital.name }}</div>
+                            {% empty %}
+                                <span class="text-muted">No hospital assigned</span>
+                            {% endfor %}
+                        </td>
+                        <td>
                             <form method="post" id="user-role-{{ user.pk }}">
                                 {% csrf_token %}
                                 <input type="hidden" name="user_id" value="{{ user.pk }}">
@@ -43,7 +51,7 @@
                         </td>
                     </tr>
                 {% empty %}
-                    <tr><td colspan="5">No users found.</td></tr>
+                    <tr><td colspan="5">No user accounts found.</td></tr>
                 {% endfor %}
             </tbody>
         </table>

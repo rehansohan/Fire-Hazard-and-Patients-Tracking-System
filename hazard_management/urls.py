@@ -14,6 +14,10 @@ urlpatterns = [
     path('', include('Core.urls')),
 ]
 
+handler404 = 'Core.views.page_not_found'
+handler403 = 'Core.views.permission_denied'
+handler500 = 'Core.views.server_error'
+
 
 # Serve media files
 if settings.DEBUG:
