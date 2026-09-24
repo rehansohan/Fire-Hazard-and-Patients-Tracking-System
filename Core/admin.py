@@ -448,7 +448,6 @@ class CustomUserAdmin(UserAdmin):
     list_display = (
         "username",
         "email",
-        "role",
         "is_staff",
         "is_active",
     )
