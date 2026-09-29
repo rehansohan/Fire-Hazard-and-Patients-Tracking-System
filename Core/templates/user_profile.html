@@ -147,6 +147,39 @@
         color: #0f172a;
     }
 
+    .permissions-toggle {
+        width: 100%;
+        margin-top: 16px;
+        padding: 12px 14px;
+        border: 0;
+        border-radius: 12px;
+        background: #2563eb;
+        color: #fff;
+        font-weight: 700;
+        cursor: pointer;
+        text-align: left;
+    }
+
+    .permissions-toggle::marker {
+        color: #fff;
+    }
+
+    .permissions-list {
+        display: grid;
+        gap: 7px;
+        margin-top: 10px;
+        padding: 0 4px;
+        list-style: none;
+    }
+
+    .permissions-list li {
+        padding: 8px 10px;
+        border-radius: 8px;
+        background: #eff6ff;
+        color: #1e3a8a;
+        font-size: 0.82rem;
+    }
+
     .profile-panel {
         padding: 28px 28px 30px;
     }
@@ -683,6 +716,19 @@
                         {% if request.user.is_active %}Active{% else %}Inactive{% endif %}
                     </span>
                 </div>
+
+                <details>
+                    <summary class="permissions-toggle">View Assigned Permissions</summary>
+                    {% if assigned_permissions %}
+                        <ul class="permissions-list">
+                            {% for permission in assigned_permissions %}
+                                <li>{{ permission.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted small mt-2 mb-0">No permissions assigned.</p>
+                    {% endif %}
+                </details>
           
             </div>
         </aside>
@@ -816,20 +862,6 @@
                     </span>
                 </div>
 
-                <div class="info-item" style="grid-column: 1 / -1;">
-                    <strong>Administrator-Assigned Permissions</strong>
-                    <span>
-                        {% if assigned_permissions %}
-                            <span class="d-flex flex-wrap gap-2 mt-1">
-                                {% for permission in assigned_permissions %}
-                                    <span class="badge bg-primary">{{ permission.name }}</span>
-                                {% endfor %}
-                            </span>
-                        {% else %}
-                            No additional permissions assigned.
-                        {% endif %}
-                    </span>
-                </div>
             </div>
 
             <div class="profile-actions">
