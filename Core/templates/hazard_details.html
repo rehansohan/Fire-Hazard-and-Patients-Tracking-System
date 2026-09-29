@@ -1143,8 +1143,7 @@
                 <div class="panel-title">Overview</div>
             </div>
             <div class="panel-body">
-                <div class="section-label">Description</div>
-                <p class="muted-text">{{ hazard.description }}</p>
+                
 
                 <div class="summary-grid">
                     <div class="summary-box">
@@ -1159,6 +1158,9 @@
 
                 <div style="margin-top: 26px;">
                     <div class="section-label">Patients list</div>
+                    <div>
+    <p>This section displays all patients admitted to different hospitals as a result of this incident.</p>
+</div>
                     <form method="GET" class="patient-search">
                         <div class="input-group">
                             <input type="text" name="q" class="form-control" placeholder="Search patient by name or ID..." value="{{ request.GET.q }}">
@@ -1210,9 +1212,19 @@
 
         <div class="panel">
             <div class="panel-header">
-                <div class="panel-title">Missing persons</div>
-                <a href="{% url 'add_missing_complaint' hazard.id %}" class="mini-btn primary">Report Missing</a>
-            </div>
+    <div>
+        <div class="panel-title">Missing Persons</div>
+        <p style="margin: 4px 0 0; font-size: 13px; color: #6b7280;">
+            This section displays missing-person reports related to this incident, submitted by family members, friends, or relatives.
+        </p>
+    </div>
+
+    <a href="{% url 'add_missing_complaint' hazard.id %}"
+       class="mini-btn danger"
+       style="background-color:#dc3545; color:white;">
+        Report Missing
+    </a>
+</div>
             <div class="panel-body">
                 <div class="report-grid">
                     {% for complaint in hazard.missing_complaints.all %}
@@ -1270,7 +1282,7 @@
                                             <p class="text-muted">{{ complaint.last_seen_location }}</p>
                                             <h6>Description</h6>
                                             <p class="text-muted">{{ complaint.description }}</p>
-                                            <h6>Reporter</h6>
+                                            <h6>Reporter contact number:</h6>
                                             <p class="text-muted">{{ complaint.person_name }} · <a href="tel:{{ complaint.contact_number }}">{{ complaint.contact_number }}</a></p>
                                         </div>
                                     </div>
@@ -1319,11 +1331,32 @@ document.addEventListener("DOMContentLoaded", function () {
         15
     );
 
-    L.tileLayer(
-        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    const streetMap = L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
         {
             maxZoom: 19,
-            attribution: "&copy; OpenStreetMap contributors"
+            attribution: "Tiles &copy; Esri"
+        }
+    );
+
+    const satelliteMap = L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        {
+            maxZoom: 19,
+            attribution: "Tiles &copy; Esri"
+        }
+    );
+
+    streetMap.addTo(map);
+
+    L.control.layers(
+        {
+            "Street Map": streetMap,
+            "Satellite": satelliteMap
+        },
+        null,
+        {
+            position: "topright"
         }
     ).addTo(map);
 

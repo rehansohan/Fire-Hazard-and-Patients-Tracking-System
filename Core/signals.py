@@ -19,7 +19,32 @@ def patient_saved(sender,instance,created, **kwarges):
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 
-from .models import Patient, Notification
+from django.contrib.auth import get_user_model
+
+from .models import HazardReport, Patient, Notification
+
+User = get_user_model()
+
+
+@receiver(post_save, sender=HazardReport)
+def hazard_report_created(sender, instance, created, **kwargs):
+    """Broadcast a fire alert when a new active hazard is reported."""
+    if not created or instance.status != 'active':
+        return
+
+    Notification.objects.bulk_create([
+        Notification(
+            user=user,
+            title='Fire Alert',
+            message=(
+                f'Active hazard reported: {instance.title}. '
+                f'Severity: {instance.get_servity_display()}. '
+                f'{instance.description or "Please review the active hazard details."}'
+            ),
+            notification_type='fire_alert'
+        )
+        for user in User.objects.all()
+    ])
 
 
 @receiver(pre_save, sender=Patient)
@@ -62,8 +87,8 @@ def patient_post_save(
     if not instance.is_identified:
         return
 
-    # A user must be associated with the patient
-    if not instance.identified_by:
+    # At least one user must be associated with the patient.
+    if not instance.identified_by and not instance.identified_by_users.exists():
         return
 
     old_patient = getattr(
@@ -74,6 +99,10 @@ def patient_post_save(
 
     if not old_patient:
         return
+
+    identifier_users = list(instance.identified_by_users.all())
+    if instance.identified_by and instance.identified_by not in identifier_users:
+        identifier_users.append(instance.identified_by)
 
     notifications = []
 
@@ -118,15 +147,16 @@ def patient_post_save(
 
             notification_type = 'status'
 
-        notifications.append(
+        notifications.extend(
             Notification(
-                user=instance.identified_by,
-                patient=instance,
-                title=title,
-                message=message,
-                notification_type=notification_type
+                    user=user,
+                    patient=instance,
+                    title=title,
+                    message=message,
+                    notification_type=notification_type
+                )
+                for user in identifier_users
             )
-        )
 
     # --------------------------------
     # CONDITION CHANGED
@@ -134,20 +164,21 @@ def patient_post_save(
 
     if old_patient.condition != instance.condition:
 
-        notifications.append(
+        notifications.extend(
             Notification(
-                user=instance.identified_by,
-                patient=instance,
-                title='Patient Condition Updated',
-                message=(
-                    f'The condition of patient '
-                    f'{instance.patient_id} has changed '
-                    f'from {old_patient.condition} '
-                    f'to {instance.condition}.'
-                ),
-                notification_type='condition'
+                    user=user,
+                    patient=instance,
+                    title='Patient Condition Updated',
+                    message=(
+                        f'The condition of patient '
+                        f'{instance.patient_id} has changed '
+                        f'from {old_patient.condition} '
+                        f'to {instance.condition}.'
+                    ),
+                    notification_type='condition'
+                )
+                for user in identifier_users
             )
-        )
 
     # --------------------------------
     # HOSPITAL CHANGED
@@ -155,18 +186,19 @@ def patient_post_save(
 
     if old_patient.hospital_id != instance.hospital_id:
 
-        notifications.append(
+        notifications.extend(
             Notification(
-                user=instance.identified_by,
-                patient=instance,
-                title='Patient Hospital Updated',
-                message=(
-                    f'Patient {instance.patient_id} '
-                    f'has been transferred to another hospital.'
-                ),
-                notification_type='transfer'
+                    user=user,
+                    patient=instance,
+                    title='Patient Hospital Updated',
+                    message=(
+                        f'Patient {instance.patient_id} '
+                        f'has been transferred to another hospital.'
+                    ),
+                    notification_type='transfer'
+                )
+                for user in identifier_users
             )
-        )
 
     # --------------------------------
     # CREATE NOTIFICATIONS

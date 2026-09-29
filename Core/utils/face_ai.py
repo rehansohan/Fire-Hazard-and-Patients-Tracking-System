@@ -2,15 +2,13 @@ from deepface import DeepFace
 import traceback
 import os
 
-FACE_THRESHOLD = 0.35
-
 
 def verify_face(image1, image2):
 
     if not image1 or not image2:
         return {
             "verified": False,
-            "distance": 1.0
+            "distance": 1.5
         }
 
     # Check whether image files actually exist
@@ -40,15 +38,22 @@ def verify_face(image1, image2):
             enforce_detection=False
         )
 
-        verified = result["distance"] <= FACE_THRESHOLD
+        distance = float(result["distance"])
+        verified = bool(result["verified"])
+
+        print("================================")
+        print("Face Distance:", distance)
+        print("DeepFace Verified:", verified)
+        print("================================")
 
         return {
             "verified": verified,
-            "distance": result["distance"]
+            "distance": distance
         }
 
-    except Exception:
+    except Exception as e:
 
+        print("Face verification error:", e)
         traceback.print_exc()
 
         return {

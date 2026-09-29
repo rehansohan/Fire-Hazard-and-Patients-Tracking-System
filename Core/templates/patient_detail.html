@@ -587,11 +587,16 @@
                 <div>
                     {% if patient.is_identified %}
                         <span class="badge bg-success">Identified Patient</span>
-                        {% if patient.identified_by %}
-                             <small class="text-muted d-block mt-1">
-                                identified body{{patient.identified_by.get_full_name|default:patient.identified_by.username}}
-                             </small>
-                        {% endif %}
+                        <small class="text-muted d-block mt-1">Identified by:</small>
+                        <ul class="text-muted mb-0 ps-3">
+                            {% for user in patient.identified_by_users.all %}
+                                <li>{{ user.get_full_name|default:user.username }}</li>
+                            {% empty %}
+                                {% if patient.identified_by %}
+                                    <li>{{ patient.identified_by.get_full_name|default:patient.identified_by.username }}</li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
                     {% else %}
 
                         <span class="badge bg-warning text-dark">

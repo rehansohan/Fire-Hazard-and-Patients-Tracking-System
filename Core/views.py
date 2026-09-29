@@ -7,11 +7,13 @@ from django.http import HttpResponse, HttpResponseForbidden
 from .forms import HazardReportForm,HospitalForm,PatientForm,MissingComplaintForm,RegisterForm,PatientTransferForm,ProfileForm,EmergencyReportForm,InitialAdminForm,DonorProfileForm
 from.models import HazardReport,Hospital,Patient,MissingComplaint,Profile,PatientTransfer,FireStation
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Permission
 from django.db.models import Q
 from collections import defaultdict
 from django.contrib.auth import authenticate, login,logout
 from.models import Profile
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render, get_list_or_404
 from Core.models import Patient,PatientMatch
@@ -84,7 +86,10 @@ def manage_user_roles(request):
     if not is_admin(request.user):
         return HttpResponseForbidden('<h1>403 Forbidden</h1><p>Only admins can manage user roles.</p>')
 
-    users = User.objects.prefetch_related('hospitals').order_by('role', 'username')
+    users = User.objects.prefetch_related(
+        'hospitals',
+        'user_permissions__content_type',
+    ).order_by('role', 'username')
     forms_by_user = {}
 
     if request.method == 'POST':
@@ -241,6 +246,15 @@ def hospital_dashboard(request, id):
         status='active'
     ).order_by('-created_at')
 
+    released_transfer_records = list(
+        PatientTransfer.objects.filter(
+            from_hospital=hospital,
+            action='release'
+        ).values_list('patient_id', 'patient__hazard_id').distinct()
+    )
+    released_ids_by_hazard = defaultdict(set)
+    for patient_id, hazard_id in released_transfer_records:
+        released_ids_by_hazard[hazard_id].add(patient_id)
 
     hazard_groups = [
         {
@@ -262,10 +276,8 @@ def hospital_dashboard(request, id):
                 for patient in grouped_patients.get(hazard, [])
                 if patient.status == 'transferred'
             ),
-            'released_count': sum(
-                1
-                for patient in grouped_patients.get(hazard, [])
-                if patient.status == 'released'
+            'released_count': len(
+                released_ids_by_hazard.get(hazard.id, set())
             ),
         }
         for hazard in active_hazards
@@ -324,7 +336,10 @@ def hospital_dashboard(request, id):
             'patients_count': len(patients),
             'admitted_count': sum(1 for patient in patients if patient.status == 'admitted'),
             'transferred_count': sum(1 for patient in patients if patient.status == 'transferred'),
-            'released_count': sum(1 for patient in patients if patient.status == 'released'),
+            'released_count': len({
+                patient_id
+                for patient_id, _ in released_transfer_records
+            }),
             'critical_count': sum(1 for patient in patients if patient.condition == 'critical'),
         }
     )
@@ -341,6 +356,7 @@ def patient_detail(request, id):
             'transfers__from_hospital',
             'transfers__to_hospital',
             'transfers__transferred_by',
+            'identified_by_users',
         ),
         id=id,
     )
@@ -908,6 +924,20 @@ def user_profile(request):
         is_read=True
     )
 
+    dashboard_hospitals = request.user.hospitals.all().order_by('name')
+    effective_permission_keys = request.user.get_all_permissions()
+    assigned_permissions = sorted(
+        (
+            permission
+            for permission in Permission.objects.select_related('content_type')
+            if (
+                f'{permission.content_type.app_label}.{permission.codename}'
+                in effective_permission_keys
+            )
+        ),
+        key=lambda permission: (permission.content_type.app_label, permission.name),
+    )
+
     return render(
         request,
         "user_profile.html",
@@ -918,6 +948,8 @@ def user_profile(request):
             "user": request.user,
             "notifications": notifications,
             "unread_count": unread_count,
+            "dashboard_hospitals": dashboard_hospitals,
+            "assigned_permissions": assigned_permissions,
         }
     )
     
@@ -954,6 +986,12 @@ def complaint_match_dashboard(request,complaint_id):
         complaint=complaint,
         face_verified=True
     ).count()
+    my_identified_patient_ids = set(
+        Patient.objects.filter(
+            id__in=matches.values('patient_id'),
+            identified_by_users=request.user,
+        ).values_list('id', flat=True)
+    )
     
     return render(
         request,
@@ -962,6 +1000,7 @@ def complaint_match_dashboard(request,complaint_id):
             "complaint":complaint,
             "matches":matches,
             "verified_matches_count": verified_matches_count,
+            "my_identified_patient_ids": my_identified_patient_ids,
         }
     )
     
@@ -978,6 +1017,28 @@ def matching_analysis(request, match_id):
             "match": match
         }
     )
+
+
+@login_required
+def reject_match(request, match_id):
+    match = get_object_or_404(
+        PatientMatch,
+        id=match_id
+    )
+
+    if request.method == "POST":
+        match.rejected = True
+        match.confirmed = False
+        match.match_status = "Rejected"
+        match.save(
+            update_fields=[
+                "rejected",
+                "confirmed",
+                "match_status",
+            ]
+        )
+
+    return redirect("ai_match_dashboard", patient_id=match.patient_id)
     
 from .models import Patient,Notification    
 from django.contrib.auth.decorators import login_required
@@ -985,36 +1046,48 @@ from django.shortcuts import get_object_or_404, redirect
 
 @login_required
 def identify_patient(request, patient_id):
-
-    patient = get_object_or_404(
-        Patient,
-        id=patient_id
-    )
-
     if request.method == 'POST':
-
-        if not patient.is_identified:
-
-            patient.is_identified = True
-            patient.identified_by = request.user
-
-            patient.save(
-                update_fields=[
-                    'is_identified',
-                    'identified_by'
-                ]
+        with transaction.atomic():
+            patient = get_object_or_404(
+                Patient.objects.select_for_update(),
+                id=patient_id
             )
+            is_new_identifier = not patient.identified_by_users.filter(
+                pk=request.user.pk
+            ).exists()
 
-            Notification.objects.create(
-                user=request.user,
-                patient=patient,
-                title='Patient Identified',
-                message=(
-                    f'Patient {patient.patient_id} '
-                    f'has been successfully identified.'
-                ),
-                notification_type='identification'
-            )
+            if not patient.is_identified:
+                patient.is_identified = True
+                patient.identified_by = request.user
+                patient.save(update_fields=['is_identified', 'identified_by'])
+
+            if patient.identified_by:
+                patient.identified_by_users.add(patient.identified_by)
+            patient.identified_by_users.add(request.user)
+
+            if is_new_identifier:
+                identifier_users = patient.identified_by_users.all()
+                existing_user_ids = set(
+                    Notification.objects.filter(
+                        patient=patient,
+                        notification_type='identification',
+                        user__in=identifier_users,
+                    ).values_list('user_id', flat=True)
+                )
+                Notification.objects.bulk_create([
+                    Notification(
+                        user=user,
+                        patient=patient,
+                        title='Patient Identified',
+                        message=(
+                            f'Patient {patient.patient_id} '
+                            f'has been successfully identified.'
+                        ),
+                        notification_type='identification'
+                    )
+                    for user in identifier_users
+                    if user.pk not in existing_user_ids
+                ])
 
     return redirect('profile')
 
@@ -1868,15 +1941,20 @@ def toggle_donation_availability(request):
 
 @login_required
 def donor_list(request):
+    blood_group = request.GET.get("blood_group", "").strip()
     donors = User.objects.filter(
          is_available_for_donation=True
     ).order_by('username')
+
+    if blood_group:
+        donors = donors.filter(blood_group__iexact=blood_group)
     
     return render(
         request,
         "donor_list.html",
         {
-            'donors':donors
+            'donors': donors,
+            'blood_group': blood_group,
         }
     )
     

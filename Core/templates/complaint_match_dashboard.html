@@ -796,8 +796,12 @@
                                     <div class="action-stack">
                                         <a href="{% url 'matching_analysis' match.id %}" class="action-btn primary">Analysis</a>
                                         <a href="{% url 'patient_detail' match.patient.id %}" class="action-btn info">Patient</a>
-                                     
-                                    {% if not match.patient.is_identified %}
+
+                                        {% if match.patient.is_identified %}
+                                            <span class="verified-badge">Identified Patient</span>
+                                        {% endif %}
+
+                                    {% if match.patient.id not in my_identified_patient_ids %}
 
                                                 <form method="POST"
                                                     action="{% url 'identify_patient' match.patient.id %}">
@@ -813,7 +817,7 @@
                                                 {% else %}
 
                                                 <span class="action-btn success">
-                                                    ✓ Identified
+                                                    Identified by you
                                                 </span>
 
                                                 {% endif %}

@@ -24,6 +24,7 @@
                     <th>Email</th>
                     <th>Role</th>
                     <th>Assigned hospital</th>
+                    <th>Permissions</th>
                     <th>Update</th>
                 </tr>
             </thead>
@@ -41,6 +42,9 @@
                             {% endfor %}
                         </td>
                         <td>
+                            <div class="mb-2">{{ form.user_permissions }}</div>
+                        </td>
+                        <td>
                             <form method="post" id="user-role-{{ user.pk }}">
                                 {% csrf_token %}
                                 <input type="hidden" name="user_id" value="{{ user.pk }}">
@@ -51,7 +55,7 @@
                         </td>
                     </tr>
                 {% empty %}
-                    <tr><td colspan="5">No user accounts found.</td></tr>
+                    <tr><td colspan="6">No user accounts found.</td></tr>
                 {% endfor %}
             </tbody>
         </table>

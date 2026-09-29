@@ -658,7 +658,14 @@
                                 <td>
                                     <div class="action-group">
                                         <a href="#" class="action-link confirm">Confirm</a>
-                                        <a href="#" class="action-link reject">Reject</a>
+                                        {% if match.rejected %}
+                                            <span class="action-link reject">Rejected</span>
+                                        {% else %}
+                                            <form method="post" action="{% url 'reject_match' match.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="action-link reject">Reject</button>
+                                            </form>
+                                        {% endif %}
                                     </div>
                                 </td>
                             </tr>

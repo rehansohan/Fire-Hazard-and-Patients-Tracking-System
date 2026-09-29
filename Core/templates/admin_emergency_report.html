@@ -297,6 +297,14 @@ Emergency Reports
 
         background: #f0f9ff;
     }
+    .description {
+    display: -webkit-box;
+    
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.5;
+    max-height: 4.5em;
+}
 
 
     .coordinates {
@@ -875,29 +883,18 @@ Emergency Reports
             <!-- DESCRIPTION -->
 
             <div>
+    <div class="section-title">
+        Incident Description
+    </div>
 
-                <div class="section-title">
-
-                    Incident Description
-
-                </div>
-
-
-                <div class="description">
-
-                    {% if report.description %}
-
-                        {{ report.description }}
-
-                    {% else %}
-
-                        No description provided.
-
-                    {% endif %}
-
-                </div>
-
-            </div>
+    <div class="description">
+        {% if report.description %}
+            {{ report.description }}
+        {% else %}
+            No description provided.
+        {% endif %}
+    </div>
+</div>
 
 
 

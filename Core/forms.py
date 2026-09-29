@@ -229,10 +229,11 @@ class RegisterForm(UserCreationForm):
 class UserRoleForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['role', 'hospitals']
+        fields = ['role', 'hospitals', 'user_permissions']
         widgets = {
             'role': forms.Select(attrs={'class': 'form-control'}),
             'hospitals': forms.SelectMultiple(attrs={'class': 'form-control'}),
+            'user_permissions': forms.SelectMultiple(attrs={'class': 'form-control'}),
         }
 
 

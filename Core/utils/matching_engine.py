@@ -5,10 +5,17 @@ from .face_ai import verify_face
 from .text_ai import name_similarity
 
 
+def _normalized_text(value):
+    return str(value or "").strip().lower()
+
+
 def calculate_match(patient, complaint):
 
     # ---------- Gender Filter ----------
-    if patient.gender.strip().lower() != complaint.missing_person_gender.strip().lower():
+    patient_gender = _normalized_text(patient.gender)
+    complaint_gender = _normalized_text(complaint.missing_person_gender)
+
+    if not patient_gender or not complaint_gender or patient_gender != complaint_gender:
         return {
             "score": 0,
 
@@ -32,17 +39,17 @@ def calculate_match(patient, complaint):
 
     # ---------- Name Matching (30%) ----------
     name = name_similarity(
-    patient.name.strip().lower(),
-    complaint.missing_person_name.strip().lower()
+    _normalized_text(patient.name),
+    _normalized_text(complaint.missing_person_name)
 )
 
     score += name * 0.30
 
     # ---------- Age (15%) ----------
     age_difference = abs(
-    int(patient.age)
+    int(patient.age or 0)
     -
-    int(complaint.missing_person_age)
+    int(complaint.missing_person_age or 0)
 )
 
     age_match = age_difference <= 2
@@ -52,9 +59,9 @@ def calculate_match(patient, complaint):
 
     # ---------- Gender (15%) ----------
     gender_match = (
-    patient.gender.strip().lower()
+    patient_gender
     ==
-    complaint.missing_person_gender.strip().lower()
+    complaint_gender
 )
 
     if gender_match:
@@ -62,9 +69,9 @@ def calculate_match(patient, complaint):
 
     # ---------- Blood Group (10%) ----------
     blood_group_match = (
-    str(patient.blood_group).strip().upper()
+    str(patient.blood_group or "").strip().upper()
     ==
-    str(complaint.blood_group).strip().upper()
+    str(complaint.blood_group or "").strip().upper()
 )
 
     if blood_group_match:
@@ -89,6 +96,7 @@ def calculate_match(patient, complaint):
         pass
 
     # ---------- Face ----------
+# ---------- Face ----------
     face = {
         "verified": False,
         "distance": 1.0
@@ -103,17 +111,13 @@ def calculate_match(patient, complaint):
                 complaint.image.path
             )
 
-            if face["distance"] <= 0.35:
-
+            if face["verified"]:
                 score += 20
-                face["verified"] = True
-
-            else:
-
-                face["verified"] = False
 
     except Exception as e:
         print("Face matching skipped:", e)
+
+
 
     score = min(score, 100)
 

@@ -161,6 +161,11 @@ class Patient(models.Model):
         
         
     )
+    identified_by_users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        related_name='identified_patients_by'
+    )
     
     STATUS_CHOICES=[
         ('admitted','Admitted'),
@@ -627,6 +632,7 @@ class Notification(models.Model):
         ('transfer','Patient Transfer'),
         ('release','Patient Release'),
         ('match','AI Match'),
+        ('fire_alert','Fire Alert'),
     ]
     
     user = models.ForeignKey(

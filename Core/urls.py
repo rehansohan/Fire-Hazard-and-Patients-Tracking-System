@@ -49,6 +49,11 @@ path(
     views.matching_analysis,
     name="matching_analysis",
 ),
+path(
+    "match/<int:match_id>/reject/",
+    views.reject_match,
+    name="reject_match",
+),
 path('patient/<int:patient_id>/identify/',views.identify_patient,name = 'identify_patient'),
     # Duplicate transfer route removed. Use 'patient/<int:id>/transfer/' above.
 path('userprofile/edit/',views.edit_profile,name='edit_profile'),

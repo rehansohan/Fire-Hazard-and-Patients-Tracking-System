@@ -289,6 +289,33 @@ Blood Donors | FHAPTS
             View currently available blood donors
         </p>
 
+        <form method="get" class="mt-4" role="search">
+            <div class="input-group">
+                <input
+                    type="search"
+                    name="blood_group"
+                    value="{{ blood_group }}"
+                    class="form-control"
+                    placeholder="Search by blood group, e.g. A+"
+                    aria-label="Search available donors by blood group"
+                    list="blood-group-options"
+                >
+                <datalist id="blood-group-options">
+                    <option value="A+"></option>
+                    <option value="A-"></option>
+                    <option value="B+"></option>
+                    <option value="B-"></option>
+                    <option value="AB+"></option>
+                    <option value="AB-"></option>
+                    <option value="O+"></option>
+                    <option value="O-"></option>
+                </datalist>
+                <button type="submit" class="btn btn-danger">
+                    Search
+                </button>
+            </div>
+        </form>
+
     </div>
 
 
@@ -474,4 +501,4 @@ Blood Donors | FHAPTS
 
 </div>
 
-{% endblock %}
+{% endblock %} 

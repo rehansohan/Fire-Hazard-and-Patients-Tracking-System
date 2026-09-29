@@ -677,6 +677,12 @@
                     <span class="mini-stat-label">Username</span>
                     <span class="mini-stat-value">{{ request.user.username }}</span>
                 </div>
+                <div class="mini-stat">
+                    <span class="mini-stat-label">Account Status</span>
+                    <span class="mini-stat-value">
+                        {% if request.user.is_active %}Active{% else %}Inactive{% endif %}
+                    </span>
+                </div>
           
             </div>
         </aside>
@@ -717,6 +723,17 @@
 
                     <span>
                         {{ request.user.blood_group|default:"Not provided" }}
+                    </span>
+                </div>
+
+                <div class="info-item">
+                    <strong>Account Status</strong>
+                    <span>
+                        {% if request.user.is_active %}
+                            <span class="badge bg-success">Active</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Inactive</span>
+                        {% endif %}
                     </span>
                 </div>
 
@@ -780,6 +797,38 @@
                 <div class="info-item" style="grid-column: 1 / -1;">
                     <strong>Address</strong>
                     <span>{{ request.user.profile.address|default:'No address added yet.' }}</span>
+                </div>
+
+                <div class="info-item" style="grid-column: 1 / -1;">
+                    <strong>Hospital Dashboard Access</strong>
+                    <span>
+                        {% if dashboard_hospitals %}
+                            <span class="d-flex flex-wrap gap-2 mt-1">
+                                {% for hospital in dashboard_hospitals %}
+                                    <a href="{% url 'hospital_dashboard' hospital.id %}" class="badge bg-primary text-decoration-none">
+                                        {{ hospital.name }}
+                                    </a>
+                                {% endfor %}
+                            </span>
+                        {% else %}
+                            No hospital dashboard access assigned.
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="info-item" style="grid-column: 1 / -1;">
+                    <strong>Administrator-Assigned Permissions</strong>
+                    <span>
+                        {% if assigned_permissions %}
+                            <span class="d-flex flex-wrap gap-2 mt-1">
+                                {% for permission in assigned_permissions %}
+                                    <span class="badge bg-primary">{{ permission.name }}</span>
+                                {% endfor %}
+                            </span>
+                        {% else %}
+                            No additional permissions assigned.
+                        {% endif %}
+                    </span>
                 </div>
             </div>
 
