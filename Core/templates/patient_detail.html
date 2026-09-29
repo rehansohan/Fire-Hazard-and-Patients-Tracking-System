@@ -626,17 +626,7 @@
         </div>
     </div>
     <div>
- <form method="POST"
-      action="{% url 'delete_patient' patient.id %}">
 
-    {% csrf_token %}
-
-    <button type="submit"
-            class="btn btn-danger">
-        Delete Patient
-    </button>
-
-</form>
     </div>
 
     <div class="history-panel">
@@ -671,8 +661,6 @@
         </div>
     </div>
 
-    <div class="footer-actions">
-        <a href="{% url 'patient_list' %}" class="back-btn">← Back to Patient List</a>
-    </div>
+  
 </div>
 {% endblock %}

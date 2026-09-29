@@ -9,12 +9,6 @@ def notification_count(request):
             is_read=False
         ).count()
 
-        print(
-            "NOTIFICATION COUNT:",
-            request.user.username,
-            unread_count
-        )
-
     else:
         unread_count = 0
 

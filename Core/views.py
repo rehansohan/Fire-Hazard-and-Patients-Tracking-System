@@ -161,7 +161,6 @@ def Hazard_report(request):
     
 def active_hazards(request):
     hazards = HazardReport.objects.filter(status='active')
-    print("COUNT:", hazards.count())  
 
     return render(request, 'active_hazard.html', {
         'hazards': hazards
@@ -203,8 +202,7 @@ def add_hospital(request):
 
 def hospital_list(request):
     hospitals=Hospital.objects.all()
-    print("Total hospitals:", hospitals.count())
-    
+
     return render(request,'show_hospital.html',{'hospitals':hospitals})
 
 
@@ -440,12 +438,8 @@ def add_patient(request, hospital_id, hazard_id):
                         name=f'patient_{patient.name}.{ext}'
                     )
 
-                except Exception as e:
-
-                    print(
-                        "Image Processing Error:",
-                        e
-                    )
+                except Exception:
+                    pass
 
             patient.save()
 
@@ -727,7 +721,7 @@ def register(request):
                 )
 
         else:
-            print(form.errors)
+            pass
 
     else:
         form = RegisterForm()
@@ -979,6 +973,10 @@ def complaint_match_dashboard(request,complaint_id):
         MissingComplaint,
         id=complaint_id
     )
+
+    if not PatientMatch.objects.filter(complaint=complaint).exists():
+        run_ai_matching_for_complaint(complaint)
+
     matches= PatientMatch.objects.filter(
         complaint=complaint
     ).order_by("-similarity_score")[:5]
@@ -1250,36 +1248,6 @@ def emergency_report(request):
 
     if request.method == "POST":
 
-        print("========== EMERGENCY REPORT ==========")
-
-        print(
-            "CAPTURED IMAGE EXISTS:",
-            bool(request.POST.get("captured_image"))
-        )
-
-        print(
-            "CAPTURED IMAGE LENGTH:",
-            len(request.POST.get("captured_image", ""))
-        )
-
-        print(
-            "CAPTURED VIDEO EXISTS:",
-            bool(request.POST.get("captured_video"))
-        )
-
-        print(
-            "CAPTURED VIDEO LENGTH:",
-            len(request.POST.get("captured_video", ""))
-        )
-
-        print(
-            "FILES:",
-            request.FILES
-        )
-
-        print("======================================")
-
-
         # ============================================
         # CAMERA DATA
         # ============================================
@@ -1324,11 +1292,6 @@ def emergency_report(request):
 
                 try:
 
-                    print(
-                        "IMAGE DATA RECEIVED"
-                    )
-
-
                     if "," in image_base64:
 
                         header, encoded = (
@@ -1367,26 +1330,12 @@ def emergency_report(request):
                     )
 
 
-                    print(
-                        "IMAGE SAVED:",
-                        emergency.image.name
-                    )
-
-
-                except Exception as e:
-
-                    print(
-                        "IMAGE SAVE ERROR:",
-                        repr(e)
-                    )
+                except Exception:
+                    pass
 
 
             else:
-
-                print(
-                    "NO CAPTURED IMAGE"
-                )
-
+                pass
 
             # ============================================
             # SAVE CAPTURED VIDEO
@@ -1395,11 +1344,6 @@ def emergency_report(request):
             if video_base64:
 
                 try:
-
-                    print(
-                        "VIDEO DATA RECEIVED"
-                    )
-
 
                     if "," in video_base64:
 
@@ -1439,60 +1383,18 @@ def emergency_report(request):
                     )
 
 
-                    print(
-                        "VIDEO SAVED:",
-                        emergency.video.name
-                    )
-
-
-                except Exception as e:
-
-                    print(
-                        "VIDEO SAVE ERROR:",
-                        repr(e)
-                    )
+                except Exception:
+                    pass
 
 
             else:
-
-                print(
-                    "NO CAPTURED VIDEO"
-                )
-
+                pass
 
             # ============================================
             # SAVE DATABASE
             # ============================================
 
             emergency.save()
-
-
-            print(
-                "======================================"
-            )
-
-            print(
-                "DATABASE SAVED:",
-                emergency.id
-            )
-
-            print(
-                "IMAGE DATABASE PATH:",
-                emergency.image.name
-                if emergency.image
-                else "NO IMAGE"
-            )
-
-            print(
-                "VIDEO DATABASE PATH:",
-                emergency.video.name
-                if emergency.video
-                else "NO VIDEO"
-            )
-
-            print(
-                "======================================"
-            )
 
 
             messages.success(
@@ -1504,12 +1406,6 @@ def emergency_report(request):
 
 
         else:
-
-            print(
-                "FORM ERRORS:",
-                form.errors
-            )
-
             messages.error(
                 request,
                 "Please correct the errors and submit again."

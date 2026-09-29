@@ -114,8 +114,8 @@ def calculate_match(patient, complaint):
             if face["verified"]:
                 score += 20
 
-    except Exception as e:
-        print("Face matching skipped:", e)
+    except Exception:
+        pass
 
 
 
