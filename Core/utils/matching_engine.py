@@ -143,7 +143,7 @@ def calculate_match(patient, complaint):
     }
     
 
-def create_patient_match(patient, complaint):
+def create_patient_match(patient, complaint, show_score=False):
     
     result = calculate_match(
         patient,
@@ -172,6 +172,13 @@ def create_patient_match(patient, complaint):
         }
     )
 
+    if show_score:
+        print(
+            f"AI match score: patient={patient.patient_id or patient.id} "
+            f"name={patient.name or 'Unknown'} "
+            f"complaint={complaint.id} score={result['score']}"
+        )
+
 
 def run_ai_matching(patient):
 
@@ -183,7 +190,7 @@ def run_ai_matching(patient):
 
         create_patient_match(
             patient,
-            complaint
+            complaint,
         )
 
 
@@ -197,5 +204,6 @@ def run_ai_matching_for_complaint(complaint):
 
         create_patient_match(
             patient,
-            complaint
+            complaint,
+            show_score=True,
         )
